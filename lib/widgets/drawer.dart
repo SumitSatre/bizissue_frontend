@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../home/screens/business_home_page.dart';
+import '../business_home_page/screens/business_home_page.dart';
 
 class MyDrawer extends StatefulWidget {
   final String name;
@@ -70,8 +70,12 @@ class _MyDrawerState extends State<MyDrawer> {
                 return ListTile(
                   onTap: () {
                     controller.selectedBusiness = business.businessId;
-
-                    controller.updateSelected(context , userModel.businesses[0].businessId);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BusinessHomePage(id : controller.selectedBusiness),
+                      ),
+                    );
 
                   },
                   //leading: Icon(
