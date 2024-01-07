@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:bizissue/utils/services/shared_preferences_service.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bizissue/utils/colors.dart';
 
@@ -9,7 +8,6 @@ import '../../utils/routes/app_route_constants.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
-  static const String routeName = "splash-screen";
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -29,12 +27,10 @@ class _SplashScreenState extends State<SplashScreen> {
     SharedPreferenceService().checkLogin().then((value) async {
       if (value) {
         print("Authtoken");
-        GoRouter.of(context)
-            .pushNamed(MyAppRouteConstants.homeRouteName);
+        Navigator.of(context).pushReplacementNamed(MyAppRouteConstants.homeRouteName);
       } else {
         print("No Authtoken");
-        GoRouter.of(context)
-            .pushNamed(MyAppRouteConstants.loginRouteName);
+        Navigator.of(context).pushReplacementNamed(MyAppRouteConstants.loginRouteName);
       }
     });
   }

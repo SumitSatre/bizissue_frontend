@@ -1,45 +1,42 @@
+
 import 'dart:convert';
 
-import 'package:bizissue/api%20repository/api_http_response.dart';
 import 'package:bizissue/api%20repository/product_repository.dart';
+import 'package:bizissue/business_home_page/models/business_model.dart';
 import 'package:bizissue/utils/services/shared_preferences_service.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
-import '../../models/user_model.dart';
-import '../../../business_home_page/screens/business_home_page.dart';
+import '../../../api repository/api_http_response.dart';
 
-class HomeProvider extends ChangeNotifier {
+class BusinessController extends ChangeNotifier {
   int _page = 0;
   int get page => _page;
 
   bool _isError = false;
   bool get isError => _isError;
 
-  UserModel? _userModel;
-  UserModel? get userModel => _userModel;
+  BusinessModel? _businessModel;
+  BusinessModel? get businessModel => _businessModel;
 
   late PageController pageController;
 
   String selectedBusiness = "";
 
-  void init() async {
+  void init(String id) async {
     pageController = PageController();
-    await sendUserGetRequest();
+    await sendUserGetRequest(id);
   }
 
-  Future<void> sendUserGetRequest() async {
+  Future<void> sendUserGetRequest(String id) async {
+    print("This is id : $id");
     String accessToken = await SharedPreferenceService().getAccessToken();
     ApiHttpResponse response =
-    await callUserGetMethod("user", accessToken);
+    await callUserGetMethod("business/get/${id}", accessToken);
     final data = jsonDecode(response.responceString!);
     debugPrint(data.toString());
     if (response.responseCode == 200) {
       print("This is data ${data["data"]}");
-      _userModel = UserModel.fromJson(data["data"]);
-
-      if(_userModel!.businesses.length > 0){
-        selectedBusiness = _userModel!.businesses[0].businessId;
-      }
+      _businessModel = BusinessModel.fromJson(data["data"]);
       notifyListeners();
     } else {
       _isError = true;
@@ -67,18 +64,4 @@ class HomeProvider extends ChangeNotifier {
     _isError = false;
     notifyListeners();
   }
-
-  void updateSelected(BuildContext context , String businessId){
-    selectedBusiness = businessId;
-
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BusinessHomePage(id: selectedBusiness),
-      ),
-    );
-
-    notifyListeners();
-  }
-
 }

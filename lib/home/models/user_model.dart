@@ -31,10 +31,12 @@ class ContactNumber {
 @JsonSerializable()
 class Business {
   String name;
+  String userType; // Assuming 'Insider' or 'Outsider'
   String businessId;
 
   Business({
     required this.name,
+    required this.userType,
     required this.businessId,
   });
 
@@ -45,10 +47,12 @@ class Business {
 
   Business copyWith({
     String? name,
+    String? userType,
     String? businessId,
   }) {
     return Business(
       name: name ?? this.name,
+      userType: userType ?? this.userType,
       businessId: businessId ?? this.businessId,
     );
   }
@@ -72,7 +76,8 @@ class UserModel {
     required this.businesses,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
+  factory UserModel.fromJson(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserModelToJson(this);
 
