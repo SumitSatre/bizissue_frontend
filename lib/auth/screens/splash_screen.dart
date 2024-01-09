@@ -29,11 +29,11 @@ class _SplashScreenState extends State<SplashScreen> {
       if (value) {
         print("Authtoken");
         GoRouter.of(context)
-            .pushNamed(MyAppRouteConstants.homeRouteName);
+            .goNamed(MyAppRouteConstants.homeRouteName);
       } else {
         print("No Authtoken");
         GoRouter.of(context)
-            .pushNamed(MyAppRouteConstants.loginRouteName);
+            .goNamed(MyAppRouteConstants.loginRouteName);
       }
     });
   }
