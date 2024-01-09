@@ -76,12 +76,7 @@ class _MyDrawerState extends State<MyDrawer> {
                     businessController.setBusinessModelNull();
 
                     controller.selectedBusiness = business.businessId;
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>BusinessPage()
-                      ),
-                    );
+                  //    GoRouter.of(context).pushNamed()
 
                   },
                   //leading: Icon(

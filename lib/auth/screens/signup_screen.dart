@@ -3,6 +3,7 @@ import 'package:bizissue/auth/screens/controllers/signup_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:bizissue/utils/colors.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -351,7 +352,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                       bool result = await controller
                                           .verifySignupOtp(context);
                                       if (result) {
-                                        Navigator.of(context)
+                                        GoRouter.of(context)
                                             .pushNamed(MyAppRouteConstants.homeRouteName);
                                       }
                                     },

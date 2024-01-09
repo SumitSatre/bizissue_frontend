@@ -107,5 +107,4 @@ Map<String, dynamic> _$BusinessModelToJson(BusinessModel instance) =>
       'myIssues': instance.myIssues,
       'myTeamIssues': instance.myTeamIssues,
     };
-
 // BusinessId to _id

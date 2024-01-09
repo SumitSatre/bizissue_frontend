@@ -22,11 +22,11 @@ class BusinessHomePage extends StatefulWidget {
 }
 
 class _BusinessHomePageState extends State<BusinessHomePage> {
-  @override
-  void initState() {
-    super.initState();
-    callInit();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   callInit();
+  // }
 
   void callInit() {
     Provider.of<BusinessController>(context, listen: false).init(widget.id);
@@ -34,8 +34,14 @@ class _BusinessHomePageState extends State<BusinessHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     final businessModel =
         Provider.of<BusinessController>(context).businessModel;
+
+    if(businessModel == null){
+      callInit();
+    }
+
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     // final userModel = Provider.of<HomeProvider>(context).userModel;

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:bizissue/utils/services/shared_preferences_service.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bizissue/utils/colors.dart';
 
@@ -27,10 +28,12 @@ class _SplashScreenState extends State<SplashScreen> {
     SharedPreferenceService().checkLogin().then((value) async {
       if (value) {
         print("Authtoken");
-        Navigator.of(context).pushReplacementNamed(MyAppRouteConstants.homeRouteName);
+        GoRouter.of(context)
+            .pushNamed(MyAppRouteConstants.homeRouteName);
       } else {
         print("No Authtoken");
-        Navigator.of(context).pushReplacementNamed(MyAppRouteConstants.loginRouteName);
+        GoRouter.of(context)
+            .pushNamed(MyAppRouteConstants.loginRouteName);
       }
     });
   }
