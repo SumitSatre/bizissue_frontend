@@ -15,31 +15,46 @@ class CreateBusinessProvider extends ChangeNotifier {
   CreateBusinessModel? _createBusinessModel;
   CreateBusinessModel? get createBusinessModel => _createBusinessModel;
 
+  final nameController = TextEditingController();
+  final industryTypeController = TextEditingController();
+  final cityController = TextEditingController();
+  final countryController = TextEditingController();
+
   bool _isError = false;
   bool get isError => _isError;
 
 
-  void createBusiness(BuildContext context , String id) async {
+  void createBusiness(BuildContext context) async {
+    try {
+      if (!areAllFieldsFilled()) {
+        showSnackBar(context, "Fill complete details!!", invalidColor);
+        return;
+      }
 
-    if(!areAllFieldsFilled()){
-      showSnackBar(context, "Fill complete details!!", invalidColor);
-      return;
+      String accessToken = await SharedPreferenceService().getAccessToken();
+
+      print(jsonEncode(_createBusinessModel!.toJson()));
+
+      ApiHttpResponse response = await callUserPostMethod(
+          _createBusinessModel!.toJson(), 'business/create', accessToken);
+
+      if (response.responseCode == 200) {
+        showSnackBar(context, "Business created Successfully!!", successColor);
+
+        notifyListeners();
+        dispose();
+      } else {
+        final data = jsonDecode(response.responceString ?? "");
+        // Handle other status codes if needed
+        showSnackBar(context, "Failed to create business: ${data['message']}", invalidColor);
+      }
+
+      debugPrint(response.responceString);
+    } catch (e) {
+      // Handle unexpected errors
+      showSnackBar(context, "An unexpected error occurred", invalidColor);
+      print("Error: $e");
     }
-    String accessToken = await SharedPreferenceService().getAccessToken();
-
-    print(jsonEncode(_createBusinessModel!.toJson()));
-
-    ApiHttpResponse response = await callUserPostMethod(
-        _createBusinessModel!.toJson(), 'business/create', accessToken);
-
-    final data = jsonDecode(response.responceString!);
-
-    if (response.responseCode == 200) {
-      showSnackBar(context, "Business created Successfully!!", successColor);
-      _createBusinessModel = null;
-      notifyListeners();
-    }
-    debugPrint(response.responceString);
   }
 
   bool areAllFieldsFilled() {
@@ -90,6 +105,15 @@ class CreateBusinessProvider extends ChangeNotifier {
       _createBusinessModel = CreateBusinessModel(country: country);
     }
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    nameController.clear();
+    industryTypeController.clear();
+    cityController.clear();
+    countryController.clear();
+    super.dispose();
   }
 
 }

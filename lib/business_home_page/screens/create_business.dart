@@ -7,6 +7,7 @@ import 'package:bizissue/utils/colors.dart';
 import 'package:bizissue/widgets/buttons/custom_back_button.dart';
 import 'package:bizissue/widgets/custom_text_field.dart';
 import 'package:bizissue/widgets/custom_text_form_field.dart';
+import 'package:bizissue/widgets/submit_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
@@ -26,11 +27,6 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
 
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-
-    final nameController = TextEditingController();
-    final industryTypeController = TextEditingController();
-    final cityController = TextEditingController();
-    final countryController = TextEditingController();
 
     return Scaffold(
       appBar: PreferredSize(
@@ -62,60 +58,39 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
           children: [
 
             CustomTextField(
-              controller: nameController,
+              controller: createBusinessController.nameController,
               onChanged: (p0) => createBusinessController.updateBusinessName(p0 ?? ""),
               labelText: "Name*",
             ),
             SizedBox(height: height * 0.02),
 
             CustomTextField(
-              controller: industryTypeController,
+              controller: createBusinessController.industryTypeController,
               onChanged: (p0) => createBusinessController.updateBusinessIndustryType(p0 ?? ""),
               labelText: "Industry type",
             ),
             SizedBox(height: height * 0.02),
 
             CustomTextField(
-              controller: cityController,
+              controller: createBusinessController.cityController,
               onChanged: (p0) => createBusinessController.updateBusinessCity(p0 ?? ""),
               labelText: "City",
             ),
             SizedBox(height: height * 0.02),
 
             CustomTextField(
-              controller: countryController,
+              controller: createBusinessController.countryController,
               onChanged: (p0) => createBusinessController.updateBusinessCountry(p0 ?? ""),
               labelText: "Country",
             ),
             SizedBox(height: height * 0.02),
 
-            Center(
-              child: SizedBox(
-                height: 45,
-                width: 240,
-                child: ElevatedButton(
-                  onPressed: () {
-
-                  },
-                  style: ButtonStyle(
-                    foregroundColor:
-                    MaterialStateProperty.all<Color>(Colors.white),
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        submitButtonsColor),
-                    shape:
-                    MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                    ),
-                  ),
-                  child: const Text(
-                    "Submit",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
-              ),
+            SubmitButton(
+              onPressed: () {
+                createBusinessController.createBusiness(context);
+              },
             ),
+
           ],
         ),
       ),

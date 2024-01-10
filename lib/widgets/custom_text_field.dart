@@ -18,7 +18,9 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double heightOfScreen = MediaQuery.of(context).size.height;
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(width: 5),
         Text(
@@ -31,7 +33,7 @@ class CustomTextField extends StatelessWidget {
           ),
           textAlign: TextAlign.left,
         ),
-        SizedBox(height: height),
+        SizedBox(height: height*heightOfScreen),
         TextField(
           controller: controller,
           onChanged: onChanged,
@@ -51,7 +53,7 @@ class CustomTextField extends StatelessWidget {
           cursorHeight: 22,
           cursorWidth: width,
         ),
-        SizedBox(height: height * 2),
+        SizedBox(height: height * heightOfScreen*1.2),
       ],
     );
   }
