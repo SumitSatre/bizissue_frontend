@@ -1,6 +1,7 @@
 import 'package:bizissue/business_home_page/screens/activity_page.dart';
 import 'package:bizissue/business_home_page/screens/controller/business_controller.dart';
 import 'package:bizissue/business_home_page/screens/create_issue_page.dart';
+import 'package:bizissue/business_home_page/screens/empty_screen.dart';
 import 'package:bizissue/business_home_page/screens/group_page.dart';
 import 'package:bizissue/business_home_page/widgets/appBar.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
@@ -73,7 +74,7 @@ class _BusinessPageState extends State<BusinessPage> {
               children: [
                 BusinessHomePage(id: controller.selectedBusiness),
                 CreateIssuePage(),
-                ActivityPage(),
+                EmptyScreen(),
                 GroupPage()
               ],
               onPageChanged: (page) {

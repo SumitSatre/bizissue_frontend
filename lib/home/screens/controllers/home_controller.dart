@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:bizissue/api%20repository/api_http_response.dart';
 import 'package:bizissue/api%20repository/product_repository.dart';
+import 'package:bizissue/utils/routes/app_route_constants.dart';
 import 'package:bizissue/utils/services/shared_preferences_service.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../models/user_model.dart';
 import '../../../business_home_page/screens/business_home_page.dart';
@@ -78,6 +80,12 @@ class HomeProvider extends ChangeNotifier {
       ),
     );
 
+    notifyListeners();
+  }
+
+  void setNewBusiness(BuildContext context , String businessId){
+    selectedBusiness = businessId;
+    GoRouter.of(context).goNamed(MyAppRouteConstants.businessRouteName);
     notifyListeners();
   }
 

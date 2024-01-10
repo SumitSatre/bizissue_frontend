@@ -23,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void navigateToNextPage() async {
     Future.delayed(
-      const Duration(seconds: 4),
+      const Duration(seconds: 2),
     );
     SharedPreferenceService().checkLogin().then((value) async {
       if (value) {

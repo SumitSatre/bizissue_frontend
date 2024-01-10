@@ -2,6 +2,7 @@ import 'package:bizissue/auth/screens/controllers/login_provider.dart';
 import 'package:bizissue/auth/screens/controllers/signup_provider.dart';
 import 'package:bizissue/auth/screens/splash_screen.dart';
 import 'package:bizissue/business_home_page/screens/controller/business_controller.dart';
+import 'package:bizissue/business_home_page/screens/controller/create_business_controller.dart';
 import 'package:bizissue/business_home_page/screens/controller/create_issue_controller.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/routes/app_route_config.dart';
@@ -27,12 +28,11 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LoginProvider()),
         ChangeNotifierProvider(create: (_) => SignupProvider()),
         ChangeNotifierProvider(create: (_) => CreateIssueProvider()),
+        ChangeNotifierProvider(create: (_) => CreateBusinessProvider()),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
-        routeInformationParser: MyAppRouter.returnRouter().routeInformationParser,
-        routeInformationProvider: MyAppRouter.returnRouter().routeInformationProvider,
-        routerDelegate: MyAppRouter.returnRouter().routerDelegate,
+        routerConfig: MyAppRouter.returnRouter(),
         theme: ThemeData.light().copyWith(primaryColor: kprimaryColor),
       ),
     );

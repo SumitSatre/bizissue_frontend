@@ -4,18 +4,18 @@ part 'create_issue_model.g.dart';
 
 @JsonSerializable()
 class CreateIssueModel {
-  String title;
-  String details;
-  String assignedToId;
-  String deliveryDate;
-  String nextFollowUpDate;
+  String? title;
+  String? details;
+  String? assignedToId;
+  String? deliveryDate;
+  String? nextFollowUpDate;
 
   CreateIssueModel({
-    required this.title,
-    required this.details,
-    required this.assignedToId,
-    required this.deliveryDate,
-    required this.nextFollowUpDate,
+     this.title,
+     this.details,
+     this.assignedToId,
+     this.deliveryDate,
+     this.nextFollowUpDate,
   });
 
   factory CreateIssueModel.fromJson(Map<String, dynamic> json) =>

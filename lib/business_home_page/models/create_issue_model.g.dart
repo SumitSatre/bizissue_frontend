@@ -8,11 +8,11 @@ part of 'create_issue_model.dart';
 
 CreateIssueModel _$CreateIssueModelFromJson(Map<String, dynamic> json) =>
     CreateIssueModel(
-      title: json['title'] as String,
-      details: json['details'] as String,
-      assignedToId: json['assignedToId'] as String,
-      deliveryDate: json['deliveryDate'] as String,
-      nextFollowUpDate: json['nextFollowUpDate'] as String,
+      title: json['title'] as String?,
+      details: json['details'] as String?,
+      assignedToId: json['assignedToId'] as String?,
+      deliveryDate: json['deliveryDate'] as String?,
+      nextFollowUpDate: json['nextFollowUpDate'] as String?,
     );
 
 Map<String, dynamic> _$CreateIssueModelToJson(CreateIssueModel instance) =>

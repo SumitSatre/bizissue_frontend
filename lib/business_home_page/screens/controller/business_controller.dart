@@ -18,7 +18,7 @@ class BusinessController extends ChangeNotifier {
   BusinessModel? _businessModel;
   BusinessModel? get businessModel => _businessModel;
 
-  late PageController pageController;
+  late PageController pageController = PageController(initialPage: 0);
 
   String selectedBusiness = "";
 

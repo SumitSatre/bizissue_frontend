@@ -265,6 +265,7 @@ Future<ApiHttpResponse> callUserPatchMethod(
   }
 }
 
+
 Future<ApiHttpResponse> callGetDistrictAndPincodeFromPincodeMethod(int pincode) async {
   try {
     String url = "https://api.postalpincode.in/pincode/$pincode";

@@ -1,5 +1,6 @@
 import 'package:bizissue/auth/screens/login_screen.dart';
 import 'package:bizissue/auth/screens/signup_screen.dart';
+import 'package:bizissue/business_home_page/screens/create_business.dart';
 import 'package:bizissue/home/screens/home_page.dart';
 import 'package:bizissue/business_home_page/screens/business_page.dart';
 import 'package:bizissue/utils/error_page.dart';
@@ -49,6 +50,14 @@ class MyAppRouter {
           path: '/home/business',
           pageBuilder: (BuildContext context,GoRouterState state) {
             return MaterialPage(child: BusinessPage());
+          },
+        ),
+
+        GoRoute(
+          name: MyAppRouteConstants.createBusinessRouteName,
+          path: '/create/business',
+          pageBuilder: (BuildContext context,GoRouterState state) {
+            return MaterialPage(child: CreateBusinessPage());
           },
         ),
 

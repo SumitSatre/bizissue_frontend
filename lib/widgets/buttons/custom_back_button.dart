@@ -1,11 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:bizissue/utils/routes/app_route_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class CustomBackButton extends StatelessWidget {
-  final String routeName;
   const CustomBackButton({
     Key? key,
-    required this.routeName,
   }) : super(key: key);
 
   @override
@@ -27,7 +27,7 @@ class CustomBackButton extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () {
-          Navigator.pop(context);
+          GoRouter.of(context).goNamed(MyAppRouteConstants.businessRouteName);
         },
         child: const Icon(
           Icons.arrow_back_sharp,
