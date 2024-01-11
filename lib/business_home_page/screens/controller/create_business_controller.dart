@@ -57,6 +57,36 @@ class CreateBusinessProvider extends ChangeNotifier {
     }
   }
 
+  void joinBusinessRequest(BuildContext context, String businessCode) async {
+    try {
+      // Validate business code
+      if (businessCode == null || businessCode.isEmpty || businessCode.length != 6) {
+        showSnackBar(context, "Invalid business code!!", invalidColor);
+        return;
+      }
+
+      String accessToken = await SharedPreferenceService().getAccessToken();
+
+      ApiHttpResponse response = await callUserPatchMethod(
+          {}, 'business/send/request/$businessCode', accessToken);
+
+      if (response.responseCode == 200) {
+        showSnackBar(context, "Request sent Successfully!!", successColor);
+        notifyListeners();
+      } else {
+        final data = jsonDecode(response.responceString ?? "");
+        // Handle other status codes if needed
+        showSnackBar(context, "Failed to send join request to business: ${data['message']}", invalidColor);
+      }
+
+      debugPrint(response.responceString);
+    } catch (e) {
+      // Handle unexpected errors
+      showSnackBar(context, "An unexpected error occurred", invalidColor);
+      print("Error: $e");
+    }
+  }
+
   bool areAllFieldsFilled() {
     return _createBusinessModel != null &&
         _createBusinessModel!.name != null &&

@@ -9,8 +9,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../utils/services/shared_preferences_service.dart';
-import '../../widgets/buttons/custom_menu_button.dart';
+import '../../../utils/services/shared_preferences_service.dart';
+import '../../../widgets/buttons/custom_menu_button.dart';
 
 class BusinessHomePage extends StatefulWidget {
   final String id;

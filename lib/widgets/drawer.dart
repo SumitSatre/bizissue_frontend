@@ -111,6 +111,10 @@ class _MyDrawerState extends State<MyDrawer> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                onTap: (){
+                  GoRouter.of(context).pop();   // pop the drawer
+                  GoRouter.of(context).goNamed(MyAppRouteConstants.joinBusinessRouteName);
+                },
               ),
 
               Divider(color: Colors.grey),

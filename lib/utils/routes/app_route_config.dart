@@ -1,8 +1,9 @@
 import 'package:bizissue/auth/screens/login_screen.dart';
 import 'package:bizissue/auth/screens/signup_screen.dart';
 import 'package:bizissue/business_home_page/screens/create_business.dart';
+import 'package:bizissue/business_home_page/screens/join_business.dart';
 import 'package:bizissue/home/screens/home_page.dart';
-import 'package:bizissue/business_home_page/screens/business_page.dart';
+import 'package:bizissue/business_home_page/screens/business%20home/business_page.dart';
 import 'package:bizissue/utils/error_page.dart';
 import 'package:bizissue/utils/routes/app_route_constants.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +59,14 @@ class MyAppRouter {
           path: '/create/business',
           pageBuilder: (BuildContext context,GoRouterState state) {
             return MaterialPage(child: CreateBusinessPage());
+          },
+        ),
+
+        GoRoute(
+          name: MyAppRouteConstants.joinBusinessRouteName,
+          path: '/join/business',
+          pageBuilder: (BuildContext context,GoRouterState state) {
+            return MaterialPage(child: JoinBusinessPage());
           },
         ),
 

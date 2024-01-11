@@ -7,4 +7,5 @@ class MyAppRouteConstants {
   static const String businessHomeRouteName = 'business_home_page';
   static const String businessRouteName = 'business_page';
   static const String createBusinessRouteName = 'create_business';
+  static const String joinBusinessRouteName = 'join_business';
 }

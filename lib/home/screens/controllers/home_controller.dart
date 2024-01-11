@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../models/user_model.dart';
-import '../../../business_home_page/screens/business_home_page.dart';
+import '../../../business_home_page/screens/business home/business_home_page.dart';
 
 class HomeProvider extends ChangeNotifier {
   int _page = 0;

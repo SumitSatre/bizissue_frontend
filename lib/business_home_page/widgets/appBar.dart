@@ -1,4 +1,5 @@
 import 'package:bizissue/business_home_page/screens/controller/business_controller.dart';
+import 'package:bizissue/business_home_page/widgets/vertical_menu_dropdown.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/widgets/buttons/custom_menu_button.dart';
 import 'package:flutter/material.dart';
@@ -47,12 +48,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ],
                 ),
-                CupertinoButton(
-                  child: Icon(CupertinoIcons.ellipsis_vertical, color: Colors.black ,size: 25,),
-                  onPressed: () {
-                    // Handle button press
-                  },
-                ),
+                VeriticalMenuDropDown(),
               ],
             ),
 

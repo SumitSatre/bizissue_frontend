@@ -1,5 +1,5 @@
-import 'package:bizissue/business_home_page/screens/business_home_page.dart';
-import 'package:bizissue/business_home_page/screens/business_page.dart';
+import 'package:bizissue/business_home_page/screens/business%20home/business_home_page.dart';
+import 'package:bizissue/business_home_page/screens/business%20home/business_page.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/home/screens/simple_home_page.dart';
 import 'package:bizissue/utils/colors.dart';
