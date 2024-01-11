@@ -103,12 +103,20 @@ class IssueShort {
   String title;
   String? details;
   String deliveryDate;
+  String nextFollowUpDate;
+  int delayed;
+  bool isBlocked;
+  bool isCritical;
 
   IssueShort({
     required this.issueId,
     required this.title,
-     this.details,
+    this.details,
     required this.deliveryDate,
+    required this.nextFollowUpDate,
+    required this.delayed,
+    required this.isBlocked,
+    required this.isCritical,
   });
 
   factory IssueShort.fromJson(Map<String, dynamic> json) =>
@@ -121,12 +129,20 @@ class IssueShort {
     String? title,
     String? details,
     String? deliveryDate,
+    String? nextFollowUpDate,
+    int? delayed,
+    bool? isBlocked,
+    bool? isCritical,
   }) {
     return IssueShort(
       issueId: issueId ?? this.issueId,
       title: title ?? this.title,
       details: details ?? this.details,
       deliveryDate: deliveryDate ?? this.deliveryDate,
+      nextFollowUpDate: nextFollowUpDate ?? this.nextFollowUpDate,
+      delayed: delayed ?? this.delayed,
+      isBlocked: isBlocked ?? this.isBlocked,
+      isCritical: isCritical ?? this.isCritical,
     );
   }
 }
@@ -170,11 +186,24 @@ class BusinessInfo {
 }
 
 @JsonSerializable()
+class TeamIssue {
+  String? nextFollowUpDate;
+  List<IssueShort>? issues;
+
+  TeamIssue({ this.nextFollowUpDate,  this.issues});
+
+  factory TeamIssue.fromJson(Map<String, dynamic> json) =>
+      _$TeamIssueFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TeamIssueToJson(this);
+}
+
+@JsonSerializable()
 class BusinessModel {
   BusinessInfo business;
   User user;
-  List<IssueShort> myIssues;
-  List<IssueShort> myTeamIssues;
+  List<TeamIssue> myIssues;
+  List<TeamIssue> myTeamIssues;
 
   BusinessModel({
     required this.business,
@@ -191,8 +220,8 @@ class BusinessModel {
   BusinessModel copyWith({
     BusinessInfo? business,
     User? user,
-    List<IssueShort>? myIssues,
-    List<IssueShort>? myTeamIssues
+    List<TeamIssue>? myIssues,
+    List<TeamIssue>? myTeamIssues
   }) {
     return BusinessModel(
       business: business ?? this.business,

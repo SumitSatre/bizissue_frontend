@@ -265,7 +265,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 .verifyLoginOtp(context);
                                             if (result) {
                                               GoRouter.of(context).pop();
-                                              GoRouter.of(context).pushNamed(MyAppRouteConstants.homeRouteName);
+                                              GoRouter.of(context).goNamed(MyAppRouteConstants.homeRouteName);
                                             }
                                           },
                                           on: true,

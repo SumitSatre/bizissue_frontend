@@ -1,6 +1,8 @@
 import 'package:bizissue/business_home_page/models/business_model.dart';
+import 'package:bizissue/business_home_page/models/dropdown_lists.dart';
 import 'package:bizissue/business_home_page/screens/controller/business_controller.dart';
 import 'package:bizissue/business_home_page/widgets/appBar.dart';
+import 'package:bizissue/business_home_page/widgets/toggle_switch.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/colors.dart';
 import 'package:bizissue/utils/routes/app_route_constants.dart';
@@ -32,13 +34,14 @@ class _BusinessHomePageState extends State<BusinessHomePage> {
     Provider.of<BusinessController>(context, listen: false).init(widget.id);
   }
 
+  bool switchToggle = false;
+
   @override
   Widget build(BuildContext context) {
-
     final businessModel =
         Provider.of<BusinessController>(context).businessModel;
 
-    if(businessModel == null){
+    if (businessModel == null) {
       callInit();
     }
 
@@ -80,59 +83,92 @@ class _BusinessHomePageState extends State<BusinessHomePage> {
                     ),
                   )
                 : Scaffold(
-                    body: ListView.builder(
-                      itemCount: businessModel.myTeamIssues.length,
-                      itemBuilder: (context, index) {
-                        IssueShort issue = businessModel.myTeamIssues[index];
-                        return Container(
-                          margin: EdgeInsets.only(bottom: 2),
-                          padding: EdgeInsets.all(8.0),
-                          color: Color(0x33D9D9D9),
-                          // decoration: BoxDecoration(
-                          //   color: Color(0x33D9D9D9),
-                          //   border: Border.all(color: Colors.grey),
-                          // ),
+                    body: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children : [
-                                  Text(
-                                    issue.title,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16.0,
-                                    ),
-                                  ),
-                                  SizedBox(height: 8.0),
-                                  Text(
-                                    "Sumit: sir checkout this",
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ]
+                              Text("Filters:"),
+                              SizedBox(
+                                width: width * 0.02,
                               ),
-                              SizedBox(width: 8.0),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    '${issue.deliveryDate.toString()}',
-                                    style: TextStyle(
+                              Container(
+                                  height: 36,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      style: BorderStyle.solid,
                                       color: Colors.grey,
                                     ),
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
-                                  // Add any other widgets or icons you may need
-                                ],
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(switchToggle
+                                        ? "My Issues"
+                                        : "MyTeamIssues"),
+                                  )),
+                              SizedBox(
+                                width: width * 0.02,
+                              ),
+                              ToggleSwitch(isSwitched: switchToggle),
+                              SizedBox(width: 5),
+                              SizedBox(
+                                height: 36,
+                                width: width * 0.28,
+                                child: Container(
+                                  height: 36,
+                                  width: width * 0.78,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      style: BorderStyle.solid,
+                                      color: Colors.grey,
+                                    ),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton<String>(
+                                      icon: const Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Icon(
+                                          Icons.keyboard_arrow_down_sharp,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      elevation: 4,
+                                      style: const TextStyle(
+                                          color: Colors.black, fontSize: 14),
+                                      // value: ,
+                                      onChanged: (p0) {},
+                                      items:
+                                          BCDList.map<DropdownMenuItem<String>>(
+                                              (String s) {
+                                        return DropdownMenuItem<String>(
+                                          value: s,
+                                          child: Text("  $s"),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ],
                           ),
-                        );
-
-                      },
+                        ),
+                        SizedBox(
+                          height: height * 0.02,
+                        ),
+                    //    Expanded(
+                    //      child: ListView.builder(
+                    //        itemCount: businessModel.myTeamIssues.length,
+                    //        itemBuilder: (context, index) {
+                    //          IssueShort issue =
+                    //              businessModel.myTeamIssues[index];
+                    //          return ;
+                    //        },
+                    //      ),
+                    //    ),
+                     ],
                     ),
                   );
       }),

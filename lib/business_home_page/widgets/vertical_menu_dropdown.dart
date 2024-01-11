@@ -1,6 +1,7 @@
 import 'package:bizissue/utils/routes/app_route_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class VeriticalMenuDropDown extends StatefulWidget {
   @override
@@ -42,7 +43,7 @@ void showDropdown(BuildContext context) async {
   final result = await showMenu(
     context: context,
     position: position,
-    items: countryCodesList.map((String s) {
+    items: menuItemsList.map((String s) {
       return PopupMenuItem<String>(
         value: s,
         child: Text("  $s"),
@@ -51,9 +52,32 @@ void showDropdown(BuildContext context) async {
   );
 
   if (result != null) {
+    String? routeName = menuItemsWithRoutes.firstWhereOrNull(
+          (item) => item.containsKey(result),
+    )?[result!];
+
+    // Navigate to the selected page using the route name
+    if (routeName != null) {
+      print("This is route : ${routeName}");
+      GoRouter.of(context).pushNamed(routeName);
+    }
   }
 }
-List<String> countryCodesList = [
-  "Requests",
-  "Business profile"
+List<String> menuItemsList = [
+  "Requests"
 ];
+
+List<Map<String , String>> menuItemsWithRoutes = [
+  {
+    "Requests" : MyAppRouteConstants.businessRequestsRouteName
+  }
+];
+
+extension ListExtension<T> on List<T> {
+  T? firstWhereOrNull(bool Function(T) test) {
+    for (final element in this) {
+      if (test(element)) return element;
+    }
+    return null;
+  }
+}

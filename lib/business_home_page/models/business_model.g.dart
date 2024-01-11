@@ -61,6 +61,10 @@ IssueShort _$IssueShortFromJson(Map<String, dynamic> json) => IssueShort(
       title: json['title'] as String,
       details: json['details'] as String?,
       deliveryDate: json['deliveryDate'] as String,
+      nextFollowUpDate: json['nextFollowUpDate'] as String,
+      delayed: json['delayed'] as int,
+      isBlocked: json['blocked']['isBlocked'] as bool,
+      isCritical: json['critical']['isCritical'] as bool,
     );
 
 Map<String, dynamic> _$IssueShortToJson(IssueShort instance) =>
@@ -69,6 +73,10 @@ Map<String, dynamic> _$IssueShortToJson(IssueShort instance) =>
       'title': instance.title,
       'details': instance.details,
       'deliveryDate': instance.deliveryDate,
+      'nextFollowUpDate': instance.nextFollowUpDate,
+      'delayed': instance.delayed,
+      'isBlocked': instance.isBlocked,
+      'isCritical': instance.isCritical,
     };
 
 BusinessInfo _$BusinessInfoFromJson(Map<String, dynamic> json) => BusinessInfo(
@@ -88,15 +96,27 @@ Map<String, dynamic> _$BusinessInfoToJson(BusinessInfo instance) =>
       '_id': instance.businessId,
     };
 
+TeamIssue _$TeamIssueFromJson(Map<String, dynamic> json) => TeamIssue(
+      nextFollowUpDate: json['nextFollowUpDate'] as String,
+      issues: (json['issues'] as List<dynamic>)
+          .map((e) => IssueShort.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$TeamIssueToJson(TeamIssue instance) => <String, dynamic>{
+      'nextFollowUpDate': instance.nextFollowUpDate,
+      'issues': instance.issues,
+    };
+
 BusinessModel _$BusinessModelFromJson(Map<String, dynamic> json) =>
     BusinessModel(
       business: BusinessInfo.fromJson(json['business'] as Map<String, dynamic>),
       user: User.fromJson(json['user'] as Map<String, dynamic>),
       myIssues: (json['myIssues'] as List<dynamic>)
-          .map((e) => IssueShort.fromJson(e as Map<String, dynamic>))
+          .map((e) => TeamIssue.fromJson(e as Map<String, dynamic>))
           .toList(),
       myTeamIssues: (json['myTeamIssues'] as List<dynamic>)
-          .map((e) => IssueShort.fromJson(e as Map<String, dynamic>))
+          .map((e) => TeamIssue.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
@@ -107,4 +127,3 @@ Map<String, dynamic> _$BusinessModelToJson(BusinessModel instance) =>
       'myIssues': instance.myIssues,
       'myTeamIssues': instance.myTeamIssues,
     };
-// BusinessId to _id
