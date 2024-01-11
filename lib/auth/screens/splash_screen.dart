@@ -32,8 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
             .goNamed(MyAppRouteConstants.homeRouteName);
       } else {
         print("No Authtoken");
-        GoRouter.of(context)
-            .goNamed(MyAppRouteConstants.loginRouteName);
+        return context.goNamed(MyAppRouteConstants.loginRouteName);
       }
     });
   }

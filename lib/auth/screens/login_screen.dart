@@ -313,7 +313,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(width: width * .01),
                         InkWell(
                           onTap: () {
-                            GoRouter.of(context).pop();
                             GoRouter.of(context)
                                 .pushNamed(MyAppRouteConstants.signupRouteName);
                           },

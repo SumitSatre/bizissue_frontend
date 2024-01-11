@@ -45,6 +45,8 @@ dependencies:
   month_year_picker: ^0.3.0+1
   month_picker_dialog: ^2.2.1
   pin_input_text_field: ^4.1.0
+  firebase_core: ^2.24.2
+  
 
 dev_dependencies:
   flutter_test:

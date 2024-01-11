@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1066560007292",
+    "project_id": "biznetize-5ea34",
+    "storage_bucket": "biznetize-5ea34.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1066560007292:android:7134423b72c3348dd6edf9",
+        "android_client_info": {
+          "package_name": "com.example.bizissue"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfmbs0LDxwwW2rcouPkZOCXcKoC0cMbXM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
