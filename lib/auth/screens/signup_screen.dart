@@ -352,8 +352,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                       bool result = await controller
                                           .verifySignupOtp(context);
                                       if (result) {
-                                        GoRouter.of(context)
-                                            .pushNamed(MyAppRouteConstants.homeRouteName);
+                                        GoRouter.of(context).pop();
+                                        GoRouter.of(context).goNamed(MyAppRouteConstants.homeRouteName);
                                       }
                                     },
                                     on: true,

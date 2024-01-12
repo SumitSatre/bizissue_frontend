@@ -5,6 +5,7 @@ import 'package:bizissue/business_home_page/screens/controller/business_controll
 import 'package:bizissue/business_home_page/screens/controller/business_requests_controller.dart';
 import 'package:bizissue/business_home_page/screens/controller/create_business_controller.dart';
 import 'package:bizissue/business_home_page/screens/controller/create_issue_controller.dart';
+import 'package:bizissue/business_home_page/screens/controller/group_controller.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/routes/app_route_config.dart';
 import 'package:bizissue/utils/colors.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CreateIssueProvider()),
         ChangeNotifierProvider(create: (_) => CreateBusinessProvider()),
         ChangeNotifierProvider(create: (_) => BusinessRequestsProvider()),
+        ChangeNotifierProvider(create: (_) => GroupProvider()),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,

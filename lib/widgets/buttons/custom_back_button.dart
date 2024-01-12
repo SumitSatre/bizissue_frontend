@@ -27,7 +27,7 @@ class CustomBackButton extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () {
-          GoRouter.of(context).goNamed(MyAppRouteConstants.businessRouteName);
+          GoRouter.of(context).pop();
         },
         child: const Icon(
           Icons.arrow_back_sharp,

@@ -1,3 +1,4 @@
+import 'package:bizissue/business_home_page/widgets/empty_screen.dart';
 import 'package:bizissue/business_home_page/widgets/request_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -47,6 +48,11 @@ class BusinessRequestsPage extends StatelessWidget {
                   return Center(child: Text('Error loading data'));
                 } else {
                   List<RequestUserModel> userList = snapshot.data!;
+
+                  if(userList.length < 1){
+                  return Center(child: EmptyScreen());
+                  }
+
                   return ListView.builder(
                     itemCount: userList.length,
                     itemBuilder: (context, index) {

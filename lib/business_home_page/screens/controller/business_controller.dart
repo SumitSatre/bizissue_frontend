@@ -22,6 +22,10 @@ class BusinessController extends ChangeNotifier {
 
   String selectedBusiness = "";
 
+  String selectedBCDFilter = "All";
+
+  bool isSwitched = true;
+
   void init(String id) async {
     pageController = PageController();
     await sendUserGetRequest(id);
@@ -69,4 +73,11 @@ class BusinessController extends ChangeNotifier {
     _businessModel = null;
     notifyListeners();
   }
+
+  Future<void> onRefresh() async {
+    await sendUserGetRequest(selectedBusiness);
+    notifyListeners();
+  }
+
+
 }

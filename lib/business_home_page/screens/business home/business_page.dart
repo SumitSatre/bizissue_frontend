@@ -1,7 +1,7 @@
 import 'package:bizissue/business_home_page/screens/business%20home/activity_page.dart';
 import 'package:bizissue/business_home_page/screens/controller/business_controller.dart';
 import 'package:bizissue/business_home_page/screens/business%20home/create_issue_page.dart';
-import 'package:bizissue/business_home_page/screens/empty_screen.dart';
+import 'package:bizissue/business_home_page/widgets/empty_screen.dart';
 import 'package:bizissue/business_home_page/screens/business%20home/group_page.dart';
 import 'package:bizissue/business_home_page/widgets/appBar.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';

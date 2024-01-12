@@ -30,7 +30,7 @@ class EmptyScreen extends StatelessWidget{
 
           SizedBox(height: height*0.005,),
 
-          Text("You haven’t created any issue!!"),
+          Text("You haven’t any data!!"),
 
           SizedBox(height: height*0.04,),
 

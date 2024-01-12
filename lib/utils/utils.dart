@@ -29,3 +29,28 @@ bool isValidDateFormat(String dateString) {
   // Test if the provided string matches the regular expression
   return regex.hasMatch(dateString);
 }
+
+String convertDateFormat(String inputDate) {
+  // Split the input date into year, month, and day
+  List<String> dateParts = inputDate.split('-');
+
+  // Ensure year, month, and day are in two-digit format
+  String year = dateParts[0].padLeft(4, '0');
+  String month = dateParts[1].padLeft(2, '0');
+  String day = dateParts[2].padLeft(2, '0');
+
+  // Return the formatted date
+  return '$year-$month-$day';
+}
+
+String getFormattedDate(DateTime date) {
+  return '${date.year}-${_twoDigits(date.month)}-${_twoDigits(date.day)}';
+}
+
+String _twoDigits(int n) {
+  if (n >= 10) {
+    return '$n';
+  } else {
+    return '0$n';
+  }
+}

@@ -97,9 +97,9 @@ Map<String, dynamic> _$BusinessInfoToJson(BusinessInfo instance) =>
     };
 
 TeamIssue _$TeamIssueFromJson(Map<String, dynamic> json) => TeamIssue(
-      nextFollowUpDate: json['nextFollowUpDate'] as String,
-      issues: (json['issues'] as List<dynamic>)
-          .map((e) => IssueShort.fromJson(e as Map<String, dynamic>))
+      nextFollowUpDate: json['nextFollowUpDate'] as String?,
+      issues: (json['issues'] as List<dynamic>?)
+          ?.map((e) => IssueShort.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

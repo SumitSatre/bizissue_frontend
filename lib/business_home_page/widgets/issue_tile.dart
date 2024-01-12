@@ -53,7 +53,7 @@ class CustomIssueTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '${issue.deliveryDate.toString()}',
+                '${issue.nextFollowUpDate.toString()}',
                 style: TextStyle(
                   color: Colors.grey,
                 ),

@@ -97,7 +97,7 @@ class _MyDrawerState extends State<MyDrawer> {
 
                 onTap: (){
                   GoRouter.of(context).pop();   // pop the drawer
-                  GoRouter.of(context).goNamed(MyAppRouteConstants.createBusinessRouteName);
+                  GoRouter.of(context).pushNamed(MyAppRouteConstants.createBusinessRouteName);
                 },
               ),
 
@@ -113,7 +113,7 @@ class _MyDrawerState extends State<MyDrawer> {
                 ),
                 onTap: (){
                   GoRouter.of(context).pop();   // pop the drawer
-                  GoRouter.of(context).goNamed(MyAppRouteConstants.joinBusinessRouteName);
+                  GoRouter.of(context).pushNamed(MyAppRouteConstants.joinBusinessRouteName);
                 },
               ),
 
@@ -172,6 +172,10 @@ class _MyDrawerState extends State<MyDrawer> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                onTap: (){
+                  SharedPreferenceService().clearLogin();
+                  GoRouter.of(context).goNamed(MyAppRouteConstants.loginRouteName);
+                },
               ),
             ],
           ),
