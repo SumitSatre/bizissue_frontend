@@ -1,13 +1,11 @@
-import 'package:bizissue/auth/models/dropdown_lists.dart';
-import 'package:bizissue/auth/screens/controllers/login_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:bizissue/utils/colors.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:bizissue/auth/screens/controllers/login_provider.dart';
+import 'package:bizissue/auth/models/dropdown_lists.dart';
+import 'package:bizissue/utils/colors.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/cupertino.dart';
-
 import '../../utils/routes/app_route_constants.dart';
 import '../../widgets/buttons/round_cornered_button.dart';
 
@@ -25,15 +23,15 @@ class _LoginScreenState extends State<LoginScreen> {
     double width = MediaQuery.of(context).size.width;
     double textScale = MediaQuery.textScaleFactorOf(context);
 
-    return Consumer<LoginProvider>(
-        builder: (context, controller, child) {
-          return Scaffold(
+    return Consumer<LoginProvider>(builder: (context, controller, child) {
+      return Stack(
+        children: [
+          Scaffold(
             body: SingleChildScrollView(
-              // physics: BouncingScrollPhysics(),
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                  vertical: height * .02,
-                  horizontal: width * .06,
+                  vertical: height * 0.02,
+                  horizontal: width * 0.06,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -54,7 +52,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     SizedBox(height: height * 0.03),
-                    // *** More space lefted ***
                     const Row(
                       children: [
                         SizedBox(width: 5),
@@ -79,11 +76,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               height: 50,
                               width: width * 0.19,
                               decoration: BoxDecoration(
-                                  border: Border.all(
-                                    style: BorderStyle.solid,
-                                    color: Colors.grey,
-                                  ),
-                                  borderRadius: BorderRadius.circular(12)),
+                                border: Border.all(
+                                  style: BorderStyle.solid,
+                                  color: Colors.grey,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
                               child: DropdownButtonHideUnderline(
                                 child: DropdownButton<String>(
                                   icon: const Align(
@@ -95,7 +93,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   elevation: 4,
                                   style: const TextStyle(
-                                      color: Colors.black, fontSize: 14),
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                  ),
                                   value: controller.countryCodeController.text,
                                   onChanged: (code) {
                                     setState(() {
@@ -104,8 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     });
                                   },
                                   items: countryCodesList
-                                      .map<DropdownMenuItem<String>>((
-                                      String s) {
+                                      .map<DropdownMenuItem<String>>((String s) {
                                     return DropdownMenuItem<String>(
                                       value: s,
                                       child: Text("  $s"),
@@ -124,10 +123,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: 50,
                           child: TextFormField(
                             inputFormatters: [
-                              LengthLimitingTextInputFormatter(
-                                  10), // Limits input to 10 characters
-                              FilteringTextInputFormatter
-                                  .digitsOnly, // Allows only digits
+                              LengthLimitingTextInputFormatter(10),
+                              FilteringTextInputFormatter.digitsOnly,
                             ],
                             initialValue: '',
                             onChanged: (value) {
@@ -143,10 +140,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               hintText: "Enter Contact Number",
                               hintStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14,
-                                  color: Colors.grey.shade600),
+                                fontFamily: "Poppins",
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                                color: Colors.grey.shade600,
+                              ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(16),
                                 borderSide: const BorderSide(
@@ -173,121 +171,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: height * 0.055,
                       child: ElevatedButton(
                         onPressed: () async {
-                          bool result = await controller.login(context);
-
-                          if (result) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return Dialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  child: SingleChildScrollView(
-                                    padding: EdgeInsets.all(20),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment
-                                              .end,
-                                          children: [
-                                            TextButton(
-                                              onPressed: () {
-                                                // Navigator.of(context).pop();
-                                              },
-                                              child: Icon(
-                                                Icons.close,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Image(
-                                          image: AssetImage(
-                                              "assets/images/google_icon.png"),
-                                          height: 40,
-                                          fit: BoxFit.fitHeight,
-                                        ),
-                                        SizedBox(height: 20),
-                                        Text(
-                                          "Enter Verification Code",
-                                          style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                        SizedBox(height: 5),
-                                        Text(
-                                          "We sent a 6-digit code to your number",
-                                          style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                        SizedBox(height: 20),
-                                        Container(
-                                          height: height * 0.06,
-                                          child: Pinput(
-                                            length: 6,
-                                            showCursor: true,
-                                            onCompleted: (pin) {
-                                              controller.otpCodeController
-                                                  .text =
-                                              (pin == null) ? '' : pin
-                                                  .toString();
-                                              print("This is $pin");
-                                            },
-                                            onChanged: (value) {},
-                                          ),
-                                        ),
-                                        //Container(
-                                        //  alignment: Alignment.centerLeft,
-                                        //  child: CupertinoButton(
-                                        //    onPressed: () {},
-                                        //    child: Text(
-                                        //      "Request new code",
-                                        //      style: TextStyle(
-                                        //        fontFamily: "Poppins",
-                                        //        height: 1.5,
-                                        //        color: Color(0XFFAD2F3B),
-                                        //      ),
-                                        //    ),
-                                        //  ),
-                                        //),
-                                        SizedBox(height: 20),
-                                        RoundCorneredButton(
-                                          buttonText: "Submit",
-                                          onClick: () async {
-                                            bool result = await controller
-                                                .verifyLoginOtp(context);
-                                            if (result) {
-                                              GoRouter.of(context).pop();
-                                              GoRouter.of(context).goNamed(MyAppRouteConstants.homeRouteName);
-                                            }
-                                          },
-                                          on: true,
-                                          width: 251,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          }
-
-                          // result ended
+                          await controller.sendOTP(context);
                         },
                         style: ButtonStyle(
-                          foregroundColor:
-                          MaterialStateProperty.all<Color>(Colors.white),
-                          backgroundColor:
-                          MaterialStateProperty.all<Color>(kprimaryColor),
-                          shape: MaterialStateProperty.all<
-                              RoundedRectangleBorder>(
+                          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                          backgroundColor: MaterialStateProperty.all<Color>(kprimaryColor),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18),
                             ),
@@ -310,11 +199,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontSize: 16,
                           ),
                         ),
-                        SizedBox(width: width * .01),
+                        SizedBox(width: width * 0.01),
                         InkWell(
                           onTap: () {
-                            GoRouter.of(context)
-                                .pushNamed(MyAppRouteConstants.signupRouteName);
+                            GoRouter.of(context).pushNamed(MyAppRouteConstants.signupRouteName);
                           },
                           child: const Text(
                             "Register Now",
@@ -326,13 +214,21 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
             ),
-          );
-        }
-    );
+          ),
+          if (controller.isSendingOTP) // Show circular progress indicator conditionally
+            Container(
+              color: Colors.black.withOpacity(0.5),
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+        ],
+      );
+    });
   }
 }

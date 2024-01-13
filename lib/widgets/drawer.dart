@@ -1,4 +1,6 @@
 import 'package:bizissue/business_home_page/screens/controller/business_controller.dart';
+import 'package:bizissue/business_home_page/screens/controller/business_requests_controller.dart';
+import 'package:bizissue/business_home_page/screens/controller/create_issue_controller.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/routes/app_route_constants.dart';
 import 'package:bizissue/utils/services/shared_preferences_service.dart';
@@ -24,6 +26,8 @@ class _MyDrawerState extends State<MyDrawer> {
     final controller = Provider.of<HomeProvider>(context, listen: false);
     final businessController =
     Provider.of<BusinessController>(context, listen: false);
+    final IssueController = Provider.of<CreateIssueProvider>(context, listen: false);
+    final businessRequestController = Provider.of<BusinessRequestsProvider>(context, listen: false);
 
     return Drawer(
       child: Container(
@@ -174,6 +178,10 @@ class _MyDrawerState extends State<MyDrawer> {
                 ),
                 onTap: (){
                   SharedPreferenceService().clearLogin();
+                //  IssueController.clear();
+                //  businessRequestController.clear();
+                //  businessController.clear();
+                //  controller.dispose();
                   GoRouter.of(context).goNamed(MyAppRouteConstants.loginRouteName);
                 },
               ),

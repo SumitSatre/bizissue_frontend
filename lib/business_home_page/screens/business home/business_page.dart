@@ -46,7 +46,7 @@ class _BusinessPageState extends State<BusinessPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Your token has expired.please login again"),
+                  const Text("Something got wrong please try again!!"),
                   const SizedBox(
                     height: 20,
                   ),

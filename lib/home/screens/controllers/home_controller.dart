@@ -24,12 +24,12 @@ class HomeProvider extends ChangeNotifier {
 
   String selectedBusiness = "";
 
-  void init() async {
+  void init(BuildContext context) async {
     pageController = PageController();
-    await sendUserGetRequest();
+    await sendUserGetRequest(context);
   }
 
-  Future<void> sendUserGetRequest() async {
+  Future<void> sendUserGetRequest(BuildContext context) async {
     String accessToken = await SharedPreferenceService().getAccessToken();
     ApiHttpResponse response =
     await callUserGetMethod("user", accessToken);
@@ -43,7 +43,14 @@ class HomeProvider extends ChangeNotifier {
         selectedBusiness = _userModel!.businesses[0].businessId;
       }
       notifyListeners();
-    } else {
+    }
+    else if(response.responseCode == 401){
+      GoRouter.of(context).goNamed(MyAppRouteConstants.loginRouteName); // Token error solved
+      print("TOken error happened");
+      return;
+      notifyListeners();
+    }
+    else {
       _isError = true;
       notifyListeners();
     }

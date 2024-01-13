@@ -1,3 +1,4 @@
+import 'package:bizissue/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class RoundCorneredButton extends StatelessWidget {
@@ -16,7 +17,7 @@ class RoundCorneredButton extends StatelessWidget {
         onPressed : onClick,
         style:
         ButtonStyle(
-          backgroundColor: on == true ? MaterialStateProperty.all<Color>(Color(0xFFAD2F3B)) : MaterialStateProperty.all<Color>(Colors.white),
+          backgroundColor: on == true ? MaterialStateProperty.all<Color>(kprimaryColor) : MaterialStateProperty.all<Color>(Colors.white),
         ),
         child: Text(
           buttonText,
@@ -24,7 +25,7 @@ class RoundCorneredButton extends StatelessWidget {
             fontWeight: FontWeight.w600,
             fontFamily: "Poppins",
             fontSize: 12,
-            color: on ? Colors.white : Color(0xFFAD2F3B),
+            color: on ? Colors.white :kprimaryColor,
           ),
         )
         ),

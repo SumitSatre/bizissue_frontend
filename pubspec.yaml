@@ -46,6 +46,7 @@ dependencies:
   month_picker_dialog: ^2.2.1
   pin_input_text_field: ^4.1.0
   firebase_core: ^2.24.2
+  firebase_auth: ^4.16.0
   intl: ^0.18.0
   flutter_xlider: ^3.5.0
   toggle_switch: ^2.1.0

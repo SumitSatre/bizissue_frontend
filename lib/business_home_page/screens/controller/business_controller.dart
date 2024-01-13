@@ -3,8 +3,10 @@ import 'dart:convert';
 
 import 'package:bizissue/api%20repository/product_repository.dart';
 import 'package:bizissue/business_home_page/models/business_model.dart';
+import 'package:bizissue/utils/routes/app_route_constants.dart';
 import 'package:bizissue/utils/services/shared_preferences_service.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../api repository/api_http_response.dart';
 
@@ -31,6 +33,11 @@ class BusinessController extends ChangeNotifier {
     await sendUserGetRequest(id);
   }
 
+  void clear(){
+    _businessModel = null;
+    notifyListeners();
+  }
+
   Future<void> sendUserGetRequest(String id) async {
     print("This is id : $id");
     String accessToken = await SharedPreferenceService().getAccessToken();
@@ -39,7 +46,7 @@ class BusinessController extends ChangeNotifier {
     final data = jsonDecode(response.responceString!);
     debugPrint(data.toString());
     if (response.responseCode == 200) {
-      print("This is data ${data["data"]}");
+      // print("This is data ${data["data"]}");
       _businessModel = BusinessModel.fromJson(data["data"]);
       notifyListeners();
     } else {
@@ -71,13 +78,14 @@ class BusinessController extends ChangeNotifier {
 
   void setBusinessModelNull(){
     _businessModel = null;
+    _page = 0;
     notifyListeners();
   }
 
-  Future<void> onRefresh() async {
-    await sendUserGetRequest(selectedBusiness);
+  Future<void> onRefresh(BuildContext context) async {
+    setBusinessModelNull();
+    GoRouter.of(context).goNamed(MyAppRouteConstants.businessRouteName);
     notifyListeners();
   }
-
 
 }

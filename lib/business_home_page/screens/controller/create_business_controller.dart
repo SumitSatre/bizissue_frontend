@@ -5,10 +5,15 @@ import 'package:bizissue/api%20repository/product_repository.dart';
 import 'package:bizissue/business_home_page/models/create_business_model.dart';
 import 'package:bizissue/business_home_page/models/create_issue_model.dart';
 import 'package:bizissue/business_home_page/models/user_list_model.dart';
+import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/colors.dart';
+import 'package:bizissue/utils/routes/app_route_constants.dart';
 import 'package:bizissue/utils/services/shared_preferences_service.dart';
 import 'package:bizissue/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
 
 class CreateBusinessProvider extends ChangeNotifier {
 
@@ -39,10 +44,19 @@ class CreateBusinessProvider extends ChangeNotifier {
           _createBusinessModel!.toJson(), 'business/create', accessToken);
 
       if (response.responseCode == 200) {
+        final homeController = Provider.of<HomeProvider>(context, listen: false);
+
+        homeController.init(context);
+        GoRouter.of(context).goNamed(MyAppRouteConstants.homeRouteName);
         showSnackBar(context, "Business created Successfully!!", successColor);
 
+
+        nameController.clear();
+        industryTypeController.clear();
+        cityController.clear();
+        countryController.clear();
+
         notifyListeners();
-        dispose();
       } else {
         final data = jsonDecode(response.responceString ?? "");
         // Handle other status codes if needed
@@ -139,10 +153,6 @@ class CreateBusinessProvider extends ChangeNotifier {
 
   @override
   void dispose() {
-    nameController.clear();
-    industryTypeController.clear();
-    cityController.clear();
-    countryController.clear();
     super.dispose();
   }
 

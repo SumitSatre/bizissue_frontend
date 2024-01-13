@@ -150,16 +150,16 @@ class IssueShort {
 @JsonSerializable()
 class BusinessInfo {
   String name;
-  String industryType;
-  String city;
-  String country;
+  String? industryType;
+  String? city;
+  String? country;
   String businessId;
 
   BusinessInfo({
     required this.name,
-    required this.industryType,
-    required this.city,
-    required this.country,
+     this.industryType,
+     this.city,
+     this.country,
     required this.businessId,
   });
 

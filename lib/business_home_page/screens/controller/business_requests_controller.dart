@@ -3,12 +3,20 @@ import 'dart:convert';
 import 'package:bizissue/api%20repository/api_http_response.dart';
 import 'package:bizissue/api%20repository/product_repository.dart';
 import 'package:bizissue/business_home_page/models/request_user_model.dart';
+import 'package:bizissue/business_home_page/models/user_list_model.dart';
+import 'package:bizissue/utils/colors.dart';
 import 'package:bizissue/utils/services/shared_preferences_service.dart';
+import 'package:bizissue/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class BusinessRequestsProvider extends ChangeNotifier{
   List<RequestUserModel>? _userRequestlist;
   List<RequestUserModel>? get userRequestlist => _userRequestlist;
+
+  UserRoleModel? _userRoleModel;
+  UserRoleModel? get userRoleModel => _userRoleModel;
+
+  String? nameOfAssignToUser = null;
 
   Future<List<RequestUserModel>> getRequestsList(String id) async {
     if (_userRequestlist == null) {
@@ -35,5 +43,121 @@ class BusinessRequestsProvider extends ChangeNotifier{
 
     // If _userlistModel is not null, return the cached list
     return _userRequestlist!;
+  }
+  void updateAssignTo(UserListModel? userListItem) {
+    if(userListItem != null){
+      if (_userRoleModel != null ) {
+        _userRoleModel = _userRoleModel!.copyWith(
+          parentId: userListItem.userId,
+        );
+        // print("${userListItem.toJson()}");
+      } else {
+        _userRoleModel = UserRoleModel(parentId: userListItem!.userId);
+      }
+
+      print("Parent id is : ${_userRoleModel?.parentId ?? "No user"}");
+    }
+
+    notifyListeners();
+  }
+
+  void updateRole(String? role){
+    if (_userRoleModel != null ) {
+      _userRoleModel = _userRoleModel!.copyWith(
+        role: role,
+      );
+      // print("${userListItem.toJson()}");
+    } else {
+      _userRoleModel = UserRoleModel(role: role,);
+    }
+    print("Role is : ${_userRoleModel?.role ?? "No role"}");
+    notifyListeners();
+  }
+
+  void acceptRequestPost(BuildContext context , String id) async {
+
+    if(!areAllFieldsFilled()){
+      showSnackBar(context, "Fill complete details!!", invalidColor);
+      return;
+    }
+    String accessToken = await SharedPreferenceService().getAccessToken();
+
+    print(jsonEncode(_userRoleModel!.toJson()));
+
+    ApiHttpResponse response = await callUserPostMethod(
+        _userRoleModel!.toJson(), 'business/add/user/${id}', accessToken);
+
+    final data = jsonDecode(response.responceString!);
+
+    if (response.responseCode == 200) {
+      showSnackBar(context, "Request accepted Successfully!!", successColor);
+      _userRoleModel = null;
+      notifyListeners();
+    }
+    debugPrint(response.responceString);
+  }
+
+  bool areAllFieldsFilled() {
+    // Check if all required fields are filled and not empty
+    return _userRoleModel != null &&
+        _userRoleModel!.role != null &&
+        _userRoleModel!.role!.isNotEmpty &&
+        _userRoleModel!.parentId != null &&
+        _userRoleModel!.parentId!.isNotEmpty &&
+        _userRoleModel!.parentId != null &&
+        _userRoleModel!.parentId!.isNotEmpty;
+  }
+
+  void setUserId(String userId){
+    if (_userRoleModel != null ) {
+      _userRoleModel = _userRoleModel!.copyWith(
+        userId: userId,
+      );
+      // print("${userListItem.toJson()}");
+    } else {
+      _userRoleModel = UserRoleModel(userId: userId,);
+    }
+    print("Role is : ${_userRoleModel?.role ?? "No role"}");
+    notifyListeners();
+  }
+}
+
+class UserRoleModel {
+  final String? role;
+  final String? parentId;
+  final String? userId;
+
+  UserRoleModel({
+    this.role,
+    this.parentId,
+    this.userId,
+  });
+
+  factory UserRoleModel.fromJson(Map<String, dynamic> json) {
+    return UserRoleModel(
+      role: json['role'] ?? "",
+      parentId: json['parentId'] ?? "",
+      userId: json['userId'] ?? "",
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'role': role,
+      'parentId': parentId,
+      'userId': userId,
+    }..removeWhere((key, value) => value == null);
+  }
+
+  UserRoleModel copyWith({
+    String? role,
+    String? parentId,
+    String? userId,
+  }) {
+    return UserRoleModel(
+      role: role ?? this.role,
+      parentId: parentId ?? this.parentId,
+      userId: userId ?? this.userId,
+    );
   }
 }

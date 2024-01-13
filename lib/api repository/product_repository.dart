@@ -64,9 +64,18 @@ Future<ApiHttpResponse> callUserPostMethod(
     return apiResponse;
   } on SocketException catch (_) {
     ApiHttpResponse apiResponse = ApiHttpResponse();
+    apiResponse.responseCode = 503;
+    apiResponse.responceString = json.encode({
+      "success": false,
+      "message": "Service temporarily unavailable due to internet connection issues",
+    });
+    return apiResponse;
+  } on http.ClientException catch (e) {
+    // Handle token-related issues
+    ApiHttpResponse apiResponse = ApiHttpResponse();
     apiResponse.responseCode = 401;
     apiResponse.responceString = json.encode(
-        {"success": false, "message": AppRemoteRoutes.internetConnectionMsg});
+        {"success": false, "message": "Token is Invalid"});
     return apiResponse;
   } catch (e) {
     debugPrint("catch error $e");

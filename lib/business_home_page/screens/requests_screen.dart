@@ -1,3 +1,4 @@
+import 'package:bizissue/business_home_page/widgets/accpet_request_dialog.dart';
 import 'package:bizissue/business_home_page/widgets/empty_screen.dart';
 import 'package:bizissue/business_home_page/widgets/request_tile.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +58,10 @@ class BusinessRequestsPage extends StatelessWidget {
                     itemCount: userList.length,
                     itemBuilder: (context, index) {
                       RequestUserModel user = userList[index];
-                      return RequestTile(name: user.name, contactNumber: user.contactNumber, onAccept: () {}, onReject: () {});
+                      return RequestTile(name: user.name, contactNumber: user.contactNumber, onAccept: () {
+                        showDialog(context: context, builder: (context) => UserSelectionDialog(userId: user.userId,));
+                      },
+                          onReject: () {});
                     },
                   );
                 }

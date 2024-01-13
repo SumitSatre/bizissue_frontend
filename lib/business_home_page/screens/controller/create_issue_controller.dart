@@ -27,6 +27,11 @@ class CreateIssueProvider extends ChangeNotifier {
     await Future.delayed(Duration(seconds: 2));
   }
 
+  void clear(){
+    _createIssueModel = null ;
+    _userlistModel = null;
+  }
+
   Future<List<UserListModel>> getUsersList(String id) async {
     if (_userlistModel == null) {
       print("This is id : $id");

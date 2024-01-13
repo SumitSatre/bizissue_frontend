@@ -1,5 +1,7 @@
 import 'package:bizissue/auth/screens/login_screen.dart';
 import 'package:bizissue/auth/screens/signup_screen.dart';
+import 'package:bizissue/auth/screens/verify_login_otp.dart';
+import 'package:bizissue/auth/screens/verify_signup_otp.dart';
 import 'package:bizissue/business_home_page/screens/create_business.dart';
 import 'package:bizissue/business_home_page/screens/join_business.dart';
 import 'package:bizissue/business_home_page/screens/requests_screen.dart';
@@ -76,6 +78,28 @@ class MyAppRouter {
           path: '/home/business/requests',
           pageBuilder: (BuildContext context,GoRouterState state) {
             return MaterialPage(child: BusinessRequestsPage());
+          },
+        ),
+
+        GoRoute(
+          name: MyAppRouteConstants.verifyRouteName,
+          path: '/login/verify/:VerificationId',
+          pageBuilder: (BuildContext context,GoRouterState state) {
+            return MaterialPage(
+                child: MyOtp(
+                  VerificationId: state.params['VerificationId']!,
+                ));
+          },
+        ),
+
+        GoRoute(
+          name: MyAppRouteConstants.verifySignUpRouteName,
+          path: '/signup/verify/:VerificationId',
+          pageBuilder: (BuildContext context,GoRouterState state) {
+            return MaterialPage(
+                child: MySignUpOtp(
+                  VerificationId: state.params['VerificationId']!,
+                ));
           },
         ),
 

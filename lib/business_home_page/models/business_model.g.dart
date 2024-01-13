@@ -81,9 +81,9 @@ Map<String, dynamic> _$IssueShortToJson(IssueShort instance) =>
 
 BusinessInfo _$BusinessInfoFromJson(Map<String, dynamic> json) => BusinessInfo(
       name: json['name'] as String,
-      industryType: json['industryType'] as String,
-      city: json['city'] as String,
-      country: json['country'] as String,
+      industryType: json['industryType'] as String?,
+      city: json['city'] as String?,
+      country: json['country'] as String?,
       businessId: json['_id'] as String,
     );
 

@@ -2,9 +2,12 @@
 
 import 'dart:convert';
 import 'package:bizissue/api%20repository/api_http_response.dart';
+import 'package:bizissue/utils/routes/app_route_constants.dart';
 import 'package:bizissue/utils/services/shared_preferences_service.dart';
 import 'package:bizissue/utils/utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -19,6 +22,8 @@ class SignupProvider extends ChangeNotifier {
   // String message = "";
   String _accessToken = "";
   bool _isRequestSent = false;
+
+  bool isSendingOTP = false;
 
   bool get isRequestSent => _isRequestSent;
 
@@ -69,7 +74,6 @@ class SignupProvider extends ChangeNotifier {
   Future<bool> verifySignupOtp(BuildContext context) async {
 
     if (numberController.text.isNotEmpty && numberController.text.length == 10 && nameController.text.isNotEmpty) {
-      if (otpCodeController.text.length == 6) {
         String res = await verifySignupOtpRequest();
 
         if (res == "Login request for verification sent successfully") {
@@ -80,14 +84,8 @@ class SignupProvider extends ChangeNotifier {
           showSnackBar(context, res, Colors.red);
           return false;
         }
-      } else {
-        showSnackBar(context, "Otp is not valid", Colors.red);
-        Navigator.of(context).pop();
-        return false;
-      }
     } else {
       showSnackBar(context, "Please enter a valid contact number", Colors.red);
-      Navigator.of(context).pop();
       return false;
     }
   }
@@ -100,7 +98,7 @@ class SignupProvider extends ChangeNotifier {
           "countryCode": countryCodeController.text,
           "number": numberController.text,
         },
-        "otp": otpCodeController.text,
+        "otp": "123456",
         "name" : nameController.text
       },
       "auth/register/verify",
@@ -121,4 +119,85 @@ class SignupProvider extends ChangeNotifier {
 
     return res;
   }
+
+  Future<void> sendOTP(BuildContext context) async {
+    print("${countryCodeController.text}${numberController.text}");
+    if (numberController.text.isEmpty && numberController.text.length != 10) {
+
+      showSnackBar(context, "Please enter a valid contact number!!", Colors.red);
+      return;
+    }
+
+    isSendingOTP = true;
+    notifyListeners();
+
+    String phoneNumber = "${countryCodeController.text}${numberController.text}";
+    print("Number is : $phoneNumber");
+
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+
+    try {
+      await _auth.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          // Handle verification completed
+          isSendingOTP = false;
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          isSendingOTP = false;
+          notifyListeners();
+          showSnackBar(context, "Unable to send OTP!!", Colors.red);
+          print('Verification Failed: ${e.message}');
+        },
+        codeSent: (String verId, int? resendToken) async {
+          isSendingOTP = false;
+          GoRouter.of(context)
+              .pushNamed(MyAppRouteConstants.verifySignUpRouteName, params: {
+            'VerificationId': '${verId}'
+          });
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          isSendingOTP = false;
+          notifyListeners();
+          showSnackBar(context, "Unable to send OTP!!", Colors.red);
+        },
+      );
+    } catch (e) {
+      print('Error sending OTP: $e');
+      showSnackBar(context, "Unable to send OTP, enter a valid number!!", Colors.red);
+    }
+  }
+
+  Future<bool> verifyOTP(String verificationId, String smsCode) async {
+    try {
+      // Create a PhoneAuthCredential with the verification ID and SMS code
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: verificationId,
+        smsCode: smsCode,
+      );
+
+      // Sign in with the PhoneAuthCredential
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      // The user is now signed in, you can handle the signed-in user as needed.
+      print('OTP verification successful!');
+      return true;
+    } catch (e) {
+      // Handle errors during OTP verification
+      print('Error verifying OTP: $e');
+      return false;
+    }
+  }
+
+  void cancelVerification() {
+    FirebaseAuth.instance.verifyPhoneNumber(
+      phoneNumber: '', // You can pass any non-empty string here
+      verificationCompleted: (PhoneAuthCredential credential) {},
+      verificationFailed: (FirebaseAuthException e) {},
+      codeSent: (String verificationId, int? resendToken) {},
+      codeAutoRetrievalTimeout: (String verificationId) {},
+      timeout: Duration(seconds: 0), // Set timeout to 0 to cancel verification immediately
+    );
+  }
+
 }

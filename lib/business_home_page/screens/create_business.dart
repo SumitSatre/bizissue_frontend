@@ -52,46 +52,48 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
         ),
       ),
 
-      body: Padding(
-        padding: const EdgeInsets.only(left: 15, right: 15),
-        child: Column(
-          children: [
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 15, right: 15),
+          child: Column(
+            children: [
 
-            CustomTextField(
-              controller: createBusinessController.nameController,
-              onChanged: (p0) => createBusinessController.updateBusinessName(p0 ?? ""),
-              labelText: "Name*",
-            ),
-            SizedBox(height: height * 0.02),
+              CustomTextField(
+                controller: createBusinessController.nameController,
+                onChanged: (p0) => createBusinessController.updateBusinessName(p0 ?? ""),
+                labelText: "Name*",
+              ),
+              SizedBox(height: height * 0.02),
 
-            CustomTextField(
-              controller: createBusinessController.industryTypeController,
-              onChanged: (p0) => createBusinessController.updateBusinessIndustryType(p0 ?? ""),
-              labelText: "Industry type",
-            ),
-            SizedBox(height: height * 0.02),
+              CustomTextField(
+                controller: createBusinessController.industryTypeController,
+                onChanged: (p0) => createBusinessController.updateBusinessIndustryType(p0 ?? ""),
+                labelText: "Industry type",
+              ),
+              SizedBox(height: height * 0.02),
 
-            CustomTextField(
-              controller: createBusinessController.cityController,
-              onChanged: (p0) => createBusinessController.updateBusinessCity(p0 ?? ""),
-              labelText: "City",
-            ),
-            SizedBox(height: height * 0.02),
+              CustomTextField(
+                controller: createBusinessController.cityController,
+                onChanged: (p0) => createBusinessController.updateBusinessCity(p0 ?? ""),
+                labelText: "City",
+              ),
+              SizedBox(height: height * 0.02),
 
-            CustomTextField(
-              controller: createBusinessController.countryController,
-              onChanged: (p0) => createBusinessController.updateBusinessCountry(p0 ?? ""),
-              labelText: "Country",
-            ),
-            SizedBox(height: height * 0.02),
+              CustomTextField(
+                controller: createBusinessController.countryController,
+                onChanged: (p0) => createBusinessController.updateBusinessCountry(p0 ?? ""),
+                labelText: "Country",
+              ),
+              SizedBox(height: height * 0.02),
 
-            SubmitButton(
-              onPressed: () {
-                createBusinessController.createBusiness(context);
-              },
-            ),
+              SubmitButton(
+                onPressed: () {
+                  createBusinessController.createBusiness(context);
+                },
+              ),
 
-          ],
+            ],
+          ),
         ),
       ),
     );

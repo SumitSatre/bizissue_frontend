@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void callInit() {
-    Provider.of<HomeProvider>(context, listen: false).init();
+    Provider.of<HomeProvider>(context, listen: false).init(context);
   }
 
   @override
@@ -37,40 +37,42 @@ class _HomePageState extends State<HomePage> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return SafeArea(
-      child: Consumer<HomeProvider>(
-        builder: (context, ref, child) {
-          return ref.isError
-              ? Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("Your token has expired. Please login again!!"),
-                const SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Provider.of<HomeProvider>(context, listen: false)
-                        .updateisError();
-                    SharedPreferenceService().clearLogin();
-                    // Move to the login screen
-                    Navigator.of(context).pushNamed(MyAppRouteConstants.loginRouteName);
-                  },
-                  child: const Text("Login again"),
-                ),
-              ],
-            ),
-          )
-              : userModel == null
-              ? const Center(
-            child: CircularProgressIndicator(
-              color: kprimaryColor,
-            ),
-          )
-              : ref.selectedBusiness != ""
-              ? BusinessPage()
-              : NoBusinessHomePage();
-        },
+      child: Scaffold(
+        body: Consumer<HomeProvider>(
+          builder: (context, ref, child) {
+            return ref.isError
+                ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Something got wrong please try again!!"),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Provider.of<HomeProvider>(context, listen: false)
+                          .updateisError();
+                      SharedPreferenceService().clearLogin();
+                      // Move to the login screen
+                      Navigator.of(context).pushNamed(MyAppRouteConstants.loginRouteName);
+                    },
+                    child: const Text("Login again"),
+                  ),
+                ],
+              ),
+            )
+                : userModel == null
+                ? const Center(
+              child: CircularProgressIndicator(
+                color: kprimaryColor,
+              ),
+            )
+                : ref.selectedBusiness != ""
+                ? BusinessPage()
+                : NoBusinessHomePage();
+          },
+        ),
       ),
     );
   }
