@@ -8,6 +8,7 @@ import 'package:bizissue/utils/colors.dart';
 import 'package:bizissue/utils/services/shared_preferences_service.dart';
 import 'package:bizissue/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class BusinessRequestsProvider extends ChangeNotifier{
   List<RequestUserModel>? _userRequestlist;
@@ -19,7 +20,6 @@ class BusinessRequestsProvider extends ChangeNotifier{
   String? nameOfAssignToUser = null;
 
   Future<List<RequestUserModel>> getRequestsList(String id) async {
-    if (_userRequestlist == null) {
       print("This is id : $id");
       String accessToken = await SharedPreferenceService().getAccessToken();
       ApiHttpResponse response =
@@ -39,8 +39,6 @@ class BusinessRequestsProvider extends ChangeNotifier{
         // Handle the error case accordingly
         return []; // Or throw an exception, or handle it as needed
       }
-    }
-
     // If _userlistModel is not null, return the cached list
     return _userRequestlist!;
   }
@@ -90,8 +88,22 @@ class BusinessRequestsProvider extends ChangeNotifier{
     final data = jsonDecode(response.responceString!);
 
     if (response.responseCode == 200) {
+      print("Hi this is worked");
+      GoRouter.of(context).pop();
       showSnackBar(context, "Request accepted Successfully!!", successColor);
       _userRoleModel = null;
+//     if (_userRequestlist != null) {
+//       // Assuming id is the condition you want to use for removal
+//
+//       // Convert list to JSON using null-aware operator
+//       List<Map<String, dynamic>> jsonList = _userRequestlist?.map((user) => user.toJson())?.toList() ?? [];
+//
+//       // Remove the item from the JSON list
+//       jsonList.removeWhere((json) => json['id'] == id);
+//
+//       // Convert JSON list back to list of models using null-aware operator
+//       _userRequestlist = jsonList?.map((json) => RequestUserModel.fromJson(json))?.toList() ?? [];
+//     }
       notifyListeners();
     }
     debugPrint(response.responceString);
@@ -118,6 +130,12 @@ class BusinessRequestsProvider extends ChangeNotifier{
       _userRoleModel = UserRoleModel(userId: userId,);
     }
     print("Role is : ${_userRoleModel?.role ?? "No role"}");
+    notifyListeners();
+  }
+
+  void clear(){
+    _userRequestlist = null;
+    _userRoleModel = null;
     notifyListeners();
   }
 }

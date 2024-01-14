@@ -15,7 +15,7 @@ class NoBusinessAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-
+    final controller = Provider.of<HomeProvider>(context, listen: false);
     return Padding(
       padding: const EdgeInsets.symmetric(
         vertical: 5,
@@ -35,6 +35,13 @@ class NoBusinessAppBar extends StatelessWidget implements PreferredSizeWidget {
                      "Biznetize",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
+
+                  IconButton(
+                      onPressed: () async{
+                         controller.onRestart(context);
+                      },
+                      icon: Icon(Icons.restart_alt_rounded))
+
                 ],
               ),
             ],

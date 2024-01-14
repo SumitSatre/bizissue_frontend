@@ -13,7 +13,6 @@ class User {
   String userType;
   String role;
   List<String> subordinates;
-  List<String> allSubordinates;
 
   User({
     required this.contactNumber,
@@ -23,7 +22,6 @@ class User {
     required this.userType,
     required this.role,
     required this.subordinates,
-    required this.allSubordinates
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
@@ -38,7 +36,6 @@ class User {
     String? userType,
     String? role,
     List<String>? subordinates,
-    List<String>? allSubordinates,
   }) {
     return User(
       contactNumber: contactNumber ?? this.contactNumber,
@@ -48,7 +45,6 @@ class User {
       userType: userType ?? this.userType,
       role: role ?? this.role,
       subordinates: subordinates ?? this.subordinates,
-      allSubordinates: allSubordinates ?? this.allSubordinates
     );
   }
 }
@@ -150,16 +146,16 @@ class IssueShort {
 @JsonSerializable()
 class BusinessInfo {
   String name;
-  String? industryType;
-  String? city;
-  String? country;
+  String industryType; // Change from String? to String
+  String city;         // Change from String? to String
+  String country;      // Change from String? to String
   String businessId;
 
   BusinessInfo({
     required this.name,
-     this.industryType,
-     this.city,
-     this.country,
+    required this.industryType,
+    required this.city,
+    required this.country,
     required this.businessId,
   });
 

@@ -178,6 +178,9 @@ class _UserSelectionDialogState extends State<UserSelectionDialog> {
                 ),
               ),
             ),
+
+            SizedBox(height: height * 0.02),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -191,7 +194,6 @@ class _UserSelectionDialogState extends State<UserSelectionDialog> {
                   onPressed: () {
                     businessRequestController.setUserId(widget.userId);
                     businessRequestController.acceptRequestPost(context , homeController.selectedBusiness);
-                    GoRouter.of(context).pop();
                   },
                   child: Text("Submit"),
                 ),

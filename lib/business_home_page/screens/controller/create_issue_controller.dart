@@ -30,6 +30,7 @@ class CreateIssueProvider extends ChangeNotifier {
   void clear(){
     _createIssueModel = null ;
     _userlistModel = null;
+    notifyListeners();
   }
 
   Future<List<UserListModel>> getUsersList(String id) async {
@@ -166,5 +167,4 @@ class CreateIssueProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-
 }

@@ -19,9 +19,6 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
   subordinates: (json['subordinates'] as List<dynamic>)
       .map((e) => e as String)
       .toList(),
-  allSubordinates: (json['allSubordinates'] as List<dynamic>)
-      .map((e) => e as String)
-      .toList(),
 );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -32,7 +29,6 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
   'userType': instance.userType,
   'role': instance.role,
   'subordinates': instance.subordinates,
-  'allSubordinates': instance.allSubordinates,
 };
 
 MyIssues _$MyIssuesFromJson(Map<String, dynamic> json) => MyIssues(
@@ -81,9 +77,9 @@ Map<String, dynamic> _$IssueShortToJson(IssueShort instance) =>
 
 BusinessInfo _$BusinessInfoFromJson(Map<String, dynamic> json) => BusinessInfo(
   name: json['name'] as String,
-  industryType: json['industryType'] as String?,
-  city: json['city'] as String?,
-  country: json['country'] as String?,
+  industryType: json['industryType'] as String? ?? '', // Provide a default value for null
+  city: json['city'] as String? ?? '',                // Provide a default value for null
+  country: json['country'] as String? ?? '',          // Provide a default value for null
   businessId: json['_id'] as String,
 );
 

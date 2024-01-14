@@ -3,10 +3,12 @@ import 'dart:convert';
 
 import 'package:bizissue/api%20repository/product_repository.dart';
 import 'package:bizissue/business_home_page/models/business_model.dart';
+import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/routes/app_route_constants.dart';
 import 'package:bizissue/utils/services/shared_preferences_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import '../../../api repository/api_http_response.dart';
 
@@ -85,6 +87,13 @@ class BusinessController extends ChangeNotifier {
   Future<void> onRefresh(BuildContext context) async {
     setBusinessModelNull();
     GoRouter.of(context).goNamed(MyAppRouteConstants.businessRouteName);
+    notifyListeners();
+  }
+
+  Future<void> onRestart(BuildContext context) async {
+    setBusinessModelNull();
+    Provider.of<HomeProvider>(context).init(context);
+    GoRouter.of(context).goNamed(MyAppRouteConstants.homeRouteName);
     notifyListeners();
   }
 

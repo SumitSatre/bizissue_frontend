@@ -57,6 +57,7 @@ class _JoinBusinessPageState extends State<JoinBusinessPage> {
           children: [
             PinInputTextField(
               pinLength: 6,
+              keyboardType: TextInputType.text,
               controller: codeController,
               decoration: UnderlineDecoration(
                 textStyle: TextStyle(fontSize: 20, color: Colors.black),

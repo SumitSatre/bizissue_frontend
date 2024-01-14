@@ -6,6 +6,7 @@ import 'package:bizissue/utils/routes/app_route_constants.dart';
 import 'package:bizissue/utils/services/shared_preferences_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/user_model.dart';
 import '../../../business_home_page/screens/business home/business_home_page.dart';
@@ -93,6 +94,11 @@ class HomeProvider extends ChangeNotifier {
   void setNewBusiness(BuildContext context , String businessId){
     selectedBusiness = businessId;
     GoRouter.of(context).goNamed(MyAppRouteConstants.businessRouteName);
+    notifyListeners();
+  }
+
+  void onRestart(context){
+    Provider.of<HomeProvider>(context, listen: false).init(context);
     notifyListeners();
   }
 

@@ -1,3 +1,4 @@
+import 'package:bizissue/business_home_page/screens/controller/business_controller.dart';
 import 'package:bizissue/business_home_page/widgets/no_business_app_bar.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/colors.dart';
@@ -18,7 +19,7 @@ class NoBusinessHomePage extends StatelessWidget {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     final controller = Provider.of<HomeProvider>(context, listen: false);
-
+    final businessController = Provider.of<BusinessController>(context, listen: false);
     return Scaffold(
       appBar: NoBusinessAppBar(),
       body: Center(
@@ -32,11 +33,34 @@ class NoBusinessHomePage extends StatelessWidget {
               child: Container(
                 width: 200,
                 height: 200,
-                color: Colors.blue,
-                child: Center(
-                  child: Text(
-                    'Create Business',
-                    style: TextStyle(color: Colors.white),
+                decoration: BoxDecoration(
+                  color: kprimaryColor.withOpacity(0.4),
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Create Business',
+                        style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        'Join to get opportunities and manage your team',
+                        style: TextStyle(color: Colors.black, fontSize: 14),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -46,17 +70,41 @@ class NoBusinessHomePage extends StatelessWidget {
               onTap: () {
                 GoRouter.of(context).pushNamed(MyAppRouteConstants.joinBusinessRouteName);
               },
-              child: Container(
+              child:Container(
                 width: 200,
                 height: 200,
-                color: Colors.green,
-                child: Center(
-                  child: Text(
-                    'Join Business',
-                    style: TextStyle(color: Colors.white),
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Join Business',
+                        style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        'Join to get opportunities and manage your team',
+                        style: TextStyle(color: Colors.black, fontSize: 14),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
                 ),
               ),
+
             ),
           ],
         ),

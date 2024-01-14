@@ -79,6 +79,7 @@ class _MyDrawerState extends State<MyDrawer> {
                     ),
                     onTap: () {
                       GoRouter.of(context).pop();
+                      IssueController.clear();
                       businessController.setBusinessModelNull();
                       controller.setNewBusiness(context, business.businessId);
                     },

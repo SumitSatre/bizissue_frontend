@@ -76,9 +76,11 @@ class MyAppRouter {
 
         GoRoute(
           name: MyAppRouteConstants.businessRequestsRouteName,
-          path: '/home/business/requests',
+          path: '/home/business/requests/:businessId',
           pageBuilder: (BuildContext context,GoRouterState state) {
-            return MaterialPage(child: BusinessRequestsPage());
+            return MaterialPage(child: BusinessRequestsPage(
+              businessId: state.params['businessId']!,
+            ));
           },
         ),
 

@@ -1,7 +1,9 @@
+import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/routes/app_route_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class VeriticalMenuDropDown extends StatefulWidget {
   @override
@@ -14,7 +16,7 @@ class _VeriticalMenuDropDownState extends State<VeriticalMenuDropDown> {
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
-
+    final homeController = Provider.of<HomeProvider>(context, listen: false);
     return CupertinoButton(
       child: Icon(
         CupertinoIcons.ellipsis_vertical,
@@ -22,13 +24,13 @@ class _VeriticalMenuDropDownState extends State<VeriticalMenuDropDown> {
         size: 25,
       ),
       onPressed: () {
-        showDropdown(context);
+        showDropdown(context , homeController.selectedBusiness);
       },
     );
   }
 }
 
-void showDropdown(BuildContext context) async {
+void showDropdown(BuildContext context , String businessId) async {
   final RenderBox button = context.findRenderObject() as RenderBox;
   final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
 
@@ -59,7 +61,9 @@ void showDropdown(BuildContext context) async {
     // Navigate to the selected page using the route name
     if (routeName != null) {
       print("This is route : ${routeName}");
-      GoRouter.of(context).pushNamed(routeName);
+      GoRouter.of(context).pushNamed(MyAppRouteConstants.businessRequestsRouteName , params: {
+        "businessId" : businessId
+      });
     }
   }
 }
