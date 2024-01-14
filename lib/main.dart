@@ -1,3 +1,4 @@
+import 'package:bizissue/Issue/screens/controllers/issue_controller.dart';
 import 'package:bizissue/auth/screens/controllers/login_provider.dart';
 import 'package:bizissue/auth/screens/controllers/signup_provider.dart';
 import 'package:bizissue/auth/screens/splash_screen.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CreateBusinessProvider()),
         ChangeNotifierProvider(create: (_) => BusinessRequestsProvider()),
         ChangeNotifierProvider(create: (_) => GroupProvider()),
+        ChangeNotifierProvider(create: (_) => IssueProvider()),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,

@@ -131,11 +131,14 @@ class _BusinessHomePageState extends State<BusinessHomePage> {
                                   initialLabelIndex: controller.isSwitched
                                       ? 0
                                       : 1,
+                                  inactiveBgColor: kbackgroundColor,
+                                  activeBgColor: [kprimaryColor],
                                   fontSize: 13,
                                   multiLineText: true,
                                   minWidth: width*0.25,
                                   totalSwitches: 2,
                                   labels: ['My Issues', 'My Team Issues'],
+                                  centerText: true,
                                   onToggle: (index) {
                                     if(index == 0){
                                       controller.isSwitched = true;

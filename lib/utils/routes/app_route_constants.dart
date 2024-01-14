@@ -11,4 +11,5 @@ class MyAppRouteConstants {
   static const String businessRequestsRouteName = 'business_requests';
   static const String verifyRouteName = 'verify';
   static const String verifySignUpRouteName = 'verifyotp';
+  static const String issuePageRouteName = 'issue_Page';
 }

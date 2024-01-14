@@ -8,7 +8,9 @@ part of 'issue_model.dart';
 
 Blocked _$BlockedFromJson(Map<String, dynamic> json) => Blocked(
       isBlocked: json['isBlocked'] as bool,
-      blockedBy: BlockedBy.fromJson(json['blockedBy'] as Map<String, dynamic>),
+      blockedBy: json['blockedBy'] == null
+          ? null
+          : BlockedBy.fromJson(json['blockedBy'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$BlockedToJson(Blocked instance) => <String, dynamic>{
@@ -28,8 +30,10 @@ Map<String, dynamic> _$BlockedByToJson(BlockedBy instance) => <String, dynamic>{
 
 Critical _$CriticalFromJson(Map<String, dynamic> json) => Critical(
       isCritical: json['isCritical'] as bool,
-      markedCriticalBy:
-          CriticalBy.fromJson(json['markedCriticalBy'] as Map<String, dynamic>),
+      markedCriticalBy: json['markedCriticalBy'] == null
+          ? null
+          : CriticalBy.fromJson(
+              json['markedCriticalBy'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$CriticalToJson(Critical instance) => <String, dynamic>{
@@ -69,10 +73,10 @@ Map<String, dynamic> _$AssignedToToJson(AssignedTo instance) =>
       'id': instance.id,
     };
 
-Issue _$IssueFromJson(Map<String, dynamic> json) => Issue(
+IssueModel _$IssueModelFromJson(Map<String, dynamic> json) => IssueModel(
       issueId: json['issueId'] as String,
       title: json['title'] as String,
-      details: json['details'] as String,
+      details: json['details'] as String?,
       blocked: Blocked.fromJson(json['blocked'] as Map<String, dynamic>),
       critical: Critical.fromJson(json['critical'] as Map<String, dynamic>),
       delayed: json['delayed'] as int,
@@ -85,7 +89,8 @@ Issue _$IssueFromJson(Map<String, dynamic> json) => Issue(
       status: json['status'] as String,
     );
 
-Map<String, dynamic> _$IssueToJson(Issue instance) => <String, dynamic>{
+Map<String, dynamic> _$IssueModelToJson(IssueModel instance) =>
+    <String, dynamic>{
       'issueId': instance.issueId,
       'title': instance.title,
       'details': instance.details,

@@ -1,3 +1,4 @@
+import 'package:bizissue/Issue/screens/issue_page.dart';
 import 'package:bizissue/auth/screens/login_screen.dart';
 import 'package:bizissue/auth/screens/signup_screen.dart';
 import 'package:bizissue/auth/screens/verify_login_otp.dart';
@@ -99,6 +100,18 @@ class MyAppRouter {
             return MaterialPage(
                 child: MySignUpOtp(
                   VerificationId: state.params['VerificationId']!,
+                ));
+          },
+        ),
+
+        GoRoute(
+          name: MyAppRouteConstants.issuePageRouteName,
+          path: '/business/issue/:issueId/:businessId',
+          pageBuilder: (BuildContext context,GoRouterState state) {
+            return MaterialPage(
+                child: IssuePage(
+                  issueId: state.params['issueId']!,
+                  businessId: state.params['businessId']!,
                 ));
           },
         ),

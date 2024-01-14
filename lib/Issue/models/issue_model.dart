@@ -5,11 +5,11 @@ part 'issue_model.g.dart';
 @JsonSerializable()
 class Blocked {
   bool isBlocked;
-  BlockedBy blockedBy;
+  BlockedBy? blockedBy;
 
   Blocked({
     required this.isBlocked,
-    required this.blockedBy,
+      this.blockedBy,
   });
 
   factory Blocked.fromJson(Map<String, dynamic> json) =>
@@ -57,11 +57,11 @@ class BlockedBy {
 @JsonSerializable()
 class Critical {
   bool isCritical;
-  CriticalBy markedCriticalBy;
+  CriticalBy? markedCriticalBy;
 
   Critical({
     required this.isCritical,
-    required this.markedCriticalBy,
+     this.markedCriticalBy,
   });
 
   factory Critical.fromJson(Map<String, dynamic> json) =>
@@ -159,10 +159,10 @@ class AssignedTo {
 }
 
 @JsonSerializable()
-class Issue {
+class IssueModel {
   String issueId;
   String title;
-  String details;
+  String? details;
   Blocked blocked;
   Critical critical;
   int delayed;
@@ -173,10 +173,10 @@ class Issue {
   String nextFollowUpDate;
   String status;
 
-  Issue({
+  IssueModel({
     required this.issueId,
     required this.title,
-    required this.details,
+     this.details,
     required this.blocked,
     required this.critical,
     required this.delayed,
@@ -188,11 +188,11 @@ class Issue {
     required this.status,
   });
 
-  factory Issue.fromJson(Map<String, dynamic> json) => _$IssueFromJson(json);
+  factory IssueModel.fromJson(Map<String, dynamic> json) => _$IssueModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$IssueToJson(this);
+  Map<String, dynamic> toJson() => _$IssueModelToJson(this);
 
-  Issue copyWith({
+  IssueModel copyWith({
     String? issueId,
     String? title,
     String? details,
@@ -206,7 +206,7 @@ class Issue {
     String? nextFollowUpDate,
     String? status,
   }) {
-    return Issue(
+    return IssueModel(
       issueId: issueId ?? this.issueId,
       title: title ?? this.title,
       details: details ?? this.details,

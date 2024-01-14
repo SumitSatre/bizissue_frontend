@@ -24,17 +24,14 @@ class BusinessPage extends StatefulWidget {
 }
 
 class _BusinessPageState extends State<BusinessPage> {
-
   @override
   Widget build(BuildContext context) {
     final userModel = Provider.of<HomeProvider>(context).userModel;
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    final controller =
-    Provider.of<HomeProvider>(context, listen: false);
+    final controller = Provider.of<HomeProvider>(context, listen: false);
 
-    final ref =
-    Provider.of<BusinessController>(context, listen: false);
+    final ref = Provider.of<BusinessController>(context, listen: false);
 
     return SafeArea(
       child: Scaffold(
@@ -43,110 +40,108 @@ class _BusinessPageState extends State<BusinessPage> {
           child: Consumer<HomeProvider>(builder: (context, ref, child) {
             return ref.isError
                 ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Something got wrong please try again!!"),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  ElevatedButton(
-                      onPressed: () {
-                        Provider.of<HomeProvider>(context, listen: false)
-                            .updateisError();
-                        SharedPreferenceService().clearLogin();
-                        Navigator.pushNamedAndRemoveUntil(context,
-                            MyAppRouteConstants.loginRouteName, (route) => false);
-                      },
-                      child: const Text("Login  again"))
-                ],
-              ),
-            )
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Something got wrong please try again!!"),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        ElevatedButton(
+                            onPressed: () {
+                              Provider.of<HomeProvider>(context, listen: false)
+                                  .updateisError();
+                              SharedPreferenceService().clearLogin();
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context,
+                                  MyAppRouteConstants.loginRouteName,
+                                  (route) => false);
+                            },
+                            child: const Text("Login  again"))
+                      ],
+                    ),
+                  )
                 : userModel == null
-                ? const Center(
-              child: CircularProgressIndicator(
-                color: kprimaryColor,
-              ),
-            )
-                : PageView(
-              controller: ref.pageController,
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                BusinessHomePage(id: controller.selectedBusiness),
-                CreateIssuePage(),
-                EmptyScreen(),
-                GroupPage()
-              ],
-              onPageChanged: (page) {
-                ref.onPageChanged(page);
-              },
-            );
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                          color: kprimaryColor,
+                        ),
+                      )
+                    : PageView(
+                        controller: ref.pageController,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: [
+                          BusinessHomePage(id: controller.selectedBusiness),
+                          CreateIssuePage(),
+                          EmptyScreen(),
+                          GroupPage()
+                        ],
+                        onPageChanged: (page) {
+                          ref.onPageChanged(page);
+                        },
+                      );
           }),
         ),
-
         bottomNavigationBar: BottomNavigationBar(
-            backgroundColor: kbackgroundColor,
-            type: BottomNavigationBarType.fixed,
-            showUnselectedLabels: true,
-            currentIndex: ref.page,
-            selectedItemColor: kprimaryColor,
-            unselectedItemColor: Colors.black,
-            unselectedLabelStyle: const TextStyle(
-                color: Colors.black,
-                fontFamily: "Poppins",
-                letterSpacing: 1.0,
-                fontWeight: FontWeight.w500),
-            selectedLabelStyle: const TextStyle(
-                fontFamily: "Poppins",
-                letterSpacing: 1.0,
-                fontWeight: FontWeight.w500,
-                color: kprimaryColor),
-            iconSize: 28,
-            elevation: 100,
-            unselectedFontSize: 12,
-            selectedFontSize: 12,
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(
-                  CupertinoIcons.home,
-                  color: controller.page == 0 ? kprimaryColor : kSecondaryColor,
-                ),
-                label: "Home",
+          backgroundColor: kbackgroundColor,
+          type: BottomNavigationBarType.fixed,
+          showUnselectedLabels: true,
+          currentIndex: ref.page,
+          selectedItemColor: kprimaryColor,
+          unselectedItemColor: Colors.black,
+          unselectedLabelStyle: const TextStyle(
+              color: Colors.black,
+              fontFamily: "Poppins",
+              letterSpacing: 1.0,
+              fontWeight: FontWeight.w500),
+          selectedLabelStyle: const TextStyle(
+              fontFamily: "Poppins",
+              letterSpacing: 1.0,
+              fontWeight: FontWeight.w500,
+              color: kprimaryColor),
+          iconSize: 28,
+          elevation: 100,
+          unselectedFontSize: 12,
+          selectedFontSize: 12,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(
+                CupertinoIcons.home,
+                color: controller.page == 0 ? kprimaryColor : kSecondaryColor,
               ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  CupertinoIcons.add_circled_solid,
-                  color: controller.page == 1 ? kprimaryColor : kSecondaryColor,
-                ),
-                label: "Issue",
+              label: "Home",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                CupertinoIcons.add_circled_solid,
+                color: controller.page == 1 ? kprimaryColor : kSecondaryColor,
               ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.notifications,
-                  color: controller.page == 2 ? kprimaryColor : kSecondaryColor,
-                ),
-                label: "Activity",
+              label: "Issue",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.notifications,
+                color: controller.page == 2 ? kprimaryColor : kSecondaryColor,
               ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.groups_rounded,
-                  color: controller.page == 3 ? kprimaryColor : kSecondaryColor,
-                ),
-                label: "Groups",
+              label: "Activity",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.groups_rounded,
+                color: controller.page == 3 ? kprimaryColor : kSecondaryColor,
               ),
-            ],
-            onTap: (page) {
-              controller.navigationTapped(page);
-            },
-          ),
-
+              label: "Groups",
+            ),
+          ],
+          onTap: (page) {
+            controller.navigationTapped(page);
+          },
+        ),
         drawer: userModel == null
             ? null
             : MyDrawer(
-          name:
-          "${(userModel.name)}",
-        ),
-
+                name: "${(userModel.name)}",
+              ),
       ),
     );
   }
