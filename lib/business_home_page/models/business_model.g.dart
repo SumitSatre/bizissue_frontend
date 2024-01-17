@@ -109,10 +109,10 @@ BusinessModel _$BusinessModelFromJson(Map<String, dynamic> json) =>
       business: BusinessInfo.fromJson(json['business'] as Map<String, dynamic>),
       user: User.fromJson(json['user'] as Map<String, dynamic>),
       myIssues: (json['myIssues'] as List<dynamic>)
-          .map((e) => TeamIssue.fromJson(e as Map<String, dynamic>))
+          .map((e) => IssueModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       myTeamIssues: (json['myTeamIssues'] as List<dynamic>)
-          .map((e) => TeamIssue.fromJson(e as Map<String, dynamic>))
+          .map((e) => IssueModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

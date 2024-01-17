@@ -1,3 +1,4 @@
+import 'package:bizissue/Issue/models/issue_model.dart';
 import 'package:bizissue/business_home_page/models/business_model.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/routes/app_route_constants.dart';
@@ -6,7 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class CustomIssueTile extends StatelessWidget {
-  final IssueShort issue; // Replace 'Issue' with the actual class/type of your 'issue' object
+  final IssueModel issue; // Replace 'Issue' with the actual class/type of your 'issue' object
 
   CustomIssueTile({required this.issue});
 

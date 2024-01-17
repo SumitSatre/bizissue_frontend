@@ -1,4 +1,6 @@
+import 'package:bizissue/Issue/models/issue_model.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
 
 void showSnackBar(context, message, color) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -53,4 +55,40 @@ String _twoDigits(int n) {
   } else {
     return '0$n';
   }
+}
+
+List<IssueModel> filterIssues(
+    List<IssueModel>? issues, String selectedBCDFilter) {
+  switch (selectedBCDFilter) {
+    case "Blocked":
+      return issues?.where((issue) => issue.blocked.isBlocked == true).toList() ?? [];
+    case "Critical":
+      return issues?.where((issue) => issue.critical.isCritical == true).toList() ??
+          [];
+    case "Delayed":
+      return issues?.where((issue) => issue.delayed >= 1).toList() ?? [];
+    default:
+      return issues ?? [];
+  }
+}
+
+List<GroupIssue> groupAndSortIssues(List<IssueModel> issues) {
+  // Group issues by nextFollowUpDate
+  Map<String, List<IssueModel>> groupedIssues = {};
+
+  issues.forEach((issue) {
+    String key = issue.nextFollowUpDate ?? "";
+    groupedIssues[key] = [...(groupedIssues[key] ?? []), issue];
+  });
+
+  List<GroupIssue> formattedIssues = groupedIssues.entries.map((entry) {
+    return GroupIssue(
+      nextFollowUpDate: entry.key,
+      issues: entry.value,
+    );
+  }).toList();
+
+  formattedIssues.sort((a, b) => a.nextFollowUpDate!.compareTo(b.nextFollowUpDate!));
+
+  return formattedIssues;
 }

@@ -222,3 +222,16 @@ class IssueModel {
     );
   }
 }
+
+@JsonSerializable()
+class GroupIssue {
+  String? nextFollowUpDate;
+  List<IssueModel>? issues;
+
+  GroupIssue({ this.nextFollowUpDate,  this.issues});
+
+  factory GroupIssue.fromJson(Map<String, dynamic> json) =>
+      _$GroupIssueFromJson(json);
+
+  Map<String, dynamic> toJson() => _$GroupIssueToJson(this);
+}

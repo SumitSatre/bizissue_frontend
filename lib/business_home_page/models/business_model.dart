@@ -1,3 +1,4 @@
+import 'package:bizissue/Issue/models/issue_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../home/models/user_model.dart';
@@ -198,8 +199,8 @@ class TeamIssue {
 class BusinessModel {
   BusinessInfo business;
   User user;
-  List<TeamIssue> myIssues;
-  List<TeamIssue> myTeamIssues;
+  List<IssueModel> myIssues;
+  List<IssueModel> myTeamIssues;
 
   BusinessModel({
     required this.business,
@@ -216,8 +217,8 @@ class BusinessModel {
   BusinessModel copyWith({
     BusinessInfo? business,
     User? user,
-    List<TeamIssue>? myIssues,
-    List<TeamIssue>? myTeamIssues
+    List<IssueModel>? myIssues,
+    List<IssueModel>? myTeamIssues
   }) {
     return BusinessModel(
       business: business ?? this.business,

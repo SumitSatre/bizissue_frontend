@@ -1,10 +1,11 @@
+import 'package:bizissue/Issue/models/issue_model.dart';
 import 'package:bizissue/business_home_page/models/business_model.dart';
 import 'package:bizissue/business_home_page/widgets/issue_tile.dart';
 import 'package:flutter/material.dart';
 
 class CustomExpansionTile extends StatefulWidget {
   final String title;
-  final List<IssueShort>? issues;
+  final List<IssueModel>? issues;
 
   CustomExpansionTile({required this.title, this.issues});
 
@@ -47,7 +48,7 @@ class _CustomExpansionTileState extends State<CustomExpansionTile> {
       child: _isExpanded
           ? Column(
         children: [
-          for (IssueShort issue in widget.issues ?? [])
+          for (IssueModel issue in widget.issues ?? [])
             CustomIssueTile(issue: issue),
         ],
       )

@@ -2,7 +2,7 @@ import 'package:bizissue/business_home_page/screens/business%20home/activity_pag
 import 'package:bizissue/business_home_page/screens/controller/business_controller.dart';
 import 'package:bizissue/business_home_page/screens/business%20home/create_issue_page.dart';
 import 'package:bizissue/business_home_page/widgets/empty_screen.dart';
-import 'package:bizissue/business_home_page/screens/business%20home/group_page.dart';
+import 'package:bizissue/group/screens/group_page.dart';
 import 'package:bizissue/business_home_page/widgets/appBar.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/colors.dart';
@@ -94,7 +94,7 @@ class _BusinessPageState extends State<BusinessPage> {
               fontFamily: "Poppins",
               letterSpacing: 1.0,
               fontWeight: FontWeight.w500),
-          selectedLabelStyle: const TextStyle(
+          selectedLabelStyle: TextStyle(
               fontFamily: "Poppins",
               letterSpacing: 1.0,
               fontWeight: FontWeight.w500,

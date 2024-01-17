@@ -6,7 +6,7 @@ import 'package:bizissue/business_home_page/screens/controller/business_controll
 import 'package:bizissue/business_home_page/screens/controller/business_requests_controller.dart';
 import 'package:bizissue/business_home_page/screens/controller/create_business_controller.dart';
 import 'package:bizissue/business_home_page/screens/controller/create_issue_controller.dart';
-import 'package:bizissue/business_home_page/screens/controller/group_controller.dart';
+import 'package:bizissue/group/controller/group_controller.dart';
 import 'package:bizissue/firebase_options.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/routes/app_route_config.dart';

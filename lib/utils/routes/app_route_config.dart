@@ -6,6 +6,7 @@ import 'package:bizissue/auth/screens/verify_signup_otp.dart';
 import 'package:bizissue/business_home_page/screens/create_business.dart';
 import 'package:bizissue/business_home_page/screens/join_business.dart';
 import 'package:bizissue/business_home_page/screens/requests_screen.dart';
+import 'package:bizissue/group/screens/group_detailed_page.dart';
 import 'package:bizissue/home/screens/home_page.dart';
 import 'package:bizissue/business_home_page/screens/business%20home/business_page.dart';
 import 'package:bizissue/utils/error_page.dart';
@@ -114,6 +115,17 @@ class MyAppRouter {
                 child: IssuePage(
                   issueId: state.params['issueId']!,
                   businessId: state.params['businessId']!,
+                ));
+          },
+        ),
+
+        GoRoute(
+          name: MyAppRouteConstants.groupDetailedRouteName,
+          path: '/business/group/detailed/:groupId',
+          pageBuilder: (BuildContext context,GoRouterState state) {
+            return MaterialPage(
+                child: GroupDetailedPage(
+                  groupId: state.params['groupId']!
                 ));
           },
         ),

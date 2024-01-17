@@ -1,11 +1,13 @@
 
 import 'dart:convert';
 
+import 'package:bizissue/Issue/models/issue_model.dart';
 import 'package:bizissue/api%20repository/product_repository.dart';
 import 'package:bizissue/business_home_page/models/business_model.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/routes/app_route_constants.dart';
 import 'package:bizissue/utils/services/shared_preferences_service.dart';
+import 'package:bizissue/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +23,12 @@ class BusinessController extends ChangeNotifier {
 
   BusinessModel? _businessModel;
   BusinessModel? get businessModel => _businessModel;
+
+  List<GroupIssue>? _myIssuesGroup;
+  List<GroupIssue>? get myIssuesGroup => _myIssuesGroup;
+
+  List<GroupIssue>? _myTeamIssuesGroup;
+  List<GroupIssue>? get myTeamIssuesGroup => _myTeamIssuesGroup;
 
   late PageController pageController = PageController(initialPage: 0);
 
@@ -50,6 +58,8 @@ class BusinessController extends ChangeNotifier {
     if (response.responseCode == 200) {
       // print("This is data ${data["data"]}");
       _businessModel = BusinessModel.fromJson(data["data"]);
+      _myIssuesGroup = groupAndSortIssues(_businessModel?.myIssues ?? []);
+      _myTeamIssuesGroup = groupAndSortIssues(_businessModel?.myTeamIssues ?? []);
       notifyListeners();
     } else {
       _isError = true;

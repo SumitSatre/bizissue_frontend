@@ -1,3 +1,4 @@
+import 'package:bizissue/Issue/models/issue_model.dart';
 import 'package:bizissue/business_home_page/models/business_model.dart';
 import 'package:bizissue/business_home_page/models/dropdown_lists.dart';
 import 'package:bizissue/business_home_page/screens/controller/business_controller.dart';
@@ -108,21 +109,7 @@ class _BusinessHomePageState extends State<BusinessHomePage> {
                                 SizedBox(
                                   width: width * 0.02,
                                 ),
-                                //    Container(
-                                //        height: 36,
-                                //        decoration: BoxDecoration(
-                                //          border: Border.all(
-                                //            style: BorderStyle.solid,
-                                //            color: Colors.grey,
-                                //          ),
-                                //          borderRadius: BorderRadius.circular(12),
-                                //        ),
-                                //        child: Padding(
-                                //          padding: const EdgeInsets.all(8.0),
-                                //          child: Text(isSwitched
-                                //              ? "My Issues"
-                                //              : "MyTeamIssues"),
-                                //        )),
+
                                 SizedBox(
                                   width: width * 0.45,
                                   height: 40,
@@ -198,7 +185,7 @@ class _BusinessHomePageState extends State<BusinessHomePage> {
                                 SizedBox(
                                   width: width * 0.01,
                                 ),
-                                
+
                               ],
                             ),
                           ),
@@ -208,34 +195,34 @@ class _BusinessHomePageState extends State<BusinessHomePage> {
                           Expanded(
                             child: ListView.builder(
                               itemCount: controller.isSwitched
-                                  ? businessModel.myIssues.length
-                                  : businessModel.myTeamIssues.length,
+                                  ? controller.myIssuesGroup?.length ?? 0
+                                  : controller.myTeamIssuesGroup?.length ?? 0,
                               itemBuilder: (context, index) {
-                                TeamIssue teamIssue = controller.isSwitched
-                                    ? businessModel.myIssues[index]
-                                    : businessModel.myTeamIssues[index];
+                                GroupIssue groupIssue  = controller.isSwitched
+                                    ? controller.myIssuesGroup![index]
+                                    : controller.myTeamIssuesGroup![index];
 
-                                if (teamIssue == null ||
-                                    teamIssue.issues == null ||
-                                    teamIssue.issues!.length < 1) {
+                                if (groupIssue == null ||
+                                    groupIssue.issues == null ||
+                                    groupIssue.issues!.length < 1) {
                                   return Center(child: Text("No Data"));
                                 } else {
-                                  List<IssueShort> filteredIssues =
-                                      filterIssues(teamIssue.issues,
+                                  List<IssueModel> filteredIssues =
+                                      filterIssues(groupIssue.issues,
                                           controller.selectedBCDFilter);
 
                                   if (filteredIssues.isEmpty) {
-                                    return Container();
+                                    return Text("Euu");
                                   }
 
                                   return CustomExpansionTile(
                                     title:
-                                        teamIssue.nextFollowUpDate == todaysDate
+                                    groupIssue.nextFollowUpDate == todaysDate
                                             ? "Today"
-                                            : teamIssue.nextFollowUpDate ==
+                                            : groupIssue.nextFollowUpDate ==
                                                     tomorrowsDate
                                                 ? "Tomorrow"
-                                                : teamIssue.nextFollowUpDate ??
+                                                : groupIssue.nextFollowUpDate ??
                                                     "No Date",
                                     issues: filteredIssues,
                                   );
@@ -250,19 +237,21 @@ class _BusinessHomePageState extends State<BusinessHomePage> {
       }),
     );
   }
-
-  List<IssueShort> filterIssues(
-      List<IssueShort>? issues, String selectedBCDFilter) {
-    switch (selectedBCDFilter) {
-      case "Blocked":
-        return issues?.where((issue) => issue.isBlocked == true).toList() ?? [];
-      case "Critical":
-        return issues?.where((issue) => issue.isCritical == true).toList() ??
-            [];
-      case "Delayed":
-        return issues?.where((issue) => issue.delayed >= 1).toList() ?? [];
-      default:
-        return issues ?? [];
-    }
-  }
 }
+
+
+/*//    Container(
+                                //        height: 36,
+                                //        decoration: BoxDecoration(
+                                //          border: Border.all(
+                                //            style: BorderStyle.solid,
+                                //            color: Colors.grey,
+                                //          ),
+                                //          borderRadius: BorderRadius.circular(12),
+                                //        ),
+                                //        child: Padding(
+                                //          padding: const EdgeInsets.all(8.0),
+                                //          child: Text(isSwitched
+                                //              ? "My Issues"
+                                //              : "MyTeamIssues"),
+                                //        )), */

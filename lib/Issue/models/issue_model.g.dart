@@ -79,7 +79,7 @@ IssueModel _$IssueModelFromJson(Map<String, dynamic> json) => IssueModel(
       details: json['details'] as String?,
       blocked: Blocked.fromJson(json['blocked'] as Map<String, dynamic>),
       critical: Critical.fromJson(json['critical'] as Map<String, dynamic>),
-      delayed: json['delayed'] as int,
+      delayed: 1, // json['delayed'] as int
       createdBy: CreatedBy.fromJson(json['createdBy'] as Map<String, dynamic>),
       assignedTo:
           AssignedTo.fromJson(json['assignedTo'] as Map<String, dynamic>),
@@ -103,4 +103,17 @@ Map<String, dynamic> _$IssueModelToJson(IssueModel instance) =>
       'deliveryDate': instance.deliveryDate,
       'nextFollowUpDate': instance.nextFollowUpDate,
       'status': instance.status,
+    };
+
+GroupIssue _$GroupIssueFromJson(Map<String, dynamic> json) => GroupIssue(
+      nextFollowUpDate: json['nextFollowUpDate'] as String?,
+      issues: (json['issues'] as List<dynamic>?)
+          ?.map((e) => IssueModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$GroupIssueToJson(GroupIssue instance) =>
+    <String, dynamic>{
+      'nextFollowUpDate': instance.nextFollowUpDate,
+      'issues': instance.issues,
     };

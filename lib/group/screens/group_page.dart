@@ -1,5 +1,5 @@
-import 'package:bizissue/business_home_page/screens/controller/group_controller.dart';
-import 'package:bizissue/business_home_page/widgets/group_tile.dart';
+import 'package:bizissue/group/controller/group_controller.dart';
+import 'package:bizissue/group/widgets/group_tile.dart';
 import 'package:bizissue/business_home_page/models/group_short_model.dart'; // Import your GroupShortModel class
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
