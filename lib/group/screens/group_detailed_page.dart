@@ -1,6 +1,7 @@
 import 'package:bizissue/Issue/models/issue_model.dart';
 import 'package:bizissue/business_home_page/widgets/view_issues_page.dart';
 import 'package:bizissue/group/controller/group_controller.dart';
+import 'package:bizissue/group/widgets/vertical_dropdown_for_group_view.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/colors.dart';
 import 'package:bizissue/utils/utils.dart';
@@ -58,43 +59,50 @@ class _GroupDetailedPageState extends State<GroupDetailedPage> {
                   vertical: MediaQuery.of(context).size.height * 0.02,
                   horizontal: MediaQuery.of(context).size.width * 0.04),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color(0x1E000000),
-                          blurRadius: 4,
-                          offset: Offset(-3, 3),
-                          spreadRadius: 0,
-                        )
-                      ],
-                    ),
-                    child: InkWell(
-                      onTap: () {
-                        // issueController.clearData();
-                        GoRouter.of(context).pop();
-                      },
-                      child: const Icon(
-                        Icons.arrow_back_sharp,
-                        color: Colors.black,
+                  Row(
+                    children: [
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color(0x1E000000),
+                              blurRadius: 4,
+                              offset: Offset(-3, 3),
+                              spreadRadius: 0,
+                            )
+                          ],
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            // issueController.clearData();
+                            GoRouter.of(context).pop();
+                          },
+                          child: const Icon(
+                            Icons.arrow_back_sharp,
+                            color: Colors.black,
+                          ),
+                        ),
                       ),
-                    ),
+                      SizedBox(width: 20),
+                      Text(
+                        widget.groupName ?? "Error",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: "Poppins",
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(width: 20),
-                  Text(
-                    widget.groupName ?? "Error",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: "Poppins",
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
+
+                  VerticalMenuDropDownOfGroupView()
                 ],
               ),
             ),

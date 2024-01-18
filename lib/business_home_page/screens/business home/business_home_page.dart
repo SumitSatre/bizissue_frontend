@@ -212,7 +212,7 @@ class _BusinessHomePageState extends State<BusinessHomePage> {
                                           controller.selectedBCDFilter);
 
                                   if (filteredIssues.isEmpty) {
-                                    return Text("Euu");
+                                    return Container();
                                   }
 
                                   return CustomExpansionTile(

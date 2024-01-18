@@ -86,15 +86,18 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                 labelText: "Name*",
               ),
               SizedBox(height: height * 0.02),
-              Text(
-                "Select Users To Add: ",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontFamily: "Poppins",
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
+              Container(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Select Users To Add: ",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: "Poppins",
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.left,
                 ),
-                textAlign: TextAlign.left,
               ),
               SizedBox(height: height * 0.02),
 

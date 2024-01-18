@@ -90,7 +90,7 @@ class _ViewIssuesWidgetState extends State<ViewIssuesWidget> {
                     groupIssue.issues, selectedBCDFilter);
 
                 if (filteredIssues.isEmpty) {
-                  return Text("Euu");
+                  return Container();
                 }
 
                 return CustomExpansionTile(
