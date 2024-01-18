@@ -6,6 +6,7 @@ import 'package:bizissue/api%20repository/product_repository.dart';
 import 'package:bizissue/business_home_page/models/group_short_model.dart';
 import 'package:bizissue/business_home_page/models/request_user_model.dart';
 import 'package:bizissue/group/models/models.dart';
+import 'package:bizissue/utils/colors.dart';
 import 'package:bizissue/utils/services/shared_preferences_service.dart';
 import 'package:bizissue/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -116,6 +117,42 @@ class GroupProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void createGroupRequest(BuildContext context , String businessId) async {
+
+    if(!_areAllFieldsFilledOfCreateGroup()){
+      showSnackBar(context, "Fill complete details!!", invalidColor);
+      return;
+    }
+    print("Done");
+    String accessToken = await SharedPreferenceService().getAccessToken();
+
+    print(jsonEncode(_createGroupResponseModel!.toJson()));
+
+    ApiHttpResponse response = await callUserPostMethod(
+        _createGroupResponseModel!.toJson(), 'group/create/${businessId}', accessToken);
+
+    final data = jsonDecode(response.responceString!);
+
+    if (response.responseCode == 200) {
+      showSnackBar(context, "Group created Successfully!!", successColor);
+      setCreateGroupVariablesNull();
+    }
+    else{
+      showSnackBar(context, "Unable to create group!!", failureColor);
+    }
+    debugPrint(response.responceString);
+    notifyListeners();
+  }
+
+  bool _areAllFieldsFilledOfCreateGroup() {
+    // Check if all required fields are filled and not empty
+    return _createGroupResponseModel != null &&
+        _createGroupResponseModel!.name != null &&
+        _createGroupResponseModel!.name!.isNotEmpty &&
+        _createGroupResponseModel!.usersToAddIds != null;
+  }
+
 
   void setCreateGroupVariablesNull(){
     _createGroupResponseModel = null;

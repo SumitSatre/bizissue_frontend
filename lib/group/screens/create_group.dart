@@ -198,7 +198,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
               SizedBox(height: height * 0.02),
               SubmitButton(
                 onPressed: () {
-                  // createBusinessController.createBusiness(context);
+                  groupController.createGroupRequest(context , homeController.selectedBusiness);
                 },
               ), // Add a closing parenthesis here
             ],
