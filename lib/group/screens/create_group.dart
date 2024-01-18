@@ -20,7 +20,7 @@ class CreateGroupPage extends StatefulWidget {
 }
 
 class _CreateGroupPageState extends State<CreateGroupPage> {
-  List<String> _selectedOptions = [];
+  late List<String> _selectedOptions = [];
 
   // homeController.getUsersList(homeController!.selectedBusiness)
   void callInit(BuildContext context) async {
@@ -45,11 +45,13 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
     }
     final groupController = Provider.of<GroupProvider>(context, listen: false);
 
-    final createIssueController =
-        Provider.of<CreateIssueProvider>(context, listen: false);
+   // final createIssueController =
+   //     Provider.of<CreateIssueProvider>(context, listen: false);
 
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+
+    _selectedOptions = groupController.createGroupResponseModel?.usersToAddIds ?? [];
 
     return SafeArea(
       child: Scaffold(
@@ -153,6 +155,9 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                                         groupController.updateSelectedUsers(
                                             _selectedOptions);
                                         Navigator.of(context).pop();
+                                        setState(() {
+
+                                        });
                                       },
                                       child: const Text('OK'),
                                     ),

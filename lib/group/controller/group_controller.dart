@@ -89,6 +89,10 @@ class GroupProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void clearGroupPageData(){
+    _userGroupslist = null;
+  }
+
   void clearGroupViewData(){
     _groupIssuesList = null;
     _groupSortedIssuesList = null;
