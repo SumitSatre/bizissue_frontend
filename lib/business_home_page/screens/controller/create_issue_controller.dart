@@ -17,9 +17,6 @@ class CreateIssueProvider extends ChangeNotifier {
   bool _isError = false;
   bool get isError => _isError;
 
-  List<UserListModel>? _userlistModel;
-  List<UserListModel>? get userlistModel => _userlistModel;
-
   String? nameOfAssignToUser = null;
 
   Future<void> performTask() async {
@@ -29,35 +26,7 @@ class CreateIssueProvider extends ChangeNotifier {
 
   void clear(){
     _createIssueModel = null ;
-    _userlistModel = null;
     notifyListeners();
-  }
-
-  Future<List<UserListModel>> getUsersList(String id) async {
-    if (_userlistModel == null) {
-      print("This is id : $id");
-      String accessToken = await SharedPreferenceService().getAccessToken();
-      ApiHttpResponse response =
-      await callUserGetMethod("issue/get/business/users/${id}", accessToken);
-      final data = jsonDecode(response.responceString!);
-      debugPrint(data.toString());
-      if (response.responseCode == 200) {
-        print("This is data of users lists : ${data["data"]["users"]}");
-
-        _userlistModel = (data["data"]["users"] as List)
-            .map((item) => UserListModel.fromJson(item))
-            .toList();
-
-        notifyListeners();
-        return _userlistModel!;
-      } else {
-        // Handle the error case accordingly
-        return []; // Or throw an exception, or handle it as needed
-      }
-    }
-
-    // If _userlistModel is not null, return the cached list
-    return _userlistModel!;
   }
 
 

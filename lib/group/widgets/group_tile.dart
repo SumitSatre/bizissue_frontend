@@ -10,14 +10,15 @@ class GroupTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: (){
-        GoRouter.of(context).pushNamed(MyAppRouteConstants.groupDetailedRouteName , params: {
-          "groupId" : group.groupId
-        });
-      },
-      child: Card(
-        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    return Card(
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: InkWell(
+        onTap: (){
+          GoRouter.of(context).pushNamed(MyAppRouteConstants.groupDetailedRouteName , params: {
+            "groupId" : group.groupId,
+            "groupName" : group.name
+          });
+        },
         child: Padding(
           padding: EdgeInsets.all(16),
           child: Column(

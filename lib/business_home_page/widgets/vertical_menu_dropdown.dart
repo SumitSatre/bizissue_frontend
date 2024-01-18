@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class VeriticalMenuDropDown extends StatefulWidget {
+class VerticalMenuDropDown extends StatefulWidget {
   @override
-  _VeriticalMenuDropDownState createState() => _VeriticalMenuDropDownState();
+  _VerticalMenuDropDownState createState() => _VerticalMenuDropDownState();
 }
 
-class _VeriticalMenuDropDownState extends State<VeriticalMenuDropDown> {
+class _VerticalMenuDropDownState extends State<VerticalMenuDropDown> {
   late String? selectedValue;
 
   @override
@@ -24,19 +24,19 @@ class _VeriticalMenuDropDownState extends State<VeriticalMenuDropDown> {
         size: 25,
       ),
       onPressed: () {
-        showDropdown(context , homeController.selectedBusiness);
+        showDropdown(context, homeController.selectedBusiness);
       },
     );
   }
 }
 
-void showDropdown(BuildContext context , String businessId) async {
+void showDropdown(BuildContext context, String businessId) async {
   final RenderBox button = context.findRenderObject() as RenderBox;
   final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
 
   final RelativeRect position = RelativeRect.fromRect(
     Rect.fromPoints(
-      button.localToGlobal(Offset(0-15, button.size.height-15), ancestor: overlay),
+      button.localToGlobal(Offset(0 - 15, button.size.height - 15), ancestor: overlay),
       button.localToGlobal(button.size.bottomRight(Offset.zero), ancestor: overlay),
     ),
     Offset.zero & overlay.size,
@@ -54,27 +54,35 @@ void showDropdown(BuildContext context , String businessId) async {
   );
 
   if (result != null) {
-    String? routeName = menuItemsWithRoutes.firstWhereOrNull(
-          (item) => item.containsKey(result),
-    )?[result!];
+    String? routeName = menuItemsWithRoutes
+        .firstWhereOrNull((item) => item.containsKey(result))?[result!];
 
     // Navigate to the selected page using the route name
     if (routeName != null) {
-      print("This is route : ${routeName}");
-      GoRouter.of(context).pushNamed(MyAppRouteConstants.businessRequestsRouteName , params: {
-        "businessId" : businessId
-      });
+
+      // print("This is route : $result");
+      if(result == "Create Group"){
+        GoRouter.of(context).pushNamed(MyAppRouteConstants.createGroupRouteName);
+      }
+      else if(result == "Requests"){
+        GoRouter.of(context).pushNamed(MyAppRouteConstants.businessRequestsRouteName,
+            params: {"businessId": businessId});
+      }
+
     }
   }
 }
+
 List<String> menuItemsList = [
-  "Requests"
+  "Requests",
+  "Create Group"
 ];
 
-List<Map<String , String>> menuItemsWithRoutes = [
+List<Map<String, String>> menuItemsWithRoutes = [
   {
-    "Requests" : MyAppRouteConstants.businessRequestsRouteName
-  }
+    "Requests": MyAppRouteConstants.businessRequestsRouteName,
+    "Create Group": MyAppRouteConstants.createGroupRouteName,
+  },
 ];
 
 extension ListExtension<T> on List<T> {

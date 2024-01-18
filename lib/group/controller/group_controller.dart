@@ -5,6 +5,7 @@ import 'package:bizissue/api%20repository/api_http_response.dart';
 import 'package:bizissue/api%20repository/product_repository.dart';
 import 'package:bizissue/business_home_page/models/group_short_model.dart';
 import 'package:bizissue/business_home_page/models/request_user_model.dart';
+import 'package:bizissue/group/models/models.dart';
 import 'package:bizissue/utils/services/shared_preferences_service.dart';
 import 'package:bizissue/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,11 @@ class GroupProvider extends ChangeNotifier {
 
   bool _isError = false;
   bool get isError => _isError;
+
+  CreateGroupResponseModel? _createGroupResponseModel ;
+  CreateGroupResponseModel? get createGroupResponseModel => _createGroupResponseModel;
+
+  final nameController = TextEditingController();
 
   Future<List<GroupShortModel>> getGroupsList(String id) async {
     if (_userGroupslist == null) {
@@ -62,24 +68,58 @@ class GroupProvider extends ChangeNotifier {
 
     print("This is data of users lists 1");
     if (response.responseCode == 200){
-      print("This is data of users lists 2${data["data"]["issues"]}");
+      // print("This is data of users lists 2${data["data"]["issues"]}");
 
       _groupIssuesList = (data["data"]["issues"] as List)
           .map((item) => IssueModel.fromJson(item))
           .toList();
-      print("data sorted is : ${groupIssuesList.toString()}");
+      // print("data sorted is : ${groupIssuesList.toString()}");
 
       _groupSortedIssuesList = groupAndSortIssues(_groupIssuesList ?? []);
       print("data sorted is : ${groupSortedIssuesList.toString()}");
-      notifyListeners();
     } else {
 
     }
     notifyListeners();
   }
 
-  setIsFetching(bool val){
+  void setIsFetching(bool val){
     _isFetching = val;
     notifyListeners();
   }
+
+  void clearGroupViewData(){
+    _groupIssuesList = null;
+    _groupSortedIssuesList = null;
+    // notifyListeners();
+  }
+
+  void updateSelectedUsers(List<String> selectedUsers){
+    print("These are selected useers : ${selectedUsers.toString()}");
+    if (_createGroupResponseModel != null) {
+      _createGroupResponseModel = _createGroupResponseModel!.copyWith(
+        usersToAddIds:selectedUsers,
+      );
+    } else {
+      _createGroupResponseModel = CreateGroupResponseModel( usersToAddIds:selectedUsers);
+    }
+    notifyListeners();
+  }
+
+  void updateGroupName(String? name) {
+    if (_createGroupResponseModel != null) {
+      _createGroupResponseModel = _createGroupResponseModel!.copyWith(
+        name : name,
+      );
+    } else {
+      _createGroupResponseModel = CreateGroupResponseModel(name: name);
+    }
+    notifyListeners();
+  }
+
+  void setCreateGroupVariablesNull(){
+    _createGroupResponseModel = null;
+    nameController.clear();
+  }
+
 }

@@ -48,7 +48,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ],
                 ),
-                VeriticalMenuDropDown(),
+                VerticalMenuDropDown(),
               ],
             ),
 

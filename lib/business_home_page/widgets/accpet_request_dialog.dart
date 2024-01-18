@@ -75,7 +75,7 @@ class _UserSelectionDialogState extends State<UserSelectionDialog> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: FutureBuilder<List<UserListModel>>(
-                future: createIssueController.getUsersList(homeController!.selectedBusiness),
+                future: homeController.getUsersList(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
