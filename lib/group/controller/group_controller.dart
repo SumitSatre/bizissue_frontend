@@ -94,6 +94,34 @@ class GroupProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getMultipleGroupsData(String id, String groupId) async {
+    print("This is id : $id");
+    String accessToken = await SharedPreferenceService().getAccessToken();
+    ApiHttpResponse response = await callUserGetMethod(
+        "group/get/multiple/${id}?groupId=${groupId}", accessToken);
+    final data = jsonDecode(response.responceString!);
+    debugPrint(data.toString());
+
+    print("This is data of users lists 1");
+    if (response.responseCode == 200){
+      // print("This is data of users lists 2${data["data"]["issues"]}");
+
+      _groupModel = GroupModel.fromJson(data["data"]);
+      print("This is group model data ${_groupModel.toString()}");
+
+      _groupIssuesList = (data["data"]["issues"] as List)
+          .map((item) => IssueModel.fromJson(item))
+          .toList();
+      // print("data sorted is : ${groupIssuesList.toString()}");
+
+      _groupSortedIssuesList = groupAndSortIssues(_groupIssuesList ?? []);
+      print("data sorted is : ${groupSortedIssuesList.toString()}");
+    } else {
+
+    }
+    notifyListeners();
+  }
+
   void setIsFetching(bool val){
     _isFetching = val;
     notifyListeners();
