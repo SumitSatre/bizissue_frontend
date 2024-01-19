@@ -1,6 +1,7 @@
 import 'package:bizissue/Issue/models/issue_model.dart';
 import 'package:bizissue/business_home_page/widgets/view_issues_page.dart';
 import 'package:bizissue/group/controller/group_controller.dart';
+import 'package:bizissue/group/controller/view_group_controller.dart';
 import 'package:bizissue/group/widgets/vertical_dropdown_for_group_view.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/colors.dart';
@@ -24,7 +25,7 @@ class _GroupDetailedPageState extends State<GroupDetailedPage> {
   void initState() {
     super.initState();
     // Note: It's better to perform async operations in didChangeDependencies instead of initState
-    Provider.of<GroupProvider>(context, listen: false).clearGroupViewData();
+    Provider.of<ViewGroupProvider>(context, listen: false).clearGroupViewData();
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       callInit(
           Provider.of<HomeProvider>(context, listen: false).selectedBusiness);
@@ -37,7 +38,7 @@ class _GroupDetailedPageState extends State<GroupDetailedPage> {
       getFormattedDate(DateTime.now().add(Duration(days: 1)));
 
   void callInit(String businessId) async {
-    final groupController = Provider.of<GroupProvider>(context, listen: false);
+    final groupController = Provider.of<ViewGroupProvider>(context, listen: false);
     await groupController.getGroupData(businessId, widget.groupId);
 
     setState(() {});
@@ -48,7 +49,7 @@ class _GroupDetailedPageState extends State<GroupDetailedPage> {
     // No need to create local variables for height and width unless you use them
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-    final groupController = Provider.of<GroupProvider>(context, listen: false);
+    final groupController = Provider.of<ViewGroupProvider>(context, listen: false);
     return SafeArea(
         child: Scaffold(
           appBar: PreferredSize(

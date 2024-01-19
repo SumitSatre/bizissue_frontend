@@ -15,17 +15,8 @@ import 'package:go_router/go_router.dart';
 
 class GroupProvider extends ChangeNotifier {
 
-  GroupModel? _groupModel;
-  GroupModel? get groupModel => _groupModel;
-
   List<GroupShortModel>? _userGroupslist;
   List<GroupShortModel>? get userGroupslist => _userGroupslist;
-
-  List<IssueModel>? _groupIssuesList;
-  List<IssueModel>? get groupIssuesList => _groupIssuesList;
-
-  List<GroupIssue>? _groupSortedIssuesList ;
-  List<GroupIssue>? get groupSortedIssuesList => _groupSortedIssuesList;
 
   bool _isFetching = false;
   bool get isFetching => _isFetching;
@@ -66,61 +57,7 @@ class GroupProvider extends ChangeNotifier {
   }
 
   // here i have to make changes
-  Future<void> getGroupData(String id, String groupId) async {
-    print("This is id : $id");
-    String accessToken = await SharedPreferenceService().getAccessToken();
-    ApiHttpResponse response = await callUserGetMethod(
-        "group/get/group/${id}?groupId=${groupId}", accessToken);
-    final data = jsonDecode(response.responceString!);
-    debugPrint(data.toString());
 
-    print("This is data of users lists 1");
-    if (response.responseCode == 200){
-      // print("This is data of users lists 2${data["data"]["issues"]}");
-
-      _groupModel = GroupModel.fromJson(data["data"]);
-      print("This is group model data ${_groupModel.toString()}");
-
-      _groupIssuesList = (data["data"]["issues"] as List)
-          .map((item) => IssueModel.fromJson(item))
-          .toList();
-      // print("data sorted is : ${groupIssuesList.toString()}");
-
-      _groupSortedIssuesList = groupAndSortIssues(_groupIssuesList ?? []);
-      print("data sorted is : ${groupSortedIssuesList.toString()}");
-    } else {
-
-    }
-    notifyListeners();
-  }
-
-  Future<void> getMultipleGroupsData(String id, String groupId) async {
-    print("This is id : $id");
-    String accessToken = await SharedPreferenceService().getAccessToken();
-    ApiHttpResponse response = await callUserGetMethod(
-        "group/get/multiple/${id}?groupId=${groupId}", accessToken);
-    final data = jsonDecode(response.responceString!);
-    debugPrint(data.toString());
-
-    print("This is data of users lists 1");
-    if (response.responseCode == 200){
-      // print("This is data of users lists 2${data["data"]["issues"]}");
-
-      _groupModel = GroupModel.fromJson(data["data"]);
-      print("This is group model data ${_groupModel.toString()}");
-
-      _groupIssuesList = (data["data"]["issues"] as List)
-          .map((item) => IssueModel.fromJson(item))
-          .toList();
-      // print("data sorted is : ${groupIssuesList.toString()}");
-
-      _groupSortedIssuesList = groupAndSortIssues(_groupIssuesList ?? []);
-      print("data sorted is : ${groupSortedIssuesList.toString()}");
-    } else {
-
-    }
-    notifyListeners();
-  }
 
   void setIsFetching(bool val){
     _isFetching = val;
@@ -129,12 +66,6 @@ class GroupProvider extends ChangeNotifier {
 
   void clearGroupPageData(){
     _userGroupslist = null;
-  }
-
-  void clearGroupViewData(){
-    _groupIssuesList = null;
-    _groupSortedIssuesList = null;
-    // notifyListeners();
   }
 
   void updateSelectedUsers(List<String> selectedUsers){
@@ -195,35 +126,8 @@ class GroupProvider extends ChangeNotifier {
         _createGroupResponseModel!.usersToAddIds != null;
   }
 
-
   void setCreateGroupVariablesNull(){
     _createGroupResponseModel = null;
     nameController.clear();
   }
-
-  Future<void> deleteGroupRequest(BuildContext context , String businessId) async {
-
-    if(_groupModel == null && _groupModel!.groupId == null){
-      showSnackBar(context, "Group is not valid", invalidColor);
-      return;
-    }
-
-    String groupId = _groupModel!.groupId;
-
-    String accessToken = await SharedPreferenceService().getAccessToken();
-    ApiHttpResponse response = await callUserDeleteMethod(
-        {},"group/delete/${businessId}/${groupId}", accessToken);
-    final data = jsonDecode(response.responceString!);
-    debugPrint(data.toString());
-
-    // print("This is data of users lists 1");
-    if (response.responseCode == 200){
-      showSnackBar(context, "Group deleted successfully!!", successColor);
-      GoRouter.of(context).pop();
-    } else {
-
-    }
-    notifyListeners();
-  }
-
 }

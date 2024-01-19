@@ -8,6 +8,7 @@ import 'package:bizissue/business_home_page/screens/join_business.dart';
 import 'package:bizissue/business_home_page/screens/requests_screen.dart';
 import 'package:bizissue/group/screens/create_group.dart';
 import 'package:bizissue/group/screens/group_detailed_page.dart';
+import 'package:bizissue/group/screens/multiple_group_detailed_page.dart';
 import 'package:bizissue/home/screens/home_page.dart';
 import 'package:bizissue/business_home_page/screens/business%20home/business_page.dart';
 import 'package:bizissue/utils/error_page.dart';
@@ -140,6 +141,15 @@ class MyAppRouter {
           },
         ),
 
+        GoRoute(
+          name: MyAppRouteConstants.multipleGroupDetailedRouteName,
+          path: '/business/group/multiple/detailed',
+          pageBuilder: (BuildContext context,GoRouterState state) {
+            return MaterialPage(
+                child: MultipleGroupDetailedPage(
+                ));
+          },
+        ),
 
       ],
       // errorPageBuilder: (BuildContext context,GoRouterState state) {

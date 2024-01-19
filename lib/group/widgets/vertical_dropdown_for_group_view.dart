@@ -1,4 +1,5 @@
 import 'package:bizissue/group/controller/group_controller.dart';
+import 'package:bizissue/group/controller/view_group_controller.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/routes/app_route_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,8 +10,8 @@ import 'package:provider/provider.dart';
 class VerticalMenuDropDownOfGroupView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer2<HomeProvider, GroupProvider>(
-      builder: (context, homeController, groupController, child) {
+    return Consumer2<HomeProvider, ViewGroupProvider>(
+      builder: (context, homeController, viewGroupController, child) {
         final businessId = homeController.selectedBusiness;
         return CupertinoButton(
           child: Icon(
@@ -19,7 +20,7 @@ class VerticalMenuDropDownOfGroupView extends StatelessWidget {
             size: 25,
           ),
           onPressed: () {
-            showDropdown(context, businessId, groupController.deleteGroupRequest);
+            showDropdown(context, businessId, viewGroupController.deleteGroupRequest);
           },
         );
       },

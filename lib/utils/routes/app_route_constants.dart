@@ -14,4 +14,5 @@ class MyAppRouteConstants {
   static const String issuePageRouteName = 'issue_Page';
   static const String groupDetailedRouteName = 'group_detailed';
   static const String createGroupRouteName = 'create_group';
+  static const String multipleGroupDetailedRouteName = 'multiple_group_detailed';
 }

@@ -8,6 +8,7 @@ import 'package:bizissue/business_home_page/screens/controller/create_business_c
 import 'package:bizissue/business_home_page/screens/controller/create_issue_controller.dart';
 import 'package:bizissue/group/controller/group_controller.dart';
 import 'package:bizissue/firebase_options.dart';
+import 'package:bizissue/group/controller/view_group_controller.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/routes/app_route_config.dart';
 import 'package:bizissue/utils/colors.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CreateBusinessProvider()),
         ChangeNotifierProvider(create: (_) => BusinessRequestsProvider()),
         ChangeNotifierProvider(create: (_) => GroupProvider()),
+        ChangeNotifierProvider(create: (_) => ViewGroupProvider()),
         ChangeNotifierProvider(create: (_) => IssueProvider()),
       ],
       child: MaterialApp.router(

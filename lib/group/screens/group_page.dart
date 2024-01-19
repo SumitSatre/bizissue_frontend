@@ -1,4 +1,5 @@
 import 'package:bizissue/group/controller/group_controller.dart';
+import 'package:bizissue/group/controller/view_group_controller.dart';
 import 'package:bizissue/group/widgets/group_tile.dart';
 import 'package:bizissue/business_home_page/models/group_short_model.dart'; // Import your GroupShortModel class
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
@@ -31,6 +32,13 @@ class _GroupPageState extends State<GroupPage> {
       // here we can set userGroupsList as [] so screen stops circular widget
       showSnackBar(context, "Unable to fetch groups data!!", failureColor);
     }
+  }
+
+  @override
+  void dispose() {
+    Provider.of<GroupProvider>(context, listen: false).dispose();
+    Provider.of<ViewGroupProvider>(context, listen: false).dispose();
+    super.dispose();
   }
 
   @override
@@ -96,8 +104,20 @@ class _GroupPageState extends State<GroupPage> {
           ? BottomAppBar(
         child: ElevatedButton(
           onPressed: () {
-            // Handle the action when the button is pressed
-            print('View Button Pressed');
+            List<String> selectedGroupNames = [];
+            for (var id in selectedChats) {
+              var group = groupController.userGroupslist?.firstWhere(
+                    (group) => group.groupId == id,
+                orElse: () => GroupShortModel(groupId: '', name: 'Unknown', createdDate: ''),
+              ) ?? GroupShortModel(groupId: '', name: 'Unknown', createdDate: '');
+
+              selectedGroupNames.add(group.name);
+            }
+
+            final viewGroupController = Provider.of<ViewGroupProvider>(context, listen: false);
+            viewGroupController.groupIds = selectedChats.toList();
+            viewGroupController.groupNames = selectedGroupNames;
+            GoRouter.of(context).pushNamed(MyAppRouteConstants.multipleGroupDetailedRouteName);
           },
           child: Text('View'),
         ),
