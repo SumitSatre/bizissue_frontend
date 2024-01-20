@@ -3,6 +3,7 @@ import 'package:bizissue/business_home_page/screens/controller/business_controll
 import 'package:bizissue/business_home_page/screens/controller/create_business_controller.dart';
 import 'package:bizissue/business_home_page/screens/controller/create_issue_controller.dart';
 import 'package:bizissue/group/controller/group_controller.dart';
+import 'package:bizissue/group/widgets/group_selection_dialog.dart';
 import 'package:bizissue/group/widgets/user_selection_widget.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/colors.dart';
@@ -44,15 +45,21 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
     if (homeController.userlistModel == null) {
       callInit(context);
     }
+
     final groupController = Provider.of<GroupProvider>(context, listen: false);
 
-   // final createIssueController =
-   //     Provider.of<CreateIssueProvider>(context, listen: false);
+    if (groupController.groupUsersIds == null) {
+      groupController.getGroupsWithIdsList(homeController.selectedBusiness);
+    }
+
+    // final createIssueController =
+    //     Provider.of<CreateIssueProvider>(context, listen: false);
 
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 
-    _selectedOptions = groupController.createGroupResponseModel?.usersToAddIds ?? [];
+    _selectedOptions =
+        groupController.createGroupResponseModel?.usersToAddIds ?? [];
 
     return SafeArea(
       child: Scaffold(
@@ -108,19 +115,52 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                       child: CircularProgressIndicator(),
                     )
                   : UserSelectionWidget(
-                userList: homeController.userlistModelWihoutMySelf ?? [],
-                selectedOptions: _selectedOptions,
-                onSelectionChanged: (selectedOptions) {
+                      userList: homeController.userlistModelWihoutMySelf ?? [],
+                      selectedOptions: _selectedOptions,
+                      onSelectionChanged: (selectedOptions) {
+                        setState(() {
+                          _selectedOptions = selectedOptions;
+                          groupController.updateSelectedUsers(_selectedOptions);
+                        });
+                      },
+                    ),
+              SizedBox(height: height * 0.02),
+              Container(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Select Groups To Add: ",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: "Poppins",
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+              ),
+              SizedBox(height: height * 0.02),
+
+              (homeController.userlistModel == null || groupController.groupUsersIds == null)
+                  ? Container(
+                height: 35,
+                child: CircularProgressIndicator(),
+              )
+                  :
+              GroupSelectionWidget(
+                groupUsersIds:  groupController.groupUsersIds ?? [],
+                selectedUsers: _selectedOptions,
+                onSelectionChanged: (selectedUsers) {
                   setState(() {
-                    _selectedOptions = selectedOptions;
-                    groupController.updateSelectedUsers(_selectedOptions);
+                    print("These are selected users : ${selectedUsers}");
                   });
                 },
               ),
+
               SizedBox(height: height * 0.02),
               SubmitButton(
                 onPressed: () {
-                  groupController.createGroupRequest(context , homeController.selectedBusiness);
+                  groupController.createGroupRequest(
+                      context, homeController.selectedBusiness);
                 },
               ), // Add a closing parenthesis here
             ],
