@@ -3,6 +3,7 @@ import 'package:bizissue/business_home_page/screens/controller/business_controll
 import 'package:bizissue/business_home_page/screens/controller/create_business_controller.dart';
 import 'package:bizissue/business_home_page/screens/controller/create_issue_controller.dart';
 import 'package:bizissue/group/controller/group_controller.dart';
+import 'package:bizissue/group/widgets/user_selection_widget.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/colors.dart';
 import 'package:bizissue/utils/utils.dart';
@@ -106,103 +107,16 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                       height: 35,
                       child: CircularProgressIndicator(),
                     )
-                  : Row(
-                      children: [
-                        SizedBox(width: 5),
-                        InkWell(
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: const Text('Select Options'),
-                                  content: StatefulBuilder(
-                                    builder: (BuildContext context,
-                                        StateSetter setState) {
-                                      return SizedBox(
-                                        width: double.maxFinite,
-                                        child: ListView.builder(
-                                          itemCount: homeController
-                                                  .userlistModelWihoutMySelf
-                                                  ?.length ??
-                                              0,
-                                          itemBuilder: (context, index) {
-                                            UserListModel userModel = homeController
-                                                    .userlistModelWihoutMySelf![
-                                                index];
-                                            return CheckboxListTile(
-                                              title: Text(userModel.name),
-                                              value: _selectedOptions
-                                                  .contains(userModel.userId),
-                                              onChanged: (bool? value) {
-                                                setState(() {
-                                                  if (value ?? false) {
-                                                    _selectedOptions
-                                                        .add(userModel.userId);
-                                                  } else {
-                                                    _selectedOptions.remove(
-                                                        userModel.userId);
-                                                  }
-                                                });
-                                              },
-                                            );
-                                          },
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  actions: <Widget>[
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        // Replace 'controller' with the correct controller instance
-                                        groupController.updateSelectedUsers(
-                                            _selectedOptions);
-                                        Navigator.of(context).pop();
-                                        setState(() {
-
-                                        });
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                          child: Container(
-                            height: height * 0.06,
-                            width: width * 0.9,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                style: BorderStyle.solid,
-                                color: Colors.grey,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    _selectedOptions.isEmpty
-                                        ? "Choose Users"
-                                        : _selectedOptions
-                                            .map((userId) => homeController
-                                                .userlistModelWihoutMySelf!
-                                                .firstWhere((user) =>
-                                                    user.userId == userId)
-                                                .name)
-                                            .join(', '),
-                                  ),
-                                ),
-                                Icon(Icons.keyboard_arrow_down_rounded)
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                  : UserSelectionWidget(
+                userList: homeController.userlistModelWihoutMySelf ?? [],
+                selectedOptions: _selectedOptions,
+                onSelectionChanged: (selectedOptions) {
+                  setState(() {
+                    _selectedOptions = selectedOptions;
+                    groupController.updateSelectedUsers(_selectedOptions);
+                  });
+                },
+              ),
               SizedBox(height: height * 0.02),
               SubmitButton(
                 onPressed: () {

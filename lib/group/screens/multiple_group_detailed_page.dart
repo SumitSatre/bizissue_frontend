@@ -37,7 +37,7 @@ class _MultipleGroupDetailedPageState extends State<MultipleGroupDetailedPage> {
 
   void callInit(String businessId) async {
     final viewGroupController = Provider.of<ViewGroupProvider>(context, listen: false);
-    await viewGroupController.getMultipleGroupsData(businessId, viewGroupController.groupNames ?? []);
+    await viewGroupController.getMultipleGroupsData(context , businessId, viewGroupController.groupIds ?? []);
     combinedNames = viewGroupController.groupNames?.join(', ') ?? "";
     setState(() {});
   }
@@ -100,8 +100,6 @@ class _MultipleGroupDetailedPageState extends State<MultipleGroupDetailedPage> {
                       ),
                     ],
                   ),
-
-                  VerticalMenuDropDownOfGroupView()
                 ],
               ),
             ),

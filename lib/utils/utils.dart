@@ -1,23 +1,28 @@
 import 'package:bizissue/Issue/models/issue_model.dart';
+import 'package:bizissue/business_home_page/models/user_list_model.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
-void showSnackBar(context, message, color) {
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    content: Text(
-      message,
-      style: const TextStyle(
-        fontSize: 14,
+import 'package:flutter/material.dart';
+
+void showSnackBar(BuildContext context, String message, Color color) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        message,
+        style: const TextStyle(
+          fontSize: 14,
+        ),
       ),
+      action: SnackBarAction(
+        label: "OK",
+        onPressed: () {},
+        textColor: Colors.white,
+      ),
+      duration: const Duration(seconds: 2),
+      backgroundColor: color,
     ),
-    action: SnackBarAction(
-      label: "OK",
-      onPressed: () {},
-      textColor: Colors.white,
-    ),
-    duration: const Duration(seconds: 2),
-    backgroundColor: color,
-  ));
+  );
 }
 
 String formatDate(DateTime date) {
@@ -91,4 +96,16 @@ List<GroupIssue> groupAndSortIssues(List<IssueModel> issues) {
   formattedIssues.sort((a, b) => a.nextFollowUpDate!.compareTo(b.nextFollowUpDate!));
 
   return formattedIssues;
+}
+
+List<UserListModel> removeUsersByIds(
+    List<UserListModel> userList, List<String> idsToRemove) {
+  return userList
+      .where((user) => !idsToRemove.contains(user.userId))
+      .toList();
+}
+
+List<UserListModel> selectUsersByIds(
+    List<UserListModel> userList, List<String> idsToSelect) {
+  return userList.where((user) => idsToSelect.contains(user.userId)).toList();
 }

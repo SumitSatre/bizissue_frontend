@@ -40,3 +40,44 @@ class GroupModel {
     );
   }
 }
+
+class GroupUsersIdModel {
+  String groupId;
+  String name;
+  List<String> usersIds;
+
+  GroupUsersIdModel({
+    required this.groupId,
+    required this.name,
+    required this.usersIds,
+  });
+
+  factory GroupUsersIdModel.fromJson(Map<String, dynamic> json) {
+    return GroupUsersIdModel(
+      groupId: json['groupId'] as String,
+      name: json['name'] as String,
+      usersIds: (json['usersIds'] as List).map((id) => id as String).toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'groupId': groupId,
+      'name': name,
+      'usersIds': usersIds,
+    };
+  }
+
+  GroupUsersIdModel copyWith({
+    String? groupId,
+    String? name,
+    List<String>? usersIds,
+  }) {
+    return GroupUsersIdModel(
+      groupId: groupId ?? this.groupId,
+      name: name ?? this.name,
+      usersIds: usersIds ?? this.usersIds,
+    );
+  }
+
+}

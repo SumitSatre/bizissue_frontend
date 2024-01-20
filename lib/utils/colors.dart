@@ -7,6 +7,7 @@ const Color successColor = Color(0xFF008000);
 const Color invalidColor = Colors.amber;
 const Color failureColor = Colors.amber;
 const Color submitButtonsColor = Colors.blue;
+const Color errorColor = Colors.amber;
 const fontFamily = "Poppins";
 
 // Colors.green.shade600 good color

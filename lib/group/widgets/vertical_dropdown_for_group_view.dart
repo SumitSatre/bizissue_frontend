@@ -1,3 +1,4 @@
+import 'package:bizissue/business_home_page/models/user_list_model.dart';
 import 'package:bizissue/group/controller/group_controller.dart';
 import 'package:bizissue/group/controller/view_group_controller.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
@@ -40,34 +41,54 @@ void showDropdown(BuildContext context, String businessId, Function deleteGroup)
     Offset.zero & overlay.size,
   );
 
+  final List<PopupMenuEntry<String>> menuItems = buildMenuItems(deleteGroup, businessId);
+
   final result = await showMenu(
     context: context,
     position: position,
-    items: menuItemsList.map((String s) {
-      return PopupMenuItem<String>(
-        value: s,
-        child: Text("  $s"),
-      );
-    }).toList(),
+    items: menuItems,
   );
 
-  if (result != null) {
-    if (result == "Delete Group") {
-      // Call the delete group function here
-      deleteGroup(context , businessId);
-    }
-  }
+  // Handle the selected menu item
+  handleSelectedMenuItem(result, context, businessId, deleteGroup);
 }
 
-List<String> menuItemsList = [
-  "Delete Group"
-];
+List<PopupMenuEntry<String>> buildMenuItems(Function deleteGroup, String businessId) {
+  return [
+    PopupMenuItem<String>(
+      value: "Remove Users",
+      child: Text("Remove Users"),
+    ),
+    PopupMenuItem<String>(
+      value: "Add Users",
+      child: Text("Add Users"),
+    ),
+    PopupMenuItem<String>(
+      value: "Delete Group",
+      child: Text("Delete Group"),
+    ),
+    // Add more items as needed
+    // PopupMenuItem<String>(
+    //   value: "Another Action",
+    //   child: Text("Another Action"),
+    // ),
+  ];
+}
 
-extension ListExtension<T> on List<T> {
-  T? firstWhereOrNull(bool Function(T) test) {
-    for (final element in this) {
-      if (test(element)) return element;
-    }
-    return null;
+void handleSelectedMenuItem(String? result, BuildContext context, String businessId, Function deleteGroup) {
+  if (result == "Delete Group") {
+    // Call the delete group function here
+    deleteGroup(context, businessId);
   }
+  else if(result == "Remove Users"){
+    final viewGroupController = Provider.of<ViewGroupProvider>(context, listen: false);
+    final homeController = Provider.of<HomeProvider>(context, listen: false);
+    viewGroupController.handleOnClickRemoveUsers(context);
+  }
+  else if(result == "Add Users"){
+    final viewGroupController = Provider.of<ViewGroupProvider>(context, listen: false);
+    final homeController = Provider.of<HomeProvider>(context, listen: false);
+    viewGroupController.handleOnClickAddUsers(context);
+  }
+  // Add more handling for other menu items if needed
 }

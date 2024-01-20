@@ -27,6 +27,8 @@ class GroupProvider extends ChangeNotifier {
   CreateGroupResponseModel? _createGroupResponseModel ;
   CreateGroupResponseModel? get createGroupResponseModel => _createGroupResponseModel;
 
+  List<GroupUsersIdModel>? groupUsersIds = null;
+
   final nameController = TextEditingController();
 
   Future<List<GroupShortModel>> getGroupsList(String id) async {
@@ -57,6 +59,33 @@ class GroupProvider extends ChangeNotifier {
   }
 
   // here i have to make changes
+
+  Future<void> getGroupsWithIdsList(String businessId) async {
+    if (_userGroupslist != null) {
+      // Return if the data is already loaded
+      return;
+    }
+
+    print("This is id : $businessId");
+    String accessToken = await SharedPreferenceService().getAccessToken();
+    ApiHttpResponse response =
+    await callUserGetMethod("group/get/users/ids/$businessId", accessToken);
+
+    final data = jsonDecode(response.responceString!);
+    debugPrint(data.toString());
+
+    if (response.responseCode == 200) {
+      print("This is data of users lists : ${data["data"]["groups"]}");
+
+      groupUsersIds = (data["data"]["groups"] as List)
+          .map((item) => GroupUsersIdModel.fromJson(item))
+          .toList();
+
+      notifyListeners();
+    } else {
+      // Handle the error case accordingly
+    }
+  }
 
 
   void setIsFetching(bool val){

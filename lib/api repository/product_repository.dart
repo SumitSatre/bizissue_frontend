@@ -87,6 +87,51 @@ Future<ApiHttpResponse> callUserPostMethod(
   }
 }
 
+Future<ApiHttpResponse> callUserPutMethod(
+    Map authData, String apiUrl, String token) async {
+  try {
+    String url = domain + apiUrl;
+
+    Map<String, String> header = {
+      'Content-Type': 'application/json',
+      'accept': ' */*',
+      'authorization': 'Bearer $token',
+    };
+
+    http.Response response = await http.put(Uri.parse(url),
+        body: json.encode(authData), headers: header);
+    ApiHttpResponse apiResponse = ApiHttpResponse();
+    apiResponse.responseCode = response.statusCode;
+    apiResponse.responceString = response.body;
+
+    return apiResponse;
+  } on SocketException catch (_) {
+    ApiHttpResponse apiResponse = ApiHttpResponse();
+    apiResponse.responseCode = 503;
+    apiResponse.responceString = json.encode({
+      "success": false,
+      "message": "Service temporarily unavailable due to internet connection issues",
+    });
+    return apiResponse;
+  } on http.ClientException catch (e) {
+    // Handle token-related issues
+    ApiHttpResponse apiResponse = ApiHttpResponse();
+    apiResponse.responseCode = 401;
+    apiResponse.responceString = json.encode(
+        {"success": false, "message": "Token is Invalid"});
+    return apiResponse;
+  } catch (e) {
+    debugPrint("catch error $e");
+    ApiHttpResponse apiResponse = ApiHttpResponse();
+    apiResponse.responseCode = 401;
+    apiResponse.responceString = json.encode(
+        {"success": false, "message": AppRemoteRoutes.someThingWentWrong});
+    return apiResponse;
+  }
+}
+
+
+
 Future<ApiHttpResponse> callGetMethod(String apiUrl) async {
   try {
     String url = domain + apiUrl;

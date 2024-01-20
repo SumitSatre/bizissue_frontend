@@ -98,7 +98,7 @@ class _BusinessPageState extends State<BusinessPage> {
               fontFamily: "Poppins",
               letterSpacing: 1.0,
               fontWeight: FontWeight.w500,
-              color: kprimaryColor),
+              color:  Color(0xFF6E24E9) ),
           iconSize: 28,
           elevation: 100,
           unselectedFontSize: 12,

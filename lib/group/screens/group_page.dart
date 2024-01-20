@@ -36,8 +36,8 @@ class _GroupPageState extends State<GroupPage> {
 
   @override
   void dispose() {
-    Provider.of<GroupProvider>(context, listen: false).dispose();
-    Provider.of<ViewGroupProvider>(context, listen: false).dispose();
+    // Provider.of<GroupProvider>(context, listen: false).dispose();
+    // Provider.of<ViewGroupProvider>(context, listen: false).dispose();
     super.dispose();
   }
 
@@ -88,6 +88,7 @@ class _GroupPageState extends State<GroupPage> {
                               selectedChats.add(chat);
                             }
                           } else {
+                            Provider.of<ViewGroupProvider>(context, listen: false).setGroupDetailsNull();
                               GoRouter.of(context).pushNamed(MyAppRouteConstants.groupDetailedRouteName , params: {
                                 "groupId" : group.groupId,
                                 "groupName" : group.name
@@ -104,19 +105,19 @@ class _GroupPageState extends State<GroupPage> {
           ? BottomAppBar(
         child: ElevatedButton(
           onPressed: () {
-            List<String> selectedGroupNames = [];
-            for (var id in selectedChats) {
+            final viewGroupController = Provider.of<ViewGroupProvider>(context, listen: false);
+
+            viewGroupController.groupIds = selectedChats.toList();
+
+            viewGroupController.groupNames = selectedChats.map((id) {
               var group = groupController.userGroupslist?.firstWhere(
                     (group) => group.groupId == id,
                 orElse: () => GroupShortModel(groupId: '', name: 'Unknown', createdDate: ''),
               ) ?? GroupShortModel(groupId: '', name: 'Unknown', createdDate: '');
 
-              selectedGroupNames.add(group.name);
-            }
+              return group.name;
+            }).toList();
 
-            final viewGroupController = Provider.of<ViewGroupProvider>(context, listen: false);
-            viewGroupController.groupIds = selectedChats.toList();
-            viewGroupController.groupNames = selectedGroupNames;
             GoRouter.of(context).pushNamed(MyAppRouteConstants.multipleGroupDetailedRouteName);
           },
           child: Text('View'),
