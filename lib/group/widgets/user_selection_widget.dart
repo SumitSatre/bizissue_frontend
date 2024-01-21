@@ -83,8 +83,11 @@ class _UserSelectionWidgetState extends State<UserSelectionWidget> {
                 widget.selectedOptions.isEmpty
                     ? "Choose Users"
                     : widget.selectedOptions
-                    .map((userId) => widget.userList
-                    .firstWhere((user) => user.userId == userId)
+                    .map((userId) =>
+                widget.userList.firstWhere(
+                      (user) => user.userId == userId,
+                  orElse: () => UserListModel(userId: userId, name: "Unknown"),
+                )
                     .name)
                     .join(', '),
               ),

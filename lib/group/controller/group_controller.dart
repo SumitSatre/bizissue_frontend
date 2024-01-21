@@ -81,16 +81,18 @@ class GroupProvider extends ChangeNotifier {
           .map((item) => GroupUsersIdModel.fromJson(item))
           .toList();
 
-      notifyListeners();
+      if(groupUsersIds == null){
+        groupUsersIds = [];
+      }
     } else {
-      // Handle the error case accordingly
+      groupUsersIds = [];
     }
+    notifyListeners();
   }
 
 
   void setIsFetching(bool val){
     _isFetching = val;
-    notifyListeners();
   }
 
   void clearGroupPageData(){
@@ -126,7 +128,10 @@ class GroupProvider extends ChangeNotifier {
       showSnackBar(context, "Fill complete details!!", invalidColor);
       return;
     }
-    print("Done");
+    // print("Done");
+    setIsFetching(true);
+    notifyListeners();
+
     String accessToken = await SharedPreferenceService().getAccessToken();
 
     print(jsonEncode(_createGroupResponseModel!.toJson()));
@@ -144,6 +149,7 @@ class GroupProvider extends ChangeNotifier {
       showSnackBar(context, "Unable to create group!!", failureColor);
     }
     debugPrint(response.responceString);
+    setIsFetching(false);
     notifyListeners();
   }
 

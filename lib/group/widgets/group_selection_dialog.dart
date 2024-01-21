@@ -1,17 +1,21 @@
-
+import 'package:bizissue/business_home_page/models/user_list_model.dart';
 import 'package:bizissue/group/models/group_model.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class GroupSelectionWidget extends StatefulWidget {
   final List<GroupUsersIdModel> groupUsersIds;
   final List<String> selectedUsers;
-  final Function(List<String>) onSelectionChanged;
+  final List<UserListModel>? userlistModel; // Added userlistModel
 
   GroupSelectionWidget({
     required this.groupUsersIds,
     required this.selectedUsers,
     required this.onSelectionChanged,
+    this.userlistModel, // Added userlistModel to the constructor
   });
+
+  final Function(List<String>) onSelectionChanged;
 
   @override
   _GroupSelectionWidgetState createState() => _GroupSelectionWidgetState();
@@ -40,14 +44,12 @@ class _GroupSelectionWidgetState extends State<GroupSelectionWidget> {
                             children: [
                               Text(group.name),
                               Checkbox(
-                                value: widget.selectedUsers.contains(group.groupId),
+                                value: areAllGroupMembersSelected(group , widget.selectedUsers),
                                 onChanged: (bool? value) {
                                   setState(() {
                                     if (value ?? false) {
-                                      widget.selectedUsers.add(group.groupId);
                                       widget.selectedUsers.addAll(group.usersIds);
                                     } else {
-                                      widget.selectedUsers.remove(group.groupId);
                                       widget.selectedUsers.removeWhere((userId) =>
                                           group.usersIds.contains(userId));
                                     }
@@ -59,7 +61,7 @@ class _GroupSelectionWidgetState extends State<GroupSelectionWidget> {
                           children: [
                             for (String userId in group.usersIds)
                               CheckboxListTile(
-                                title: Text(userId),
+                                title: Text(getUserName(userId)),
                                 value: widget.selectedUsers.contains(userId),
                                 onChanged: (bool? value) {
                                   setState(() {
@@ -73,8 +75,6 @@ class _GroupSelectionWidgetState extends State<GroupSelectionWidget> {
                               ),
                           ],
                         );
-
-
                       },
                     ),
                   );
@@ -83,8 +83,12 @@ class _GroupSelectionWidgetState extends State<GroupSelectionWidget> {
               actions: <Widget>[
                 ElevatedButton(
                   onPressed: () {
-                    widget.onSelectionChanged(widget.selectedUsers);
-                    Navigator.of(context).pop();
+                    // Remove all group IDs from the selectedUsers list
+                    widget.selectedUsers.removeWhere((userId) =>
+                        widget.groupUsersIds.any((group) => group.groupId == userId));
+
+                    widget.onSelectionChanged(removeDuplicates(widget.selectedUsers));
+                    GoRouter.of(context).pop();
                   },
                   child: const Text('OK'),
                 ),
@@ -110,7 +114,7 @@ class _GroupSelectionWidgetState extends State<GroupSelectionWidget> {
               child: Text(
                 widget.selectedUsers.isEmpty
                     ? "Choose Users"
-                    : widget.selectedUsers.join(', '),
+                    : widget.selectedUsers.map((userId) => getUserName(userId)).join(', '),
               ),
             ),
             Icon(Icons.keyboard_arrow_down_rounded),
@@ -119,4 +123,34 @@ class _GroupSelectionWidgetState extends State<GroupSelectionWidget> {
       ),
     );
   }
+
+  // Helper method to get user name based on user ID
+  String getUserName(String userId) {
+    // print("Hi");
+    if (widget.userlistModel != null) {
+      var user = widget.userlistModel!.firstWhere((user) => user.userId == userId, orElse: () => UserListModel(userId: userId, name: "Unknown"));
+      return user.name;
+    } else {
+      return userId; // Return user ID if userlistModel is not provided
+    }
+  }
+
+  bool areAllGroupMembersSelected(GroupUsersIdModel groupUsersIds, List<String> selectedUsers) {
+    // Flatten the list of usersIds from all groups
+    List<String> allGroupMembers = groupUsersIds.usersIds ?? [];
+    // Check if all group members are present in the selectedUsers list
+    return allGroupMembers.every((userId) => selectedUsers.contains(userId));
+  }
+
+  List<String> removeDuplicates(List<String> inputList) {
+    // Using a Set to efficiently remove duplicates
+    Set<String> uniqueSet = Set<String>.from(inputList);
+
+    // Converting the Set back to a List
+    List<String> result = uniqueSet.toList();
+
+    return result;
+  }
+
+
 }

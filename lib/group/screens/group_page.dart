@@ -118,6 +118,8 @@ class _GroupPageState extends State<GroupPage> {
               return group.name;
             }).toList();
 
+            isMultiSelectMode = false;
+            selectedChats = <String>{};
             GoRouter.of(context).pushNamed(MyAppRouteConstants.multipleGroupDetailedRouteName);
           },
           child: Text('View'),

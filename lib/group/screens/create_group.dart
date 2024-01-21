@@ -62,111 +62,129 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         groupController.createGroupResponseModel?.usersToAddIds ?? [];
 
     return SafeArea(
-      child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(height * .19),
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-                vertical: height * 0.02, horizontal: width * .04),
-            child: Row(
+      child: Stack(children: [
+        Scaffold(
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(height * .19),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: height * 0.02, horizontal: width * .04),
+              child: Row(
+                children: [
+                  CustomBackButton(),
+                  SizedBox(width: 20),
+                  Text(
+                    "Create Group",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: "Poppins",
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.only(left: 15, right: 15),
+            child: Column(
               children: [
-                CustomBackButton(),
-                SizedBox(width: 20),
-                Text(
-                  "Create Group",
-                  style: TextStyle(
+                CustomTextField(
+                  controller: groupController.nameController,
+                  onChanged: (p0) => groupController.updateGroupName(p0 ?? ""),
+                  labelText: "Name*",
+                ),
+                SizedBox(height: height * 0.02),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Select Users To Add: ",
+                    style: TextStyle(
                       color: Colors.black,
                       fontFamily: "Poppins",
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
                 ),
+                SizedBox(height: height * 0.02),
+
+                homeController.userlistModel == null
+                    ? Container(
+                        height: 35,
+                        child: CircularProgressIndicator(),
+                      )
+                    : UserSelectionWidget(
+                        userList:
+                            homeController.userlistModelWihoutMySelf ?? [],
+                        selectedOptions: _selectedOptions,
+                        onSelectionChanged: (selectedOptions) {
+                          setState(() {
+                            _selectedOptions = selectedOptions;
+                            groupController
+                                .updateSelectedUsers(_selectedOptions);
+                          });
+                        },
+                      ),
+                SizedBox(height: height * 0.02),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Select Groups To Add: ",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: "Poppins",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                SizedBox(height: height * 0.02),
+
+                (homeController.userlistModel == null ||
+                        groupController.groupUsersIds == null)
+                    ? Container(
+                        height: 35,
+                        child: CircularProgressIndicator(),
+                      )
+                    : GroupSelectionWidget(
+                        groupUsersIds: groupController.groupUsersIds ?? [],
+                        selectedUsers: _selectedOptions,
+                        userlistModel: homeController.userlistModel,
+                        onSelectionChanged: (selectedUsers) {
+                          setState(() {
+                            print(
+                                "These are selected users : ${selectedUsers}");
+                            _selectedOptions = selectedUsers;
+                            groupController
+                                .updateSelectedUsers(_selectedOptions);
+                          });
+                        },
+                      ),
+
+                SizedBox(height: height * 0.02),
+                SubmitButton(
+                  onPressed: () {
+                    groupController.createGroupRequest(
+                        context, homeController.selectedBusiness);
+                  },
+                ), // Add a closing parenthesis here
               ],
             ),
           ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.only(left: 15, right: 15),
-          child: Column(
-            children: [
-              CustomTextField(
-                controller: groupController.nameController,
-                onChanged: (p0) => groupController.updateGroupName(p0 ?? ""),
-                labelText: "Name*",
-              ),
-              SizedBox(height: height * 0.02),
-              Container(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Select Users To Add: ",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontFamily: "Poppins",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-              ),
-              SizedBox(height: height * 0.02),
 
-              homeController.userlistModel == null
-                  ? Container(
-                      height: 35,
-                      child: CircularProgressIndicator(),
-                    )
-                  : UserSelectionWidget(
-                      userList: homeController.userlistModelWihoutMySelf ?? [],
-                      selectedOptions: _selectedOptions,
-                      onSelectionChanged: (selectedOptions) {
-                        setState(() {
-                          _selectedOptions = selectedOptions;
-                          groupController.updateSelectedUsers(_selectedOptions);
-                        });
-                      },
-                    ),
-              SizedBox(height: height * 0.02),
-              Container(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Select Groups To Add: ",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontFamily: "Poppins",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-              ),
-              SizedBox(height: height * 0.02),
-
-              (homeController.userlistModel == null || groupController.groupUsersIds == null)
-                  ? Container(
-                height: 35,
-                child: CircularProgressIndicator(),
-              )
-                  :
-              GroupSelectionWidget(
-                groupUsersIds:  groupController.groupUsersIds ?? [],
-                selectedUsers: _selectedOptions,
-                onSelectionChanged: (selectedUsers) {
-                  setState(() {
-                    print("These are selected users : ${selectedUsers}");
-                  });
-                },
-              ),
-
-              SizedBox(height: height * 0.02),
-              SubmitButton(
-                onPressed: () {
-                  groupController.createGroupRequest(
-                      context, homeController.selectedBusiness);
-                },
-              ), // Add a closing parenthesis here
-            ],
+        if (groupController
+            .isFetching) // Show circular progress indicator conditionally
+          Container(
+            color: Colors.black.withOpacity(0.5),
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
           ),
-        ),
-      ),
+      ]),
     );
   }
 }
