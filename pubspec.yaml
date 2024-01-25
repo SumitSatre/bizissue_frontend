@@ -50,6 +50,8 @@ dependencies:
   intl: ^0.18.0
   flutter_xlider: ^3.5.0
   toggle_switch: ^2.1.0
+  flutter_chat_ui: ^1.6.10
+  socket_io_client: ^2.0.3+1
   
 
 dev_dependencies:
