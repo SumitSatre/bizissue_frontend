@@ -9,6 +9,10 @@ import 'package:bizissue/utils/services/shared_preferences_service.dart';
 import 'package:bizissue/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 
+import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
+
 class IssueProvider extends ChangeNotifier {
   IssueModel? _issueModel;
   IssueModel? get issueModel => _issueModel;
@@ -333,4 +337,47 @@ class IssueProvider extends ChangeNotifier {
     }
     setFetching(false);
   }
+
+  Future<void> uploadDocument(File file) async {
+    try {
+      if (file == null) {
+        throw Exception("No document provided");
+      }
+
+      // Create a multipart request
+      var request = http.MultipartRequest('POST', Uri.parse('https://bizissue-backend.onrender.com/api/v1/upload'));
+
+      // Add the file to the request
+      var stream = http.ByteStream(file.openRead());
+      var length = await file.length();
+      var multipartFile = http.MultipartFile('document', stream, length,
+          filename: path.basename(file.path));
+
+      request.files.add(multipartFile);
+
+      // Send the request
+      var response = await request.send();
+
+      // Read response stream and convert to string
+      var responseData = await response.stream.bytesToString();
+
+      // Print the response data
+      print("Response Data: $responseData");
+
+      // Check the status code of the response
+      if (response.statusCode == 200) {
+        // Handle success
+        print('Document uploaded successfully.');
+      } else {
+        // Handle failure
+        throw Exception('Failed to upload document. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      // Handle errors
+      print('Error uploading document: $error');
+      throw error;
+    }
+  }
+
+
 }
