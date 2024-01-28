@@ -338,20 +338,27 @@ class IssueProvider extends ChangeNotifier {
     setFetching(false);
   }
 
-  Future<void> uploadDocument(File file) async {
+  Future<String> uploadDocument(File file) async {
     try {
       if (file == null) {
         throw Exception("No document provided");
       }
 
       // Create a multipart request
-      var request = http.MultipartRequest('POST', Uri.parse('https://bizissue-backend.onrender.com/api/v1/upload'));
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('https://bizissue-backend.onrender.com/api/v1/upload'),
+      );
 
       // Add the file to the request
       var stream = http.ByteStream(file.openRead());
       var length = await file.length();
-      var multipartFile = http.MultipartFile('document', stream, length,
-          filename: path.basename(file.path));
+      var multipartFile = http.MultipartFile(
+        'document',
+        stream,
+        length,
+        filename: path.basename(file.path),
+      );
 
       request.files.add(multipartFile);
 
@@ -361,23 +368,35 @@ class IssueProvider extends ChangeNotifier {
       // Read response stream and convert to string
       var responseData = await response.stream.bytesToString();
 
+      // Parse the JSON response data
+      var jsonResponse = json.decode(responseData);
+
       // Print the response data
-      print("Response Data: $responseData");
+      print("Response Data: $jsonResponse");
 
       // Check the status code of the response
       if (response.statusCode == 200) {
         // Handle success
         print('Document uploaded successfully.');
+
+        // Extract documentUrl from jsonResponse
+        String docUrl = jsonResponse['documentUrl'];
+
+        return docUrl;
       } else {
+        return "failure";
         // Handle failure
         throw Exception('Failed to upload document. Status code: ${response.statusCode}');
+
       }
     } catch (error) {
       // Handle errors
+      return "failure";
       print('Error uploading document: $error');
       throw error;
     }
   }
+
 
 
 }

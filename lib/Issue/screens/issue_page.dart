@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bizissue/Issue/models/message_model.dart';
 import 'package:bizissue/Issue/screens/controllers/issue_controller.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
+import 'package:bizissue/utils/colors.dart';
 import 'package:bizissue/utils/utils.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -362,6 +363,9 @@ class _IssuePageState extends State<IssuePage> {
                                   bool isMe = message.sender.id ==
                                       (homeController.userModel?.id ??
                                           ""); // Example condition
+                                  if(message.isAttachment){
+                                    return DocumentBubble(message: message , isMe: isMe );
+                                  }
                                   return ChatBubble(
                                       message: message, isMe: isMe);
                                 }).toList() ??
@@ -388,6 +392,7 @@ class _IssuePageState extends State<IssuePage> {
                         GestureDetector(
                           onTap: () async {
                             // Assuming this is inside an async function
+                            /*
                             FilePickerResult? result =
                                 await FilePicker.platform.pickFiles();
 
@@ -403,9 +408,46 @@ class _IssuePageState extends State<IssuePage> {
                               String fileName = platformFile.name!;
 
                               print(fileName);
+                              */
+                            FilePickerResult? result =
+                                await FilePicker.platform.pickFiles();
+                            if (result != null) {
+                              PlatformFile platformFile = result.files.first;
+                              File file = File(platformFile.path!);
+                              String docUrl =
+                                  await issueController.uploadDocument(file);
 
+                              if (docUrl == "failure") {
+                                showSnackBar(
+                                    context,
+                                    "Unable to upload document!!",
+                                    failureColor);
+                                return;
+                              } else {
+                                // Get filename and file type
+                                String fileName = platformFile.name;
+                                String fileType = platformFile.extension ?? "unknown";
+
+                                socket.emit('issue-message-doc', {
+                                  'issueId': widget.issueId,
+                                  'businessId': widget.businessId,
+                                  'message': {
+                                    'sender': {
+                                      'id': homeController.userModel?.id ?? "",
+                                      'name':
+                                          homeController.userModel?.name ?? ""
+                                    },
+                                    'isAttachment': true,
+                                    "attachments": {
+                                      "url": docUrl,
+                                      "type": fileType,
+                                      "name": fileName
+                                    }
+                                  },
+                                });
+
+                              }
                             }
-                            GoRouter.of(context).pop();
                           },
                           child: CircleAvatar(
                             backgroundColor: Colors.blue,
@@ -566,18 +608,25 @@ class ChatBubble extends StatelessWidget {
 
 class DocumentBubble extends StatelessWidget {
   final MessageModel message;
+  final bool isMe;
 
-  const DocumentBubble({Key? key, required this.message}) : super(key: key);
+  const DocumentBubble({
+    Key? key,
+    required this.message,
+    required this.isMe,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final AlignmentGeometry alignment = isMe ? Alignment.centerRight : Alignment.centerLeft;
+
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: alignment,
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 4.0),
         padding: EdgeInsets.all(12.0),
         decoration: BoxDecoration(
-          color: Colors.grey[300],
+          color: isMe ? Colors.lightBlue : Colors.grey[300],
           borderRadius: BorderRadius.circular(24.0),
         ),
         child: Row(
@@ -599,16 +648,19 @@ class DocumentBubble extends StatelessWidget {
                 ),
                 SizedBox(height: 2.0),
                 Text(
-                  message.content ?? "",
+                  ((message.attachments?.name?.toString()?.length ?? 0) > 20)
+                      ? '${message.attachments?.name?.toString()?.substring(0, 20)}...'
+                      : message.attachments?.name?.toString() ?? "",
                   style: TextStyle(
                     color: Colors.black87,
                     fontSize: 16.0,
                   ),
                 ),
+
               ],
             ),
             SizedBox(width: 8.0),
-            RoundDownloadButton(), // Assuming you have a RoundDownloadButton widget
+            if (isMe) RoundDownloadButton(),
           ],
         ),
       ),
