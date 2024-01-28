@@ -7,6 +7,7 @@ import 'package:bizissue/api%20repository/product_repository.dart';
 import 'package:bizissue/utils/colors.dart';
 import 'package:bizissue/utils/services/shared_preferences_service.dart';
 import 'package:bizissue/utils/utils.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'dart:io';
@@ -344,11 +345,23 @@ class IssueProvider extends ChangeNotifier {
         throw Exception("No document provided");
       }
 
-      // Create a multipart request
-      var request = http.MultipartRequest(
-        'POST',
-        Uri.parse('https://bizissue-backend.onrender.com/api/v1/upload'),
-      );
+      Reference ref = FirebaseStorage.instance.ref().child("files/");
+
+      UploadTask task = ref.putFile(file);
+
+      TaskSnapshot snapshot = await task;
+
+      String downloadUrl = await snapshot.ref.getDownloadURL();
+
+      return downloadUrl;
+    } catch (e) {
+      return "failure";
+    }
+  }
+}
+
+
+/*
 
       // Add the file to the request
       var stream = http.ByteStream(file.openRead());
@@ -395,8 +408,4 @@ class IssueProvider extends ChangeNotifier {
       print('Error uploading document: $error');
       throw error;
     }
-  }
-
-
-
-}
+  }*/

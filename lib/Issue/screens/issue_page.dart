@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:bizissue/Issue/models/message_model.dart';
 import 'package:bizissue/Issue/screens/controllers/issue_controller.dart';
+import 'package:bizissue/Issue/widgets/document_bubble.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/colors.dart';
 import 'package:bizissue/utils/utils.dart';
@@ -11,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
 class IssuePage extends StatefulWidget {
   final String issueId;
@@ -363,8 +366,9 @@ class _IssuePageState extends State<IssuePage> {
                                   bool isMe = message.sender.id ==
                                       (homeController.userModel?.id ??
                                           ""); // Example condition
-                                  if(message.isAttachment){
-                                    return DocumentBubble(message: message , isMe: isMe );
+                                  if (message.isAttachment) {
+                                    return DocumentBubble(
+                                        message: message, isMe: isMe);
                                   }
                                   return ChatBubble(
                                       message: message, isMe: isMe);
@@ -426,7 +430,8 @@ class _IssuePageState extends State<IssuePage> {
                               } else {
                                 // Get filename and file type
                                 String fileName = platformFile.name;
-                                String fileType = platformFile.extension ?? "unknown";
+                                String fileType =
+                                    platformFile.extension ?? "unknown";
 
                                 socket.emit('issue-message-doc', {
                                   'issueId': widget.issueId,
@@ -445,7 +450,6 @@ class _IssuePageState extends State<IssuePage> {
                                     }
                                   },
                                 });
-
                               }
                             }
                           },
@@ -604,84 +608,5 @@ class ChatBubble extends StatelessWidget {
       ),
     );
   }
-}
 
-class DocumentBubble extends StatelessWidget {
-  final MessageModel message;
-  final bool isMe;
-
-  const DocumentBubble({
-    Key? key,
-    required this.message,
-    required this.isMe,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final AlignmentGeometry alignment = isMe ? Alignment.centerRight : Alignment.centerLeft;
-
-    return Align(
-      alignment: alignment,
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 4.0),
-        padding: EdgeInsets.all(12.0),
-        decoration: BoxDecoration(
-          color: isMe ? Colors.lightBlue : Colors.grey[300],
-          borderRadius: BorderRadius.circular(24.0),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.insert_drive_file, color: Colors.black87),
-            SizedBox(width: 8.0),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  message.sender.name,
-                  style: TextStyle(
-                    color: Colors.black87,
-                    fontSize: 12.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 2.0),
-                Text(
-                  ((message.attachments?.name?.toString()?.length ?? 0) > 20)
-                      ? '${message.attachments?.name?.toString()?.substring(0, 20)}...'
-                      : message.attachments?.name?.toString() ?? "",
-                  style: TextStyle(
-                    color: Colors.black87,
-                    fontSize: 16.0,
-                  ),
-                ),
-
-              ],
-            ),
-            SizedBox(width: 8.0),
-            if (isMe) RoundDownloadButton(),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class RoundDownloadButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.lightBlue,
-      ),
-      child: IconButton(
-        icon: Icon(Icons.download_rounded, color: Colors.white),
-        onPressed: () {
-          // Handle download action
-        },
-      ),
-    );
-  }
 }
