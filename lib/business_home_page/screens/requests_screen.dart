@@ -1,5 +1,6 @@
 import 'package:bizissue/business_home_page/widgets/accpet_request_dialog.dart';
 import 'package:bizissue/business_home_page/widgets/empty_screen.dart';
+import 'package:bizissue/business_home_page/widgets/reject_request_dialog.dart';
 import 'package:bizissue/business_home_page/widgets/request_tile.dart';
 import 'package:bizissue/utils/routes/app_route_constants.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +22,6 @@ class BusinessRequestsPage extends StatefulWidget {
 }
 
 class _BusinessRequestsPageState extends State<BusinessRequestsPage> {
-  late List<RequestUserModel> userList = [];
-
   @override
   void initState() {
     super.initState();
@@ -30,23 +29,27 @@ class _BusinessRequestsPageState extends State<BusinessRequestsPage> {
   }
 
   Future<void> callInit() async {
-    userList = await Provider.of<BusinessRequestsProvider>(context, listen: false)
-        .getRequestsList(widget.businessId);
+    await Provider.of<BusinessRequestsProvider>(context, listen: false)
+        .getRequestsList(context, widget.businessId);
     setState(() {}); // Trigger a rebuild after data is fetched
   }
 
   @override
   Widget build(BuildContext context) {
-    final homeController = Provider.of<HomeProvider>(context, listen: false);
-    final requestController = Provider.of<BusinessRequestsProvider>(context, listen: false);
+    // final homeController = Provider.of<HomeProvider>(context, listen: false);
+    final requestController =
+        Provider.of<BusinessRequestsProvider>(context, listen: false);
 
-    if(requestController.userRequestlist == null){
+    if (requestController.userRequestlist == null) {
       callInit();
     }
 
+    double height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.19),
+        preferredSize:
+            Size.fromHeight(MediaQuery.of(context).size.height * 0.19),
         child: Padding(
           padding: EdgeInsets.symmetric(
             vertical: MediaQuery.of(context).size.height * 0.02,
@@ -71,35 +74,68 @@ class _BusinessRequestsPageState extends State<BusinessRequestsPage> {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-         // requestController.clear();
-         // GoRouter.of(context).pop();
-         // GoRouter.of(context).pushNamed(MyAppRouteConstants.businessRequestsRouteName , params: {
-         // "businessId" : widget.businessId});
+          requestController.clear();
+          setState(() {});
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Expanded(
-              child: userList.isEmpty
-                  ? Center(child: EmptyScreen())
-                  : ListView.builder(
-                itemCount: userList.length,
-                itemBuilder: (context, index) {
-                  RequestUserModel user = userList[index];
-                  return RequestTile(
-                    name: user.name,
-                    contactNumber: user.contactNumber,
-                    onAccept: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => UserSelectionDialog(userId: user.userId),
-                      );
-                    },
-                    onReject: () {},
-                  );
-                },
-              ),
+              child: requestController.userRequestlist == null
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : requestController.userRequestlist!.isEmpty
+                      ? Center(
+                          child: EmptyScreen(),
+                        )
+                      : ListView.builder(
+                          itemCount:
+                              requestController.userRequestlist?.length ?? 0,
+                          itemBuilder: (context, index) {
+                            RequestUserModel user =
+                                requestController.userRequestlist![index];
+                            return RequestTile(
+                              name: user.name,
+                              contactNumber: user.contactNumber,
+                              onAccept: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) =>
+                                      UserSelectionDialog(userId: user.userId),
+                                );
+                              },
+                              onReject: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return DenyLeaveRequestDialog(
+                                      userId: user.userId,
+                                      name: user.name,
+                                      contactNumber: user.contactNumber,
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          },
+                        ),
             ),
+            SizedBox(
+              height: height * 0.01,
+            ),
+            Container(
+                alignment: Alignment.centerLeft, child: const Text("History")),
+            SizedBox(
+              height: height * 0.01,
+            ),
+            Expanded(
+              child: ListView.builder(
+                  itemCount: 0,
+                  itemBuilder: (context, index) {
+                    return Container();
+                  }),
+            )
           ],
         ),
       ),

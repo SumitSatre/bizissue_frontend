@@ -4,6 +4,7 @@ import 'package:bizissue/api%20repository/api_http_response.dart';
 import 'package:bizissue/api%20repository/product_repository.dart';
 import 'package:bizissue/business_home_page/models/request_user_model.dart';
 import 'package:bizissue/business_home_page/models/user_list_model.dart';
+import 'package:bizissue/home/models/user_model.dart';
 import 'package:bizissue/utils/colors.dart';
 import 'package:bizissue/utils/services/shared_preferences_service.dart';
 import 'package:bizissue/utils/utils.dart';
@@ -11,15 +12,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class BusinessRequestsProvider extends ChangeNotifier{
-  List<RequestUserModel>? _userRequestlist;
-  List<RequestUserModel>? get userRequestlist => _userRequestlist;
+  List<RequestUserModel>? userRequestlist;
 
-  UserRoleModel? _userRoleModel;
-  UserRoleModel? get userRoleModel => _userRoleModel;
+  UserRoleModel? userRoleModel;
 
   String? nameOfAssignToUser = null;
 
-  Future<List<RequestUserModel>> getRequestsList(String id) async {
+  Future<void> getRequestsList(BuildContext context , String id) async {
       print("This is id : $id");
       String accessToken = await SharedPreferenceService().getAccessToken();
       ApiHttpResponse response =
@@ -29,46 +28,49 @@ class BusinessRequestsProvider extends ChangeNotifier{
       if (response.responseCode == 200) {
         print("This is data of users lists : ${data["data"]["users"]}");
 
-        _userRequestlist = (data["data"]["requests"] as List)
+        userRequestlist = (data["data"]["requests"] as List)
             .map((item) => RequestUserModel.fromJson(item))
             .toList();
 
-        notifyListeners();
-        return _userRequestlist!;
+        // if their is no request in the business
+        if(userRequestlist == null){
+          userRequestlist = [];
+        }
+
       } else {
-        // Handle the error case accordingly
-        return []; // Or throw an exception, or handle it as needed
+        userRequestlist = [];
+        showSnackBar(context, "Unable to fetch requests list!!", failureColor);
       }
+      notifyListeners();
     // If _userlistModel is not null, return the cached list
-    return _userRequestlist!;
   }
   void updateAssignTo(UserListModel? userListItem) {
     if(userListItem != null){
-      if (_userRoleModel != null ) {
-        _userRoleModel = _userRoleModel!.copyWith(
+      if (userRoleModel != null ) {
+        userRoleModel = userRoleModel!.copyWith(
           parentId: userListItem.userId,
         );
         // print("${userListItem.toJson()}");
       } else {
-        _userRoleModel = UserRoleModel(parentId: userListItem!.userId);
+        userRoleModel = UserRoleModel(parentId: userListItem!.userId);
       }
 
-      print("Parent id is : ${_userRoleModel?.parentId ?? "No user"}");
+      print("Parent id is : ${userRoleModel?.parentId ?? "No user"}");
     }
 
     notifyListeners();
   }
 
   void updateRole(String? role){
-    if (_userRoleModel != null ) {
-      _userRoleModel = _userRoleModel!.copyWith(
+    if (userRoleModel != null ) {
+      userRoleModel = userRoleModel!.copyWith(
         role: role,
       );
       // print("${userListItem.toJson()}");
     } else {
-      _userRoleModel = UserRoleModel(role: role,);
+      userRoleModel = UserRoleModel(role: role,);
     }
-    print("Role is : ${_userRoleModel?.role ?? "No role"}");
+    print("Role is : ${userRoleModel?.role ?? "No role"}");
     notifyListeners();
   }
 
@@ -80,10 +82,10 @@ class BusinessRequestsProvider extends ChangeNotifier{
     }
     String accessToken = await SharedPreferenceService().getAccessToken();
 
-    print(jsonEncode(_userRoleModel!.toJson()));
+    print(jsonEncode(userRoleModel!.toJson()));
 
     ApiHttpResponse response = await callUserPostMethod(
-        _userRoleModel!.toJson(), 'business/add/user/${id}', accessToken);
+        userRoleModel!.toJson(), 'business/add/user/${id}', accessToken);
 
     final data = jsonDecode(response.responceString!);
 
@@ -91,52 +93,99 @@ class BusinessRequestsProvider extends ChangeNotifier{
       print("Hi this is worked");
       GoRouter.of(context).pop();
       showSnackBar(context, "Request accepted Successfully!!", successColor);
-      _userRoleModel = null;
-//     if (_userRequestlist != null) {
-//       // Assuming id is the condition you want to use for removal
-//
-//       // Convert list to JSON using null-aware operator
-//       List<Map<String, dynamic>> jsonList = _userRequestlist?.map((user) => user.toJson())?.toList() ?? [];
-//
-//       // Remove the item from the JSON list
-//       jsonList.removeWhere((json) => json['id'] == id);
-//
-//       // Convert JSON list back to list of models using null-aware operator
-//       _userRequestlist = jsonList?.map((json) => RequestUserModel.fromJson(json))?.toList() ?? [];
-//     }
+      removeUserByIdFromRequestList(userRoleModel?.userId ?? "");
+      userRoleModel = null;
       notifyListeners();
     }
     debugPrint(response.responceString);
   }
 
+  Future<void> rejectRequestPost(BuildContext context , String businessId , String name ,ContactNumber contactNumber , String userId , String reason) async {
+
+    String accessToken = await SharedPreferenceService().getAccessToken();
+print("hiii");
+
+    ApiHttpResponse response = await callUserPostMethod(
+        {
+          "name" : name,
+          "userId" : userId,
+          "reason" : reason,
+          "contactNumber" : {
+            "countryCode" : contactNumber.countryCode,
+            "number" : contactNumber.number
+          }
+        }
+    , 'business/decline/request/${businessId}', accessToken);
+
+    final data = jsonDecode(response.responceString!);
+
+    print("This is response : $data");
+
+    if (response.responseCode == 200) {
+      // print("Hi this is worked");
+      showSnackBar(context, "Request rejected Successfully!!", successColor);
+
+      removeUserByIdFromRequestList(userId);
+    }
+    else{
+      showSnackBar(context, "Unable to reject request!!", failureColor);
+    }
+
+    notifyListeners();
+    debugPrint(response.responceString);
+  }
+
+  List<RequestUserModel>? removeUserByIdFromRequestList(String userId) {
+    if (userRequestlist == null || userId == "") {
+      print("User request list is empty.");
+      return userRequestlist;
+    }
+
+    int indexToRemove = -1;
+    for (int i = 0; i < userRequestlist!.length; i++) {
+      if (userRequestlist![i].userId == userId) {
+        indexToRemove = i;
+        break;
+      }
+    }
+
+    if (indexToRemove != -1) {
+      userRequestlist!.removeAt(indexToRemove);
+      print("User with userId: $userId removed successfully.");
+      return userRequestlist;
+    } else {
+      print("User with userId: $userId not found.");
+      return userRequestlist;
+    }
+  }
+
   bool areAllFieldsFilled() {
     // Check if all required fields are filled and not empty
-    return _userRoleModel != null &&
-        _userRoleModel!.role != null &&
-        _userRoleModel!.role!.isNotEmpty &&
-        _userRoleModel!.parentId != null &&
-        _userRoleModel!.parentId!.isNotEmpty &&
-        _userRoleModel!.parentId != null &&
-        _userRoleModel!.parentId!.isNotEmpty;
+    return userRoleModel != null &&
+        userRoleModel!.role != null &&
+        userRoleModel!.role!.isNotEmpty &&
+        userRoleModel!.parentId != null &&
+        userRoleModel!.parentId!.isNotEmpty &&
+        userRoleModel!.parentId != null &&
+        userRoleModel!.parentId!.isNotEmpty;
   }
 
   void setUserId(String userId){
-    if (_userRoleModel != null ) {
-      _userRoleModel = _userRoleModel!.copyWith(
+    if (userRoleModel != null ) {
+      userRoleModel = userRoleModel!.copyWith(
         userId: userId,
       );
       // print("${userListItem.toJson()}");
     } else {
-      _userRoleModel = UserRoleModel(userId: userId,);
+      userRoleModel = UserRoleModel(userId: userId,);
     }
-    print("Role is : ${_userRoleModel?.role ?? "No role"}");
+    print("Role is : ${userRoleModel?.role ?? "No role"}");
     notifyListeners();
   }
 
   void clear(){
-    _userRequestlist = null;
-    _userRoleModel = null;
-    notifyListeners();
+    userRequestlist = null;
+    userRoleModel = null;
   }
 }
 

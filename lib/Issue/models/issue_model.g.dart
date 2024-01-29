@@ -79,7 +79,7 @@ IssueModel _$IssueModelFromJson(Map<String, dynamic> json) => IssueModel(
       details: json['details'] as String?,
       blocked: Blocked.fromJson(json['blocked'] as Map<String, dynamic>),
       critical: Critical.fromJson(json['critical'] as Map<String, dynamic>),
-      delayed: json['delayed'] as int, // json['delayed'] as int
+      delayed: json['delayed'] as int,
       createdBy: CreatedBy.fromJson(json['createdBy'] as Map<String, dynamic>),
       assignedTo:
           AssignedTo.fromJson(json['assignedTo'] as Map<String, dynamic>),
