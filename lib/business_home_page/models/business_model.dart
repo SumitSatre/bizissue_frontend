@@ -6,14 +6,41 @@ import '../../home/models/user_model.dart';
 part 'business_model.g.dart';
 
 @JsonSerializable()
+class ActivityModel {
+  String content;
+  String activityCategory;
+  DateTime createdDate;
+  String? issueId;
+  String? issueTitle;
+  String? groupId;
+  String? groupName;
+
+  ActivityModel({
+    required this.content,
+    required this.activityCategory,
+    required this.createdDate,
+    this.issueId,
+    this.issueTitle,
+    this.groupId,
+    this.groupName,
+  });
+
+  factory ActivityModel.fromJson(Map<String, dynamic> json) => _$ActivityModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ActivityModelToJson(this);
+}
+
+@JsonSerializable()
 class User {
   ContactNumber contactNumber;
   String name;
   List<String> assignedToMeIssues;
   String userId;
   String userType;
+  int activityViewCounter;
   String role;
   List<String> subordinates;
+  List<ActivityModel> activities;
 
   User({
     required this.contactNumber,
@@ -21,8 +48,10 @@ class User {
     required this.assignedToMeIssues,
     required this.userId,
     required this.userType,
+    required this.activityViewCounter,
     required this.role,
     required this.subordinates,
+    required this.activities,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
@@ -35,8 +64,11 @@ class User {
     List<String>? assignedToMeIssues,
     String? userId,
     String? userType,
+    int? activityViewCounter,
     String? role,
     List<String>? subordinates,
+    List<ActivityModel>? activities
+
   }) {
     return User(
       contactNumber: contactNumber ?? this.contactNumber,
@@ -44,8 +76,10 @@ class User {
       assignedToMeIssues: assignedToMeIssues ?? this.assignedToMeIssues,
       userId: userId ?? this.userId,
       userType: userType ?? this.userType,
+      activityViewCounter: activityViewCounter ?? this.activityViewCounter,
       role: role ?? this.role,
       subordinates: subordinates ?? this.subordinates,
+      activities: activities ?? this.activities,
     );
   }
 }

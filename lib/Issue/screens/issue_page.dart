@@ -418,8 +418,10 @@ class _IssuePageState extends State<IssuePage> {
                             if (result != null) {
                               PlatformFile platformFile = result.files.first;
                               File file = File(platformFile.path!);
-                              String docUrl =
-                                  await issueController.uploadDocument(file);
+                              String fileName = platformFile.name;
+                              String docUrl = await issueController
+                                  .uploadDocument(file, fileName);
+                              print("File path : ${file.path}");
 
                               if (docUrl == "failure") {
                                 showSnackBar(
@@ -429,7 +431,7 @@ class _IssuePageState extends State<IssuePage> {
                                 return;
                               } else {
                                 // Get filename and file type
-                                String fileName = platformFile.name;
+
                                 String fileType =
                                     platformFile.extension ?? "unknown";
 
@@ -608,5 +610,4 @@ class ChatBubble extends StatelessWidget {
       ),
     );
   }
-
 }

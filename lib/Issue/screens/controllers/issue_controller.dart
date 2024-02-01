@@ -339,13 +339,13 @@ class IssueProvider extends ChangeNotifier {
     setFetching(false);
   }
 
-  Future<String> uploadDocument(File file) async {
+  Future<String> uploadDocument(File file, String filename) async {
     try {
       if (file == null) {
         throw Exception("No document provided");
       }
 
-      Reference ref = FirebaseStorage.instance.ref().child("files/");
+      Reference ref = FirebaseStorage.instance.ref().child("files/${filename}");
 
       UploadTask task = ref.putFile(file);
 
