@@ -60,6 +60,7 @@ class BusinessController extends ChangeNotifier {
       _businessModel = BusinessModel.fromJson(data["data"]);
       _myIssuesGroup = groupAndSortIssues(_businessModel?.myIssues ?? []);
       _myTeamIssuesGroup = groupAndSortIssues(_businessModel?.myTeamIssues ?? []);
+      print("Done");
       notifyListeners();
     } else {
       _isError = true;

@@ -9,6 +9,7 @@ import 'package:bizissue/business_home_page/widgets/issue_tile.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/colors.dart';
 import 'package:bizissue/utils/routes/app_route_constants.dart';
+import 'package:bizissue/utils/services/business_activity_socket_service.dart';
 import 'package:bizissue/utils/utils.dart';
 import 'package:bizissue/widgets/drawer.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_xlider/flutter_xlider.dart';
 import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../../utils/services/shared_preferences_service.dart';
 import '../../../widgets/buttons/custom_menu_button.dart';
@@ -30,11 +32,14 @@ class BusinessHomePage extends StatefulWidget {
 }
 
 class _BusinessHomePageState extends State<BusinessHomePage> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   callInit();
-  // }
+
+  // late IO.Socket socket;
+
+   @override
+   void initState() {
+     super.initState();
+      // socket = BusinessActivitySocketService().socket;
+   }
 
   void callInit() {
     Provider.of<BusinessController>(context, listen: false).init(widget.id);

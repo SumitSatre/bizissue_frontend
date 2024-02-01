@@ -11,6 +11,7 @@ import 'package:bizissue/widgets/drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../../utils/services/shared_preferences_service.dart';
 import '../../../widgets/buttons/custom_menu_button.dart';
@@ -24,6 +25,20 @@ class BusinessPage extends StatefulWidget {
 }
 
 class _BusinessPageState extends State<BusinessPage> {
+
+   @override
+   void initState() {
+     super.initState();
+     callInit();
+
+   }
+
+   void callInit() {
+     String selectedBusiness = Provider.of<HomeProvider>(context, listen: false).selectedBusiness;
+     print("Fetched on business page!!");
+     Provider.of<BusinessController>(context, listen: false).init(selectedBusiness);
+   }
+
   @override
   Widget build(BuildContext context) {
     final userModel = Provider.of<HomeProvider>(context).userModel;
