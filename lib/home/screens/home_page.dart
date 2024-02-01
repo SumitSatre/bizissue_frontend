@@ -2,6 +2,7 @@ import 'package:bizissue/business_home_page/screens/business%20home/business_hom
 import 'package:bizissue/business_home_page/screens/business%20home/business_page.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/home/screens/simple_home_page.dart';
+import 'package:bizissue/outsider/screens/outsider_screen.dart';
 import 'package:bizissue/utils/colors.dart';
 import 'package:bizissue/widgets/drawer.dart';
 import 'package:flutter/cupertino.dart';
@@ -42,35 +43,40 @@ class _HomePageState extends State<HomePage> {
           builder: (context, ref, child) {
             return ref.isError
                 ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Something got wrong please try again!!"),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Provider.of<HomeProvider>(context, listen: false)
-                          .updateisError();
-                      SharedPreferenceService().clearLogin();
-                      // Move to the login screen
-                      Navigator.of(context).pushNamed(MyAppRouteConstants.loginRouteName);
-                    },
-                    child: const Text("Login again"),
-                  ),
-                ],
-              ),
-            )
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Something got wrong please try again!!"),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Provider.of<HomeProvider>(context, listen: false)
+                                .updateisError();
+                            SharedPreferenceService().clearLogin();
+                            // Move to the login screen
+                            Navigator.of(context)
+                                .pushNamed(MyAppRouteConstants.loginRouteName);
+                          },
+                          child: const Text("Login again"),
+                        ),
+                      ],
+                    ),
+                  )
                 : userModel == null
-                ? const Center(
-              child: CircularProgressIndicator(
-                color: kprimaryColor,
-              ),
-            )
-                : ref.selectedBusiness != ""
-                ? BusinessPage()
-                : NoBusinessHomePage();
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                          color: kprimaryColor,
+                        ),
+                      )
+                    : ref.selectedBusiness != ""
+                        ? ref.selectedBusinessUserType != ""
+                            ? ref.selectedBusinessUserType == "Insider"
+                                ? BusinessPage()
+                                : OutsiderPage()
+                            : NoBusinessHomePage()
+                        : NoBusinessHomePage();
           },
         ),
       ),

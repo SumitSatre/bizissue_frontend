@@ -81,7 +81,7 @@ class _MyDrawerState extends State<MyDrawer> {
                       GoRouter.of(context).pop();
                       IssueController.clear();
                       businessController.setBusinessModelNull();
-                      controller.setNewBusiness(context, business.businessId);
+                      controller.setNewBusiness(context, business.businessId , business.userType);
                     },
                   );
                 }).toList(),

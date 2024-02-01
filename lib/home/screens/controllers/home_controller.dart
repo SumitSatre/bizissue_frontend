@@ -25,6 +25,7 @@ class HomeProvider extends ChangeNotifier {
   late PageController pageController;
 
   String selectedBusiness = "";
+  String selectedBusinessUserType = "";
 
   void init(BuildContext context) async {
     pageController = PageController();
@@ -43,6 +44,7 @@ class HomeProvider extends ChangeNotifier {
 
       if(_userModel!.businesses.length > 0){
         selectedBusiness = _userModel!.businesses[0].businessId;
+        selectedBusinessUserType = _userModel!.businesses[0].userType;
       }
       notifyListeners();
     }
@@ -92,8 +94,9 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setNewBusiness(BuildContext context , String businessId){
+  void setNewBusiness(BuildContext context , String businessId , String userType){
     selectedBusiness = businessId;
+    selectedBusinessUserType = userType;
     GoRouter.of(context).goNamed(MyAppRouteConstants.businessRouteName);
     notifyListeners();
   }

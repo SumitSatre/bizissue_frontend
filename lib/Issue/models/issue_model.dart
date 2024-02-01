@@ -107,6 +107,32 @@ class CriticalBy {
 }
 
 @JsonSerializable()
+class OutsiderShort {
+  String? name;
+  String? id;
+
+  OutsiderShort({
+    this.name,
+    this.id,
+  });
+
+  factory OutsiderShort.fromJson(Map<String, dynamic> json) =>
+      _$OutsiderShortFromJson(json);
+
+  Map<String, dynamic> toJson() => _$OutsiderShortToJson(this);
+
+  OutsiderShort copyWith({
+    String? name,
+    String? id,
+  }) {
+    return OutsiderShort(
+      name: name ?? this.name,
+      id: id ?? this.id,
+    );
+  }
+}
+
+@JsonSerializable()
 class CreatedBy {
   String name;
   String id;
@@ -172,6 +198,8 @@ class IssueModel {
   String deliveryDate;
   String nextFollowUpDate;
   String status;
+  bool isAssignToOutsider;
+  OutsiderShort? outsider;
 
   IssueModel({
     required this.issueId,
@@ -186,6 +214,8 @@ class IssueModel {
     required this.deliveryDate,
     required this.nextFollowUpDate,
     required this.status,
+    required this.isAssignToOutsider,
+    required this.outsider
   });
 
   factory IssueModel.fromJson(Map<String, dynamic> json) => _$IssueModelFromJson(json);
@@ -205,6 +235,8 @@ class IssueModel {
     String? deliveryDate,
     String? nextFollowUpDate,
     String? status,
+    bool? isAssignToOutsider,
+    OutsiderShort? outsider,
   }) {
     return IssueModel(
       issueId: issueId ?? this.issueId,
@@ -219,6 +251,8 @@ class IssueModel {
       deliveryDate: deliveryDate ?? this.deliveryDate,
       nextFollowUpDate: nextFollowUpDate ?? this.nextFollowUpDate,
       status: status ?? this.status,
+      isAssignToOutsider: isAssignToOutsider ?? this.isAssignToOutsider,
+      outsider: outsider ?? this.outsider,
     );
   }
 }

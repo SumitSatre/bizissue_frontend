@@ -52,6 +52,18 @@ Map<String, dynamic> _$CriticalByToJson(CriticalBy instance) =>
       'id': instance.id,
     };
 
+OutsiderShort _$OutsiderShortFromJson(Map<String, dynamic> json) =>
+    OutsiderShort(
+      name: json['name'] as String?,
+      id: json['id'] as String?,
+    );
+
+Map<String, dynamic> _$OutsiderShortToJson(OutsiderShort instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'id': instance.id,
+    };
+
 CreatedBy _$CreatedByFromJson(Map<String, dynamic> json) => CreatedBy(
       name: json['name'] as String,
       id: json['id'] as String,
@@ -87,6 +99,12 @@ IssueModel _$IssueModelFromJson(Map<String, dynamic> json) => IssueModel(
       deliveryDate: json['deliveryDate'] as String,
       nextFollowUpDate: json['nextFollowUpDate'] as String,
       status: json['status'] as String,
+      isAssignToOutsider: json['isAssignToOutsider'] != null
+          ? json['isAssignToOutsider'] as bool
+          : false,
+      outsider: json['outsider'] == null
+          ? null
+          : OutsiderShort.fromJson(json['outsider'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$IssueModelToJson(IssueModel instance) =>
@@ -103,6 +121,8 @@ Map<String, dynamic> _$IssueModelToJson(IssueModel instance) =>
       'deliveryDate': instance.deliveryDate,
       'nextFollowUpDate': instance.nextFollowUpDate,
       'status': instance.status,
+      'isAssignToOutsider': instance.isAssignToOutsider,
+      'outsider': instance.outsider,
     };
 
 GroupIssue _$GroupIssueFromJson(Map<String, dynamic> json) => GroupIssue(

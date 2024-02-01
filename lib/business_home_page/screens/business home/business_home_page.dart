@@ -33,14 +33,6 @@ class BusinessHomePage extends StatefulWidget {
 
 class _BusinessHomePageState extends State<BusinessHomePage> {
 
-  // late IO.Socket socket;
-
-   @override
-   void initState() {
-     super.initState();
-      // socket = BusinessActivitySocketService().socket;
-   }
-
   void callInit() {
     Provider.of<BusinessController>(context, listen: false).init(widget.id);
   }
