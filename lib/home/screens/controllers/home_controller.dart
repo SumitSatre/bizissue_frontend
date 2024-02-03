@@ -13,8 +13,6 @@ import '../../models/user_model.dart';
 import '../../../business_home_page/screens/business home/business_home_page.dart';
 
 class HomeProvider extends ChangeNotifier {
-  int _page = 0;
-  int get page => _page;
 
   bool _isError = false;
   bool get isError => _isError;
@@ -22,13 +20,11 @@ class HomeProvider extends ChangeNotifier {
   UserModel? _userModel;
   UserModel? get userModel => _userModel;
 
-  late PageController pageController;
 
   String selectedBusiness = "";
   String selectedBusinessUserType = "";
 
-  void init(BuildContext context) async {
-    pageController = PageController();
+  Future<void> init(BuildContext context) async {
     await sendUserGetRequest(context);
   }
 
@@ -61,20 +57,6 @@ class HomeProvider extends ChangeNotifier {
   }
 
 
-  @override
-  void dispose() {
-    super.dispose();
-    pageController.dispose();
-  }
-
-  void navigationTapped(int page) {
-    pageController.jumpToPage(page);
-  }
-
-  void onPageChanged(int page) {
-    _page = page;
-    notifyListeners();
-  }
 
   void updateisError() {
     _isError = false;

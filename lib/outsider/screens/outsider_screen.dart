@@ -49,7 +49,7 @@ class OutsiderPageState extends State<OutsiderPage> {
     final controller = Provider.of<HomeProvider>(context, listen: false);
 
     final outsiderController =
-        Provider.of<OutsiderProvider>(context, listen: false);
+        Provider.of<OutsiderProvider>(context, listen: true);
 
     return SafeArea(
         child: Scaffold(

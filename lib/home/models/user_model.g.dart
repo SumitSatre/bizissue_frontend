@@ -40,6 +40,9 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       businesses: (json['businesses'] as List<dynamic>)
           .map((e) => Business.fromJson(e as Map<String, dynamic>))
           .toList(),
+      notifications: (json['notifications'] as List<dynamic>)
+          .map((e) => NotificationModel.fromJson(e as Map<String, dynamic>))
+          .toList() ?? [],
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
@@ -49,4 +52,5 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'email': instance.email,
       'contactNumber': instance.contactNumber,
       'businesses': instance.businesses,
+      'notifications': instance.notifications,
     };

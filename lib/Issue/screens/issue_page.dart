@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bizissue/Issue/models/message_model.dart';
 import 'package:bizissue/Issue/screens/controllers/issue_controller.dart';
 import 'package:bizissue/Issue/widgets/document_bubble.dart';
+import 'package:bizissue/Issue/widgets/vertical_menu_issue.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/colors.dart';
 import 'package:bizissue/utils/utils.dart';
@@ -126,43 +127,50 @@ class _IssuePageState extends State<IssuePage> {
                           vertical: MediaQuery.of(context).size.height * 0.02,
                           horizontal: MediaQuery.of(context).size.width * 0.04),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
-                            width: 40,
-                            height: 40,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0x1E000000),
-                                  blurRadius: 4,
-                                  offset: Offset(-3, 3),
-                                  spreadRadius: 0,
-                                )
-                              ],
-                            ),
-                            child: InkWell(
-                              onTap: () {
-                                issueController.clearData();
-                                GoRouter.of(context).pop();
-                              },
-                              child: const Icon(
-                                Icons.arrow_back_sharp,
-                                color: Colors.black,
+                          Row (
+                            children: [
+                              Container(
+                                width: 40,
+                                height: 40,
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0x1E000000),
+                                      blurRadius: 4,
+                                      offset: Offset(-3, 3),
+                                      spreadRadius: 0,
+                                    )
+                                  ],
+                                ),
+                                child: InkWell(
+                                  onTap: () {
+                                    issueController.clearData();
+                                    GoRouter.of(context).pop();
+                                  },
+                                  child: const Icon(
+                                    Icons.arrow_back_sharp,
+                                    color: Colors.black,
+                                  ),
+                                ),
                               ),
-                            ),
+                              SizedBox(width: 20),
+                              Text(
+                                issueController.issueModel?.title ?? "Error",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(width: 20),
-                          Text(
-                            issueController.issueModel?.title ?? "Error",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: "Poppins",
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
+
+                          VerticalMenuIssueDropDown(issueId : widget.issueId)
                         ],
                       ),
                     ),
@@ -351,15 +359,18 @@ class _IssuePageState extends State<IssuePage> {
                             ],
                           ),
                           SizedBox(
-                            height: height * 0.01,
+                            height: height * 0.03,
                           ),
-                          Text(
-                            "Chats:",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500, fontSize: 17),
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Chats:",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 17),
+                            ),
                           ),
                           SizedBox(
-                            height: height * 0.01,
+                            height: height * 0.03,
                           ),
                           Column(
                             children: issueController.messages?.map((message) {

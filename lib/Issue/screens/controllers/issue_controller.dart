@@ -4,6 +4,8 @@ import 'package:bizissue/Issue/models/issue_model.dart';
 import 'package:bizissue/Issue/models/message_model.dart';
 import 'package:bizissue/api%20repository/api_http_response.dart';
 import 'package:bizissue/api%20repository/product_repository.dart';
+import 'package:bizissue/business_home_page/screens/controller/business_controller.dart';
+import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/colors.dart';
 import 'package:bizissue/utils/services/shared_preferences_service.dart';
 import 'package:bizissue/utils/utils.dart';
@@ -13,6 +15,7 @@ import 'package:flutter/cupertino.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
+import 'package:provider/provider.dart';
 
 class IssueProvider extends ChangeNotifier {
   IssueModel? _issueModel;
@@ -358,8 +361,71 @@ class IssueProvider extends ChangeNotifier {
       return "failure";
     }
   }
-}
 
+  void sentInviteToOutsiderRequest(
+      BuildContext context, String countryCode, String number) async {
+    try {
+      final homeController = Provider.of<HomeProvider>(context, listen: false);
+
+      String businessId = homeController.selectedBusiness;
+      String businessName =
+          Provider.of<BusinessController>(context, listen: false)
+              .businessModel!
+              .business
+              .name;
+
+      if (countryCode == "" || number.length != 10) {
+        // showSnackBar(context, "Contact number is not valid!!", invalidColor);
+        return;
+      }
+
+      if (businessId == null || businessId.isEmpty) {
+        //  showSnackBar(context, "Invalid business code!!", invalidColor);
+        return;
+      }
+
+      if (issueModel == null || issueModel!.issueId == null) {
+        //  showSnackBar(context, "Something got wrong!!", invalidColor);
+        return;
+      }
+
+      String accessToken = await SharedPreferenceService().getAccessToken();
+
+      var json = {
+        "businessName": businessName,
+        "issueId": issueModel!.issueId,
+        "contactNumber": {"countryCode": countryCode, "number": number}
+      };
+      print("This is data ${json.toString()}");
+
+      ApiHttpResponse response = await callUserPutMethod({
+        "businessName": businessName,
+        "issueId": issueModel!.issueId,
+        "contactNumber": {"countryCode": countryCode, "number": number}
+      }, 'issue/invite/user/${businessId}', accessToken);
+
+      print("This is response $response");
+      if (response.responseCode == 200) {
+        //  showSnackBar(context, "Invite sent successfully!!", successColor);
+        notifyListeners();
+      } else {
+        final data = jsonDecode(response.responceString ?? "");
+        // Handle other status codes if needed
+        //  showSnackBar(
+        //      context,
+        //      "Failed to send invite request to user: ${data['message']}",
+        //      invalidColor);
+      }
+
+      debugPrint(response.responceString);
+    } catch (e) {
+      // Handle unexpected errors
+      showSnackBar(context, "An unexpected error occurred", invalidColor);
+      print("Error: $e");
+    }
+    setFetching(false);
+  }
+}
 
 /*
 

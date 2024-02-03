@@ -27,22 +27,25 @@ class _ActivityPageState extends State<ActivityPage> {
   @override
   Widget build(BuildContext context) {
     final homeController = Provider.of<HomeProvider>(context, listen: false);
-    final businessController =
-        Provider.of<BusinessController>(context, listen: false);
+    //final businessController =
+    //    Provider.of<BusinessController>(context, listen: false);
 
-    return Scaffold(
-      body: businessController.businessModel == null
-          ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount:
-                  businessController?.businessModel?.user?.activities.length ??
-                      0,
-              itemBuilder: (context, index) {
-                ActivityModel activity =
-                    businessController!.businessModel!.user!.activities![index];
+    return Consumer<BusinessController>(builder: (context, businessController, child) {
+        return Scaffold(
+          body: businessController.businessModel == null
+              ? Center(child: CircularProgressIndicator())
+              : ListView.builder(
+                  itemCount:
+                      businessController?.businessModel?.user?.activities.length ??
+                          0,
+                  itemBuilder: (context, index) {
+                    ActivityModel activity =
+                        businessController!.businessModel!.user!.activities![index];
 
-                return ActivityTile(activity: activity);
-              }),
+                    return ActivityTile(activity: activity);
+                  }),
+        );
+      }
     );
   }
 }

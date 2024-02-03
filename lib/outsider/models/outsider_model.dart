@@ -42,12 +42,15 @@ class Business {
     return Business(
       id: json['_id'],
       name: json['name'],
-      industryType: json['industryType'],
-      city: json['city'],
-      country: json['country'],
-      users: List<User>.from(json['users'].map((x) => User.fromJson(x))),
+      industryType: json['industryType'] ?? "",
+      city: json['city'] ?? "",
+      country: json['country'] ?? "",
+      users: (json['users'] as List<dynamic>?)
+          ?.map((userJson) => User.fromJson(userJson))
+          ?.toList() ?? [], // Handle null users field
     );
   }
+
 }
 
 class User {
@@ -84,26 +87,9 @@ class User {
       userType: json['userType'],
       role: json['role'],
       parentId: json['parentId'],
-      activityViewCounter: json['activityViewCounter'],
+      activityViewCounter: json['activityViewCounter'] ?? 0,
       id: json['_id'],
-      activities: List<dynamic>.from(json['activities']),
-    );
-  }
-}
-
-class ContactNumber {
-  final String countryCode;
-  final String number;
-
-  ContactNumber({
-    required this.countryCode,
-    required this.number,
-  });
-
-  factory ContactNumber.fromJson(Map<String, dynamic> json) {
-    return ContactNumber(
-      countryCode: json['countryCode'],
-      number: json['number'],
+      activities: List<dynamic>.from(json['activities'] ?? []) ,
     );
   }
 }

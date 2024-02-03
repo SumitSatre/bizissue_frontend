@@ -135,6 +135,21 @@ class _MyDrawerState extends State<MyDrawer> {
                 ),
               ),
               ListTile(
+                leading: Icon(Icons.notifications, color: Colors.white),
+                title: Text(
+                  "Notifications",
+                  textScaleFactor: 1.2,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onTap: (){
+                  GoRouter.of(context).pop();   // pop the drawer
+                  GoRouter.of(context).pushNamed(MyAppRouteConstants.notificationPageRouteName);
+                },
+              ),
+              ListTile(
                 leading: Icon(CupertinoIcons.doc, color: Colors.white),
                 title: Text(
                   "Contact us",

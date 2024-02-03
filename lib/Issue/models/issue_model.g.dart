@@ -99,9 +99,7 @@ IssueModel _$IssueModelFromJson(Map<String, dynamic> json) => IssueModel(
       deliveryDate: json['deliveryDate'] as String,
       nextFollowUpDate: json['nextFollowUpDate'] as String,
       status: json['status'] as String,
-      isAssignToOutsider: json['isAssignToOutsider'] != null
-          ? json['isAssignToOutsider'] as bool
-          : false,
+      isAssignToOutsider: json['isAssignToOutsider'] as bool,
       outsider: json['outsider'] == null
           ? null
           : OutsiderShort.fromJson(json['outsider'] as Map<String, dynamic>),

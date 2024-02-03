@@ -2,6 +2,44 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'user_model.g.dart';
 
+class NotificationModel {
+  final String content;
+  final String notificationCategory;
+  final DateTime createdDate;
+  final String? businessName;
+  final String? businessId;
+
+  NotificationModel({
+    required this.content,
+    required this.notificationCategory,
+    required this.createdDate,
+     this.businessName,
+     this.businessId,
+  });
+
+  factory NotificationModel.fromJson(Map<String, dynamic> json) {
+    return NotificationModel(
+      content: json['content'] as String,
+      notificationCategory: json['notificationCategory'] as String,
+      createdDate: DateTime.parse(json['createdDate'] as String),
+      businessName: json['businessName'] as String?, // Nullable
+      businessId: json['businessId'] as String?, // Nullable
+    );
+  }
+
+
+  Map<String, dynamic> toJson() {
+    return {
+      'content': content,
+      'notificationCategory': notificationCategory,
+      'createdDate': createdDate.toIso8601String(),
+      'businessName': businessName,
+      'businessId': businessId,
+    };
+  }
+}
+
+
 @JsonSerializable()
 class ContactNumber {
   String countryCode;
@@ -66,6 +104,7 @@ class UserModel {
   String email;
   ContactNumber contactNumber;
   List<Business> businesses;
+  List<NotificationModel> notifications;
 
   UserModel({
     required this.id,
@@ -74,6 +113,7 @@ class UserModel {
     required this.email,
     required this.contactNumber,
     required this.businesses,
+    required this.notifications,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
@@ -88,6 +128,7 @@ class UserModel {
     String? email,
     ContactNumber? contactNumber,
     List<Business>? businesses,
+    List<NotificationModel>? notifications
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -96,6 +137,7 @@ class UserModel {
       email: email ?? this.email,
       contactNumber: contactNumber ?? this.contactNumber,
       businesses: businesses ?? this.businesses,
+      notifications: notifications ?? this.notifications,
     );
   }
 }

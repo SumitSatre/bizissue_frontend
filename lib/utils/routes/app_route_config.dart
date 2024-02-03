@@ -12,6 +12,7 @@ import 'package:bizissue/group/screens/group_detailed_page.dart';
 import 'package:bizissue/group/screens/multiple_group_detailed_page.dart';
 import 'package:bizissue/home/screens/home_page.dart';
 import 'package:bizissue/business_home_page/screens/business%20home/business_page.dart';
+import 'package:bizissue/home/screens/notification_page.dart';
 import 'package:bizissue/utils/error_page.dart';
 import 'package:bizissue/utils/routes/app_route_constants.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +50,13 @@ class MyAppRouter {
           path: '/home',
           pageBuilder: (BuildContext context, GoRouterState state) {
             return MaterialPage(child: HomePage());
+          },
+        ),
+        GoRoute(
+          name: MyAppRouteConstants.notificationPageRouteName,
+          path: '/home/notification',
+          pageBuilder: (BuildContext context, GoRouterState state) {
+            return MaterialPage(child: NotificationPage());
           },
         ),
         GoRoute(
