@@ -18,4 +18,6 @@ class MyAppRouteConstants {
       'multiple_group_detailed';
   static const String ViewPdfRouteName = 'view_pdf';
   static const String notificationPageRouteName = 'notification_page';
+  static const String businessUsersListPageRouteName = 'business_users';
+  static const String closedIssuesPageRouteName = 'closed_issues';
 }

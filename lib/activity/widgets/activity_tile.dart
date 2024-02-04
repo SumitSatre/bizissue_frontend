@@ -1,5 +1,6 @@
 import 'package:bizissue/business_home_page/models/business_model.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ActivityTile extends StatelessWidget {
   final ActivityModel activity;
@@ -15,11 +16,11 @@ class ActivityTile extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         subtitle: Text(
-          _getSubtitle(),
+          "Category:${activity.activityCategory}",
           style: TextStyle(fontStyle: FontStyle.italic),
         ),
         trailing: Text(
-          '${activity.createdDate}',
+          _formatDate(activity.createdDate),
           style: TextStyle(fontSize: 12),
         ),
       ),
@@ -35,4 +36,9 @@ class ActivityTile extends StatelessWidget {
       return 'No details available';
     }
   }
+
+  String _formatDate(DateTime date) {
+    return DateFormat('dd/MM/yyyy').format(date);
+  }
 }
+

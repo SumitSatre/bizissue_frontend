@@ -68,20 +68,32 @@ void showDropdown(BuildContext context, String businessId) async {
         GoRouter.of(context).pushNamed(MyAppRouteConstants.businessRequestsRouteName,
             params: {"businessId": businessId});
       }
-
+      else if(result == "Users"){
+        print("Hi");
+        GoRouter.of(context).pushNamed(MyAppRouteConstants.businessUsersListPageRouteName,
+            params: {"businessId": businessId});
+      }
+      else if(result == "Closed Issues"){
+        print("Hi");
+        GoRouter.of(context).pushNamed(MyAppRouteConstants.closedIssuesPageRouteName);
+      }
     }
   }
 }
 
 List<String> menuItemsList = [
   "Requests",
-  "Create Group"
+  "Create Group",
+  "Users",
+  "Closed Issues"
 ];
 
 List<Map<String, String>> menuItemsWithRoutes = [
   {
     "Requests": MyAppRouteConstants.businessRequestsRouteName,
     "Create Group": MyAppRouteConstants.createGroupRouteName,
+    "Users": MyAppRouteConstants.businessUsersListPageRouteName,
+    "Closed Issues": MyAppRouteConstants.closedIssuesPageRouteName,
   },
 ];
 

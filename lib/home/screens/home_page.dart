@@ -31,15 +31,17 @@ class _HomePageState extends State<HomePage> {
     // Initialize HomeProvider and then initialize the socket
     callInit().then((_) {
       print("Hi");
-      final userId = Provider.of<HomeProvider>(context, listen: false).userModel?.id ?? "fail";
+      final userId =
+          Provider.of<HomeProvider>(context, listen: false).userModel?.id ??
+              "fail";
 
-      if(userId == "fail"){
+      if (userId == "fail") {
         print("Unable to connect to socket");
         return;
       }
       print("This is userId $userId");
       _notificationSocketService = NotificationSocketService();
-      _notificationSocketService.initSocket(context , userId);
+      _notificationSocketService.initSocket(context, userId);
     });
   }
 
@@ -64,40 +66,40 @@ class _HomePageState extends State<HomePage> {
           builder: (context, ref, child) {
             return ref.isError
                 ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Something got wrong please try again!!"),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Provider.of<HomeProvider>(context, listen: false)
-                          .updateisError();
-                      SharedPreferenceService().clearLogin();
-                      // Move to the login screen
-                      Navigator.of(context)
-                          .pushNamed(MyAppRouteConstants.loginRouteName);
-                    },
-                    child: const Text("Login again"),
-                  ),
-                ],
-              ),
-            )
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Something got wrong please try again!!"),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Provider.of<HomeProvider>(context, listen: false)
+                                .updateisError();
+                            SharedPreferenceService().clearLogin();
+                            // Move to the login screen
+                            Navigator.of(context)
+                                .pushNamed(MyAppRouteConstants.loginRouteName);
+                          },
+                          child: const Text("Login again"),
+                        ),
+                      ],
+                    ),
+                  )
                 : userModel == null
-                ? const Center(
-              child: CircularProgressIndicator(
-                color: kprimaryColor,
-              ),
-            )
-                : ref.selectedBusiness != ""
-                ? ref.selectedBusinessUserType != ""
-                ? ref.selectedBusinessUserType == "Insider"
-                ? BusinessPage()
-                : OutsiderPage()
-                : NoBusinessHomePage()
-                : NoBusinessHomePage();
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                          color: kprimaryColor,
+                        ),
+                      )
+                    : ref.selectedBusiness != ""
+                        ? ref.selectedBusinessUserType != ""
+                            ? ref.selectedBusinessUserType == "Insider"
+                                ? BusinessPage()
+                                : ref.selectedBusinessUserType == "Outsider" ? OutsiderPage() : NoBusinessHomePage()
+                            : NoBusinessHomePage()
+                        : NoBusinessHomePage();
           },
         ),
       ),

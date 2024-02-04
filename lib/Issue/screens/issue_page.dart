@@ -121,7 +121,7 @@ class _IssuePageState extends State<IssuePage> {
                 Scaffold(
                   appBar: PreferredSize(
                     preferredSize: Size.fromHeight(
-                        MediaQuery.of(context).size.height * 0.19),
+                        MediaQuery.of(context).size.height * 0.15),
                     child: Padding(
                       padding: EdgeInsets.symmetric(
                           vertical: MediaQuery.of(context).size.height * 0.02,
@@ -170,7 +170,7 @@ class _IssuePageState extends State<IssuePage> {
                             ],
                           ),
 
-                          VerticalMenuIssueDropDown(issueId : widget.issueId)
+                          homeController.selectedBusinessUserType == "Outsider" ? Container() : VerticalMenuIssueDropDown(issueId : widget.issueId)
                         ],
                       ),
                     ),
@@ -178,7 +178,7 @@ class _IssuePageState extends State<IssuePage> {
                   body: SingleChildScrollView(
                     physics: BouncingScrollPhysics(),
                     child: Padding(
-                      padding: const EdgeInsets.all(15.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
                       child: Column(
                         children: [
                           Row(

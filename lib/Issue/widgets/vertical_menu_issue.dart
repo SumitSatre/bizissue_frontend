@@ -1,4 +1,6 @@
+import 'package:bizissue/Issue/screens/controllers/issue_controller.dart';
 import 'package:bizissue/Issue/widgets/inivite_outsider_dialog.dart';
+import 'package:bizissue/business_home_page/screens/controller/business_controller.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/routes/app_route_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -75,10 +77,15 @@ void showDropdown(
         },
       );
     }
+    else if(result == "Close Issue"){
+      String businessId = Provider.of<HomeProvider>(context, listen: false).selectedBusiness;
+
+      Provider.of<IssueProvider>(context, listen: false).closeIssueRequest(context, businessId);
+    }
   }
 }
 
-List<String> menuItemsList = ["Invite outsider"];
+List<String> menuItemsList = ["Invite outsider" , "Close Issue"];
 
 List<Map<String, String>> menuItemsWithRoutes = [
   {"Requests": MyAppRouteConstants.businessRequestsRouteName},

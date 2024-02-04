@@ -4,6 +4,8 @@ import 'package:bizissue/auth/screens/login_screen.dart';
 import 'package:bizissue/auth/screens/signup_screen.dart';
 import 'package:bizissue/auth/screens/verify_login_otp.dart';
 import 'package:bizissue/auth/screens/verify_signup_otp.dart';
+import 'package:bizissue/business_home_page/screens/business_users_list_screen.dart';
+import 'package:bizissue/business_home_page/screens/closed_issues.dart';
 import 'package:bizissue/business_home_page/screens/create_business.dart';
 import 'package:bizissue/business_home_page/screens/join_business.dart';
 import 'package:bizissue/business_home_page/screens/requests_screen.dart';
@@ -57,6 +59,22 @@ class MyAppRouter {
           path: '/home/notification',
           pageBuilder: (BuildContext context, GoRouterState state) {
             return MaterialPage(child: NotificationPage());
+          },
+        ),
+        GoRoute(
+          name: MyAppRouteConstants.closedIssuesPageRouteName,
+          path: '/home/closedIssues',
+          pageBuilder: (BuildContext context, GoRouterState state) {
+            return MaterialPage(child: ClosedIssues());
+          },
+        ),
+        GoRoute(
+          name: MyAppRouteConstants.businessUsersListPageRouteName,
+          path: '/home/users/:businessId',
+          pageBuilder: (BuildContext context, GoRouterState state) {
+            return MaterialPage(child: BusinessUsersListScreen(
+              businessId: state.params['businessId']!,
+            ));
           },
         ),
         GoRoute(

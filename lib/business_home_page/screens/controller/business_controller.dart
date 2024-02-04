@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:bizissue/Issue/models/issue_model.dart';
@@ -24,6 +23,9 @@ class BusinessController extends ChangeNotifier {
   BusinessModel? _businessModel;
   BusinessModel? get businessModel => _businessModel;
 
+  List<IssueModel>? myIssues;
+  List<IssueModel>? myTeamIssues;
+
   List<GroupIssue>? _myIssuesGroup;
   List<GroupIssue>? get myIssuesGroup => _myIssuesGroup;
 
@@ -43,7 +45,7 @@ class BusinessController extends ChangeNotifier {
     await sendUserGetRequest(id);
   }
 
-  void clear(){
+  void clear() {
     _businessModel = null;
     notifyListeners();
   }
@@ -52,14 +54,17 @@ class BusinessController extends ChangeNotifier {
     print("This is id : $id");
     String accessToken = await SharedPreferenceService().getAccessToken();
     ApiHttpResponse response =
-    await callUserGetMethod("business/get/${id}", accessToken);
+        await callUserGetMethod("business/get/${id}", accessToken);
     final data = jsonDecode(response.responceString!);
     debugPrint(data.toString());
     if (response.responseCode == 200) {
       // print("This is data ${data["data"]}");
       _businessModel = BusinessModel.fromJson(data["data"]);
+      myIssues = _businessModel?.myIssues ?? [];
+      myTeamIssues = _businessModel?.myTeamIssues ?? [];
       _myIssuesGroup = groupAndSortIssues(_businessModel?.myIssues ?? []);
-      _myTeamIssuesGroup = groupAndSortIssues(_businessModel?.myTeamIssues ?? []);
+      _myTeamIssuesGroup =
+          groupAndSortIssues(_businessModel?.myTeamIssues ?? []);
       print("Done");
       notifyListeners();
     } else {
@@ -68,6 +73,12 @@ class BusinessController extends ChangeNotifier {
     }
   }
 
+  void reGroupIssues(
+      List<IssueModel>? myIssuess, List<IssueModel>? myTeamIssuess) {
+    _myIssuesGroup = groupAndSortIssues(myIssuess ?? []);
+    _myTeamIssuesGroup = groupAndSortIssues(myTeamIssuess ?? []);
+    notifyListeners();
+  }
 
   @override
   void dispose() {
@@ -89,7 +100,7 @@ class BusinessController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setBusinessModelNull(){
+  void setBusinessModelNull() {
     _businessModel = null;
     _page = 0;
     notifyListeners();
@@ -107,5 +118,4 @@ class BusinessController extends ChangeNotifier {
     GoRouter.of(context).goNamed(MyAppRouteConstants.homeRouteName);
     notifyListeners();
   }
-
 }

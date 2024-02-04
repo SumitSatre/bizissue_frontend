@@ -11,6 +11,7 @@ import 'package:bizissue/utils/services/shared_preferences_service.dart';
 import 'package:bizissue/utils/utils.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -421,6 +422,52 @@ class IssueProvider extends ChangeNotifier {
     } catch (e) {
       // Handle unexpected errors
       showSnackBar(context, "An unexpected error occurred", invalidColor);
+      print("Error: $e");
+    }
+    setFetching(false);
+  }
+
+  void closeIssueRequest(BuildContext context, String businessId) async {
+    try {
+      // Validate business code
+      if (businessId == null || businessId.isEmpty) {
+        //      showSnackBar(context, "Invalid business code!!", invalidColor);
+        return;
+      }
+
+      if (issueModel == null || issueModel!.issueId == null) {
+        //      showSnackBar(context, "Something got wrong!!", invalidColor);
+        return;
+      }
+
+      String accessToken = await SharedPreferenceService().getAccessToken();
+
+      ApiHttpResponse response = await callUserPatchMethod({},
+          'issue/close/${businessId}?issueId=${issueModel!.issueId}',
+          accessToken);
+
+      if (response.responseCode == 200) {
+        final businessController =
+            Provider.of<BusinessController>(context, listen: false);
+
+        businessController.setBusinessModelNull();
+
+        GoRouter.of(context).pop();
+        //    showSnackBar(context, "Issue blocked successfully!!", successColor);
+        notifyListeners();
+      } else {
+        final data = jsonDecode(response.responceString ?? "");
+        // Handle other status codes if needed
+        //    showSnackBar(
+        //        context,
+        //        "Failed to send block request to business: ${data['message']}",
+        //        invalidColor);
+      }
+
+      debugPrint(response.responceString);
+    } catch (e) {
+      // Handle unexpected errors
+      // showSnackBar(context, "An unexpected error occurred", invalidColor);
       print("Error: $e");
     }
     setFetching(false);

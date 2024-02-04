@@ -39,32 +39,32 @@ class _MyPdfViewerState extends State<MyPdfViewer> {
           fileP == ''
               ? CircularProgressIndicator()
               : PDFView(
-                  filePath: fileP,
-                  fitEachPage: true,
-                  fitPolicy: FitPolicy.BOTH,
-                  onRender: (_pages) {
-                    setState(() {
-                      if (_pages != null) {
-                        totalPages = _pages;
-                      }
-                    });
-                  },
-                  onError: (error) {
-                    setState(() {
-                      errorMessage = error.toString();
-                    });
-                  },
-                  onPageError: (page, error) {
-                    setState(() {
-                      errorMessage = '$error';
-                    });
-                  },
-                  onViewCreated: (PDFViewController vc) {
-                    setState(() {
-                      pdfViewController = vc;
-                    });
-                  },
-                ),
+            filePath: fileP,
+            fitEachPage: true,
+            fitPolicy: FitPolicy.BOTH,
+            onRender: (_pages) {
+              setState(() {
+                if (_pages != null) {
+                  totalPages = _pages;
+                }
+              });
+            },
+            onError: (error) {
+              setState(() {
+                errorMessage = error.toString();
+              });
+            },
+            onPageError: (page, error) {
+              setState(() {
+                errorMessage = '$error';
+              });
+            },
+            onViewCreated: (PDFViewController vc) {
+              setState(() {
+                pdfViewController = vc;
+              });
+            },
+          ),
           if (errorMessage.isEmpty)
             if (!isReady)
               Center(
@@ -110,5 +110,5 @@ class _MyPdfViewerState extends State<MyPdfViewer> {
       });
       print(e);
     }
-  }
+    }
 }

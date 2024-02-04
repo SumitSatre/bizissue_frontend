@@ -16,6 +16,20 @@ class CreateIssuePage extends StatefulWidget {
 
 class _CreateIssuePageState extends State<CreateIssuePage> {
   UserListModel? selectedUserListItem;
+  List<UserListModel> usersList = [];
+
+  @override
+  void initState() {
+    callInit();
+    super.initState();
+  }
+
+  Future<void> callInit() async {
+    usersList = await Provider.of<HomeProvider>(context, listen: false).getUsersList();
+    setState(() {
+
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +49,7 @@ class _CreateIssuePageState extends State<CreateIssuePage> {
 
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: () async {
-
-        },
+        onRefresh: () async {},
         child: Padding(
           padding: const EdgeInsets.only(left: 15, right: 15),
           child: SingleChildScrollView(
@@ -95,64 +107,56 @@ class _CreateIssuePageState extends State<CreateIssuePage> {
                 ),
                 SizedBox(height: height * 0.01),
                 Container(
-                  height: height * 0.06,
-                  width: width - 41,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      style: BorderStyle.solid,
-                      color: Colors.grey,
+                    height: height * 0.06,
+                    width: width - 41,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        style: BorderStyle.solid,
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: FutureBuilder<List<UserListModel>>(
-                    future: homeController.getUsersList(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      } else if (snapshot.hasError || snapshot.data == null) {
-                        return Center(child: Text('Error loading data'));
-                      } else {
-                        List<UserListModel> userList = snapshot.data!;
-
-                        return DropdownButtonHideUnderline(
-                          child: DropdownButton<UserListModel>(
-                            icon: const Align(
-                              alignment: Alignment.centerRight,
-                              child: Icon(
-                                Icons.keyboard_arrow_down_sharp,
-                                color: Colors.grey,
+                    child: usersList == null
+                        ? Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : DropdownButtonHideUnderline(
+                            child: DropdownButton<UserListModel>(
+                              icon: const Align(
+                                alignment: Alignment.centerRight,
+                                child: Icon(
+                                  Icons.keyboard_arrow_down_sharp,
+                                  color: Colors.grey,
+                                ),
                               ),
-                            ),
-                            elevation: 4,
-                            style: const TextStyle(color: Colors.black, fontSize: 14),
-                            value: selectedUserListItem,
-                            onChanged: (UserListModel? newValue) {
-                              if (newValue != null) {
-                                // Update selectedUserListItem
-                                selectedUserListItem = newValue;
+                              elevation: 4,
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 14),
+                              value: selectedUserListItem,
+                              onChanged: (UserListModel? newValue) {
+                                if (newValue != null) {
+                                  // Update selectedUserListItem
+                                  selectedUserListItem = newValue;
 
-                                // Update the controller property
-                                createIssueController.updateAssignTo(selectedUserListItem);
+                                  // Update the controller property
+                                  createIssueController
+                                      .updateAssignTo(selectedUserListItem);
 
-                                // Trigger a rebuild of the widget
-                                setState(() {});
-                              }
-                            },
-                            items: userList.map<DropdownMenuItem<UserListModel>>(
-                                  (UserListModel user) {
-                                return DropdownMenuItem<UserListModel>(
-                                  value: user,
-                                  child: Text("  ${user.name}"),
-                                );
+                                  // Trigger a rebuild of the widget
+                                  setState(() {});
+                                }
                               },
-                            ).toList(),
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                ),
-
+                              items: usersList
+                                  .map<DropdownMenuItem<UserListModel>>(
+                                (UserListModel user) {
+                                  return DropdownMenuItem<UserListModel>(
+                                    value: user,
+                                    child: Text("  ${user.name}"),
+                                  );
+                                },
+                              ).toList(),
+                            ),
+                          )),
                 SizedBox(height: height * 0.02),
                 const Row(
                   children: [
@@ -172,7 +176,10 @@ class _CreateIssuePageState extends State<CreateIssuePage> {
                   children: [
                     Expanded(
                       child: TextFormField(
-                        controller: TextEditingController(text: createIssueController.createIssueModel?.deliveryDate ?? ""),
+                        controller: TextEditingController(
+                            text: createIssueController
+                                    .createIssueModel?.deliveryDate ??
+                                ""),
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.all(14),
                           filled: false,
@@ -195,9 +202,11 @@ class _CreateIssuePageState extends State<CreateIssuePage> {
                                   // Now you can use day, month, and year as needed
                                   print("$year-$month-$day");
                                   String deliveryDate = "$year-$month-$day";
-                                  String validDeliveryDate = convertDateFormat(deliveryDate);
-                                  createIssueController.updateDeliveryDateOfIssue(
-                                      context, validDeliveryDate);
+                                  String validDeliveryDate =
+                                      convertDateFormat(deliveryDate);
+                                  createIssueController
+                                      .updateDeliveryDateOfIssue(
+                                          context, validDeliveryDate);
                                 });
                               }
                             },
@@ -241,7 +250,10 @@ class _CreateIssuePageState extends State<CreateIssuePage> {
                   children: [
                     Expanded(
                       child: TextFormField(
-                        controller: TextEditingController(text: createIssueController.createIssueModel?.nextFollowUpDate ?? ""),
+                        controller: TextEditingController(
+                            text: createIssueController
+                                    .createIssueModel?.nextFollowUpDate ??
+                                ""),
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.all(14),
                           filled: false,
@@ -265,12 +277,13 @@ class _CreateIssuePageState extends State<CreateIssuePage> {
 
                                   String nextFollowUpDate = "$year-$month-$day";
 
-                                  String validNextFollowUpDate = convertDateFormat(nextFollowUpDate);
+                                  String validNextFollowUpDate =
+                                      convertDateFormat(nextFollowUpDate);
 
                                   print("Date : $validNextFollowUpDate");
                                   createIssueController
                                       .updateNextFollowUpDateOfIssue(
-                                      context, validNextFollowUpDate);
+                                          context, validNextFollowUpDate);
                                 });
                               }
                             },
@@ -296,22 +309,22 @@ class _CreateIssuePageState extends State<CreateIssuePage> {
                   ],
                 ),
                 SizedBox(height: height * 0.05),
-
                 Center(
                   child: SizedBox(
                     height: 45,
                     width: 240,
                     child: ElevatedButton(
                       onPressed: () {
-                        createIssueController.postIssue(context, homeController.selectedBusiness);
+                        createIssueController.postIssue(
+                            context, homeController.selectedBusiness);
                       },
                       style: ButtonStyle(
                         foregroundColor:
-                        MaterialStateProperty.all<Color>(Colors.white),
+                            MaterialStateProperty.all<Color>(Colors.white),
                         backgroundColor: MaterialStateProperty.all<Color>(
                             submitButtonsColor),
                         shape:
-                        MaterialStateProperty.all<RoundedRectangleBorder>(
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25),
                           ),

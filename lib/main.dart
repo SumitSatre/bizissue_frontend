@@ -4,6 +4,7 @@ import 'package:bizissue/auth/screens/controllers/signup_provider.dart';
 import 'package:bizissue/auth/screens/splash_screen.dart';
 import 'package:bizissue/business_home_page/screens/controller/business_controller.dart';
 import 'package:bizissue/business_home_page/screens/controller/business_requests_controller.dart';
+import 'package:bizissue/business_home_page/screens/controller/business_users_controller.dart';
 import 'package:bizissue/business_home_page/screens/controller/create_business_controller.dart';
 import 'package:bizissue/business_home_page/screens/controller/create_issue_controller.dart';
 import 'package:bizissue/group/controller/group_controller.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ViewGroupProvider()),
         ChangeNotifierProvider(create: (_) => IssueProvider()),
         ChangeNotifierProvider(create: (_) => OutsiderProvider()),
+        ChangeNotifierProvider(create: (_) => BusinessUsersProvider()),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
