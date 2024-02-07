@@ -5,6 +5,8 @@ class MyAppRouteConstants {
   static const String contactUsRouteName = 'contact_us';
   static const String homeRouteName = 'home_page';
   static const String businessHomeRouteName = 'business_home_page';
+  static const String noBusinessHomeRouteName = 'Nobusiness_home_page';
+  static const String outsiderBusinessHomeRouteName = 'Outsider_business_home_page';
   static const String businessRouteName = 'business_page';
   static const String createBusinessRouteName = 'create_business';
   static const String joinBusinessRouteName = 'join_business';
@@ -20,4 +22,5 @@ class MyAppRouteConstants {
   static const String notificationPageRouteName = 'notification_page';
   static const String businessUsersListPageRouteName = 'business_users';
   static const String closedIssuesPageRouteName = 'closed_issues';
+  static const String userProfilePageRouteName = 'userProfile';
 }

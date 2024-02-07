@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bizissue/Issue/models/issue_model.dart';
 import 'package:bizissue/api%20repository/product_repository.dart';
 import 'package:bizissue/business_home_page/models/business_model.dart';
+import 'package:bizissue/business_home_page/models/user_profile_model.model.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/routes/app_route_constants.dart';
 import 'package:bizissue/utils/services/shared_preferences_service.dart';
@@ -39,6 +40,8 @@ class BusinessController extends ChangeNotifier {
   String selectedBCDFilter = "All";
 
   bool isSwitched = true;
+
+  UserProfile? userProfile ;
 
   void init(String id) async {
     pageController = PageController();
@@ -118,4 +121,27 @@ class BusinessController extends ChangeNotifier {
     GoRouter.of(context).goNamed(MyAppRouteConstants.homeRouteName);
     notifyListeners();
   }
+
+  Future<void> sendUserProfileGetRequest(String businessId , String userId) async {
+    print("This is id : $businessId");
+    String accessToken = await SharedPreferenceService().getAccessToken();
+    ApiHttpResponse response =
+    await callUserGetMethod("business/user/${businessId}/${userId}", accessToken);
+    final data = jsonDecode(response.responceString!);
+    debugPrint(data.toString());
+    if (response.responseCode == 200) {
+      print("This is data ${data["data"]}");
+      userProfile = UserProfile.fromJson(data["data"]);
+
+      print("This is userProfile data : ${userProfile.toString()}");
+      print("Done");
+    } else {
+    }
+    notifyListeners();
+  }
+
+  void setUserProfileNull(){
+    userProfile = null;
+  }
+
 }

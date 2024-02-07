@@ -9,12 +9,15 @@ import 'package:bizissue/business_home_page/screens/closed_issues.dart';
 import 'package:bizissue/business_home_page/screens/create_business.dart';
 import 'package:bizissue/business_home_page/screens/join_business.dart';
 import 'package:bizissue/business_home_page/screens/requests_screen.dart';
+import 'package:bizissue/business_home_page/screens/user_profile_page.dart';
 import 'package:bizissue/group/screens/create_group.dart';
 import 'package:bizissue/group/screens/group_detailed_page.dart';
 import 'package:bizissue/group/screens/multiple_group_detailed_page.dart';
 import 'package:bizissue/home/screens/home_page.dart';
 import 'package:bizissue/business_home_page/screens/business%20home/business_page.dart';
 import 'package:bizissue/home/screens/notification_page.dart';
+import 'package:bizissue/home/screens/simple_home_page.dart';
+import 'package:bizissue/outsider/screens/outsider_screen.dart';
 import 'package:bizissue/utils/error_page.dart';
 import 'package:bizissue/utils/routes/app_route_constants.dart';
 import 'package:flutter/material.dart';
@@ -82,6 +85,30 @@ class MyAppRouter {
           path: '/home/business',
           pageBuilder: (BuildContext context, GoRouterState state) {
             return MaterialPage(child: BusinessPage());
+          },
+        ),
+        GoRoute(
+          name: MyAppRouteConstants.userProfilePageRouteName,
+          path: '/home/business/profile/:businessId/:userId',
+          pageBuilder: (BuildContext context, GoRouterState state) {
+            return MaterialPage(child: UserProfilePage(
+              userId: state.params['userId']!,
+              businessId: state.params['businessId']!,
+            ));
+          },
+        ),
+        GoRoute(
+          name: MyAppRouteConstants.noBusinessHomeRouteName,
+          path: '/home/noBusiness',
+          pageBuilder: (BuildContext context, GoRouterState state) {
+            return MaterialPage(child: NoBusinessHomePage());
+          },
+        ),
+        GoRoute(
+          name: MyAppRouteConstants.outsiderBusinessHomeRouteName,
+          path: '/home/outsiderBusiness',
+          pageBuilder: (BuildContext context, GoRouterState state) {
+            return MaterialPage(child: OutsiderPage());
           },
         ),
         GoRoute(

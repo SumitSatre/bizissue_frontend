@@ -428,15 +428,16 @@ class IssueProvider extends ChangeNotifier {
   }
 
   void closeIssueRequest(BuildContext context, String businessId) async {
+
     try {
       // Validate business code
       if (businessId == null || businessId.isEmpty) {
-        //      showSnackBar(context, "Invalid business code!!", invalidColor);
+           showSnackBar(context, "Invalid business code!!", invalidColor);
         return;
       }
 
       if (issueModel == null || issueModel!.issueId == null) {
-        //      showSnackBar(context, "Something got wrong!!", invalidColor);
+         showSnackBar(context, "Something got wrong!!", invalidColor);
         return;
       }
 
@@ -453,15 +454,14 @@ class IssueProvider extends ChangeNotifier {
         businessController.setBusinessModelNull();
 
         GoRouter.of(context).pop();
-        //    showSnackBar(context, "Issue blocked successfully!!", successColor);
+            showSnackBar(context, "Issue blocked successfully!!", successColor);
         notifyListeners();
       } else {
         final data = jsonDecode(response.responceString ?? "");
-        // Handle other status codes if needed
-        //    showSnackBar(
-        //        context,
-        //        "Failed to send block request to business: ${data['message']}",
-        //        invalidColor);
+           showSnackBar(
+               context,
+               "Failed to send close request to business: ${data['message']}",
+               invalidColor);
       }
 
       debugPrint(response.responceString);

@@ -79,7 +79,23 @@ class HomeProvider extends ChangeNotifier {
   void setNewBusiness(BuildContext context , String businessId , String userType){
     selectedBusiness = businessId;
     selectedBusinessUserType = userType;
-    GoRouter.of(context).goNamed(MyAppRouteConstants.businessRouteName);
+
+    if (selectedBusiness != "") {
+      if (this.selectedBusinessUserType != "") {
+        if (this.selectedBusinessUserType == "Insider") {
+          GoRouter.of(context).goNamed(MyAppRouteConstants.businessRouteName);
+        } else if (this.selectedBusinessUserType == "Outsider") {
+          GoRouter.of(context).goNamed(MyAppRouteConstants.outsiderBusinessHomeRouteName);
+        } else {
+          GoRouter.of(context).goNamed(MyAppRouteConstants.noBusinessHomeRouteName);
+        }
+      } else {
+        GoRouter.of(context).goNamed(MyAppRouteConstants.noBusinessHomeRouteName);
+      }
+    } else {
+      GoRouter.of(context).goNamed(MyAppRouteConstants.noBusinessHomeRouteName);
+    }
+
     notifyListeners();
   }
 
