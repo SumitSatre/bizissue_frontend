@@ -1,5 +1,11 @@
+import 'dart:io';
+
+import 'package:bizissue/business_home_page/screens/controller/business_controller.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
+import 'package:bizissue/utils/colors.dart';
 import 'package:bizissue/utils/routes/app_route_constants.dart';
+import 'package:bizissue/utils/utils.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -54,9 +60,7 @@ void showDropdown(BuildContext context, String businessId) async {
   );
 
   if (result != null) {
-    String? routeName = menuItemsWithRoutes
-        .firstWhereOrNull((item) => item.containsKey(result))?[result!];
-
+    String routeName =  result;
     // Navigate to the selected page using the route name
     if (routeName != null) {
 
@@ -77,6 +81,13 @@ void showDropdown(BuildContext context, String businessId) async {
         print("Hi");
         GoRouter.of(context).pushNamed(MyAppRouteConstants.closedIssuesPageRouteName);
       }
+      else if(result == "Download Issue Template"){
+        print("Hi");
+        Provider.of<BusinessController>(context, listen: false).downloadCsvTemplate(context);
+      }
+      else if(result == "Upload Issues"){
+        Provider.of<BusinessController>(context, listen: false).pickAndUploadCsvFile(context , businessId);
+      }
     }
   }
 }
@@ -85,7 +96,9 @@ List<String> menuItemsList = [
   "Requests",
   "Create Group",
   "Users",
-  "Closed Issues"
+  "Closed Issues",
+  "Download Issue Template",
+  "Upload Issues"
 ];
 
 List<Map<String, String>> menuItemsWithRoutes = [

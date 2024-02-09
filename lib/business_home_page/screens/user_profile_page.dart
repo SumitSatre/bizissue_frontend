@@ -1,4 +1,5 @@
 import 'package:bizissue/business_home_page/screens/controller/business_controller.dart';
+import 'package:bizissue/business_home_page/widgets/rate_user_dialog.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/widgets/buttons/custom_back_button.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,8 @@ class UserProfilePage extends StatefulWidget {
 class _UserProfilePageState extends State<UserProfilePage> {
   @override
   void initState() {
-    Provider.of<BusinessController>(context, listen: false).setUserProfileNull();
+    Provider.of<BusinessController>(context, listen: false)
+        .setUserProfileNull();
     Provider.of<BusinessController>(context, listen: false)
         .sendUserProfileGetRequest(widget.businessId, widget.userId)
         .then((_) {
@@ -32,11 +34,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Widget build(BuildContext context) {
     final userProfile =
         Provider.of<BusinessController>(context, listen: true).userProfile;
-
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    double textScale = MediaQuery.textScaleFactorOf(context);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize:
-        Size.fromHeight(MediaQuery.of(context).size.height * 0.19),
+            Size.fromHeight(MediaQuery.of(context).size.height * 0.19),
         child: Padding(
           padding: EdgeInsets.symmetric(
             vertical: MediaQuery.of(context).size.height * 0.02,
@@ -61,82 +65,129 @@ class _UserProfilePageState extends State<UserProfilePage> {
       ),
       body: userProfile == null
           ? Center(
-        child: CircularProgressIndicator(),
-      )
-          : Center(
-        child: Column(
-          children: [
-            SizedBox(height: 20),
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Colors.transparent,
-                  width: 2.0,
+              child: CircularProgressIndicator(),
+            )
+          : SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.only(top: 15 , left: 15 , right: 15),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.transparent,
+                            width: 2.0,
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            CircleAvatar(
+                              backgroundImage: AssetImage('assets/images/person.png'),
+                              radius: 50,
+                            ),
+                            SizedBox(
+                              height: height*0.01,
+                            ),
+                            Text((userProfile?.user?.totalRating ?? "").toString() + " ⭐" , style: TextStyle(
+                              fontWeight: FontWeight.bold , fontSize: 18
+                            ),)
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: height*0.02),
+                      Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Name:",
+                                style: TextStyle(
+                                  fontFamily: "poppins",
+                                  fontSize: 12 * textScale,
+                                  color:
+                                      Colors.black.withOpacity(0.699999988079071),
+                                ),
+                              ),
+                              SizedBox(height: height * 0.01),
+                              Text(
+                                "Contact Number:",
+                                style: TextStyle(
+                                  fontFamily: "poppins",
+                                  fontSize: 12 * textScale,
+                                  color:
+                                      Colors.black.withOpacity(0.699999988079071),
+                                ),
+                              ),
+                              SizedBox(height: height * 0.01),
+                            ],
+                          ),
+                          SizedBox(width: width * 0.22),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: width * 0.3,
+                                child: Text(
+                                  "t",
+                                  style: TextStyle(
+                                    fontFamily: "poppins",
+                                    fontSize: 12 * textScale,
+                                    color: Colors.black
+                                        .withOpacity(0.699999988079071),
+                                  ),
+                                ), // Text(
+                                //    userModel.artInfo!.artCategory == ""
+                                //        ? "N/A"
+                                //        : userModel
+                                //            .artInfo!.artCategory!,
+                                //    softWrap: false,
+                                //    overflow: TextOverflow.ellipsis,
+                                //    style: TextStyle(
+                                //      fontFamily: "poppins",
+                                //      fontSize: 12 * textScale,
+                                //      color: Colors.black.withOpacity(
+                                //          0.699999988079071),
+                                //    ),
+                                //  ),
+                              ),
+                              SizedBox(height: height * 0.01),
+                              Text(
+                                "fr",
+                                style: TextStyle(
+                                  fontFamily: "poppins",
+                                  fontSize: 12 * textScale,
+                                  color:
+                                      Colors.black.withOpacity(0.699999988079071),
+                                ),
+                              ),
+                              SizedBox(height: height * 0.01),
+                            ],
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => RateUserDialog(
+                              userId:
+                                  widget.userId, // Pass the required parameters
+                              businessId: widget.businessId,
+                            ),
+                          );
+                        },
+                        child: Text('Rate User'),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              child: CircleAvatar(
-                backgroundImage: AssetImage('assets/images/person.png'),
-                radius: 50,
-              ),
             ),
-            SizedBox(height: 20),
-            Text(
-              'Name: ${userProfile.user.name}',
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'User Type: ${userProfile.user.userType}',
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Role: ${userProfile.user.role}',
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 20),
-            Text(
-              'Total Issues Count: ${userProfile.count.totalIssuesCount}',
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Delayed Count: ${userProfile.count.delayedCount}',
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Blocked Count: ${userProfile.count.blockedCount}',
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Critical Count: ${userProfile.count.criticalCount}',
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Expired Delivery Date Count: ${userProfile.count.expiredDeliveryDateCount}',
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Expired Next Follow-Up Date Count: ${userProfile.count.expiredNextFollowUpDateCount}',
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Handle rate user action
-              },
-              child: Text('Rate User'),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

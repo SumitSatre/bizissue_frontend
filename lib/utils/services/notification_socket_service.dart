@@ -13,7 +13,7 @@ class NotificationSocketService {
 
   void initSocket(BuildContext context, String userId) {
     socket = IO.io(
-      'https://bizissue-backend.onrender.com/home/notifications',
+      'https://ophize-backend.onrender.com/home/notifications',
       <String, dynamic>{
         'transports': ['websocket'],
         'autoConnect': false,

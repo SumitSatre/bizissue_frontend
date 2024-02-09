@@ -1,13 +1,14 @@
 import 'package:bizissue/home/models/user_model.dart';
+import 'dart:convert'; // for json.decode if needed
 
 class User {
   final ContactNumber contactNumber;
-  final int totalRating;
+  final double totalRating;
   final String name;
   final String userId;
   final String userType;
   final String role;
-  final String lastSeen;
+  final DateTime lastSeen;
 
   User({
     required this.contactNumber,
@@ -21,14 +22,15 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      contactNumber: ContactNumber.fromJson(json['contactNumber']),
-      totalRating: json['totalRating'],
-      name: json['name'],
-      userId: json['userId'],
-      userType: json['userType'],
-      role: json['role'],
-      lastSeen: json['last_seen'],
-    );
+        contactNumber: ContactNumber.fromJson(json['contactNumber']),
+        totalRating: json['totalRating'] is int
+            ? (json['totalRating'] as int).toDouble()
+            : json['totalRating'],
+        name: json['name'],
+        userId: json['userId'],
+        userType: json['userType'],
+        role: json['role'],
+        lastSeen: DateTime.parse(json['lastSeen']));
   }
 }
 
