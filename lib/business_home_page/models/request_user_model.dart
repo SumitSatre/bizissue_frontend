@@ -32,3 +32,29 @@ class RequestUserModel {
     );
   }
 }
+
+class DeclinedRequestUser {
+  final String userId;
+  final String name;
+  final String reason;
+  final String declinedDate;
+  final ContactNumber contactNumber;
+
+  DeclinedRequestUser({
+    required this.userId,
+    required this.name,
+    required this.reason,
+    required this.declinedDate,
+    required this.contactNumber,
+  });
+
+  factory DeclinedRequestUser.fromJson(Map<String, dynamic> json) {
+    return DeclinedRequestUser(
+      userId: json['userId'],
+      name: json['name'],
+      reason: json['reason'],
+      declinedDate: json['declinedDate'],
+      contactNumber: ContactNumber.fromJson(json['contactNumber']),
+    );
+  }
+}

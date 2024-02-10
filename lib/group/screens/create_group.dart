@@ -46,7 +46,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
       callInit(context);
     }
 
-    final groupController = Provider.of<GroupProvider>(context, listen: false);
+    final groupController = Provider.of<GroupProvider>(context, listen: true);
 
     if (groupController.groupUsersIds == null) {
       groupController.getGroupsWithIdsList(homeController.selectedBusiness);

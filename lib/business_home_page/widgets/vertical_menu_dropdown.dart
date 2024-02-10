@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bizissue/business_home_page/screens/controller/business_controller.dart';
+import 'package:bizissue/business_home_page/screens/controller/business_requests_controller.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/colors.dart';
 import 'package:bizissue/utils/routes/app_route_constants.dart';
@@ -69,6 +70,7 @@ void showDropdown(BuildContext context, String businessId) async {
         GoRouter.of(context).pushNamed(MyAppRouteConstants.createGroupRouteName);
       }
       else if(result == "Requests"){
+        Provider.of<BusinessRequestsProvider>(context, listen: false).clear();
         GoRouter.of(context).pushNamed(MyAppRouteConstants.businessRequestsRouteName,
             params: {"businessId": businessId});
       }

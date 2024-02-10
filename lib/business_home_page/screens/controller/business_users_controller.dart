@@ -151,4 +151,17 @@ class BusinessUsersProvider extends ChangeNotifier {
     }
   }
 
+  void sortAccordingToDeliveryDate(){
+    _myIssuesGroup = groupAndSortIssuesDeliveryDate(myIssues ?? []);
+    _myTeamIssuesGroup =
+        groupAndSortIssuesDeliveryDate(myTeamIssues ?? []);
+  }
+
+  void sortAccordingToNextFollowUpDate(){
+    _myIssuesGroup = groupAndSortIssues(myIssues ?? []);
+    _myTeamIssuesGroup =
+        groupAndSortIssues(myTeamIssues ?? []);
+  }
+
+
 }

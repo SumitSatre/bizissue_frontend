@@ -84,6 +84,20 @@ class BusinessController extends ChangeNotifier {
     }
   }
 
+  void sortAccordingToDeliveryDate(){
+    _myIssuesGroup = groupAndSortIssuesDeliveryDate(_businessModel?.myIssues ?? []);
+    _myTeamIssuesGroup =
+        groupAndSortIssuesDeliveryDate(_businessModel?.myTeamIssues ?? []);
+  }
+
+  void sortAccordingToNextFollowUpDate(){
+    _myIssuesGroup = groupAndSortIssues(_businessModel?.myIssues ?? []);
+    _myTeamIssuesGroup =
+        groupAndSortIssues(_businessModel?.myTeamIssues ?? []);
+  }
+
+
+
   void reGroupIssues(
       List<IssueModel>? myIssuess, List<IssueModel>? myTeamIssuess) {
     _myIssuesGroup = groupAndSortIssues(myIssuess ?? []);

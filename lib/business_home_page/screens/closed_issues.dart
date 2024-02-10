@@ -1,5 +1,5 @@
 import 'package:bizissue/business_home_page/screens/controller/business_users_controller.dart';
-import 'package:bizissue/business_home_page/widgets/custom_filtered_list.dart';
+import 'package:bizissue/business_home_page/widgets/custom_filtered_list_closed_issues.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/widgets/buttons/custom_back_button.dart';
 import 'package:flutter/cupertino.dart';
@@ -61,9 +61,6 @@ class _ClosedIssuesState extends State<ClosedIssues> {
             ? Center(
                 child: CircularProgressIndicator(),
               )
-            : CustomFilteredList(
-                myIssuesGroup: businessUsersController.myIssuesGroup ?? [],
-                myTeamIssuesGroup:
-                    businessUsersController.myTeamIssuesGroup ?? []));
+            : CustomFilteredListClosedIssues());
   }
 }

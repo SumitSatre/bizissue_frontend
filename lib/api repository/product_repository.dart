@@ -291,6 +291,7 @@ Future<ApiHttpResponse> callUserPatchMethod(
   try {
     String url = domain + apiUrl;
 
+    print("This is $url");
     Map<String, String> header = {
       'Content-Type': 'application/json',
       'accept': ' */*',
@@ -302,7 +303,7 @@ Future<ApiHttpResponse> callUserPatchMethod(
     ApiHttpResponse apiResponse = ApiHttpResponse();
     apiResponse.responseCode = response.statusCode;
     apiResponse.responceString = response.body;
-
+print("this is response ${response.body.toString()}");
     return apiResponse;
   } on SocketException catch (_) {
     ApiHttpResponse apiResponse = ApiHttpResponse();

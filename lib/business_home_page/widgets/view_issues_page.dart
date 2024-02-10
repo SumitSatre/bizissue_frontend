@@ -94,11 +94,11 @@ class _ViewIssuesWidgetState extends State<ViewIssuesWidget> {
                 }
 
                 return CustomExpansionTile(
-                  title: groupIssue.nextFollowUpDate == todaysDate
+                  title: groupIssue.date == todaysDate
                       ? "Today"
-                      : groupIssue.nextFollowUpDate == tomorrowsDate
+                      : groupIssue.date == tomorrowsDate
                       ? "Tomorrow"
-                      : groupIssue.nextFollowUpDate ?? "No Date",
+                      : groupIssue.date ?? "No Date",
                   issues: filteredIssues,
                 );
               }

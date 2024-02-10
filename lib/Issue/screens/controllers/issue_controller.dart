@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:bizissue/Issue/models/issue_model.dart';
 import 'package:bizissue/Issue/models/message_model.dart';
@@ -11,12 +12,15 @@ import 'package:bizissue/utils/services/shared_preferences_service.dart';
 import 'package:bizissue/utils/utils.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:go_router/go_router.dart';
 
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class IssueProvider extends ChangeNotifier {
   IssueModel? _issueModel;
@@ -29,6 +33,8 @@ class IssueProvider extends ChangeNotifier {
 
   bool _isFetching = false;
   bool get isFetching => _isFetching;
+
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   Future<void> sendIssueGetRequest(String businessId, String issueId) async {
     print("This is business id : $businessId");
@@ -472,6 +478,65 @@ class IssueProvider extends ChangeNotifier {
     }
     setFetching(false);
   }
+
+  Future<String> uploadFileToStorage(String childName, XFile? file) async {
+    try {
+      if (file == null) {
+        throw Exception('File is null');
+      }
+
+      Uuid uuid = const Uuid();
+      String id = uuid.v4();
+      Reference ref = _storage.ref().child(childName).child(id);
+      File compressedFile = await compressImage(File(file.path));
+
+      SettableMetadata metadata = SettableMetadata(contentType: 'image/jpg');
+
+      UploadTask uploadTask = ref.putFile(compressedFile, metadata);
+
+      await uploadTask;
+
+      String downloadUrl = await ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      throw Exception('Error uploading file:');
+    }
+    }
+
+  Future<File> compressImage(File imageFile) async {
+    // Define the target file size in bytes (200 KB in this example)
+    int targetSize = 200 * 1024;
+
+    Uint8List? compressedBytes = await FlutterImageCompress.compressWithFile(
+      imageFile.path,
+      minWidth: 800,
+      minHeight: 600,
+      quality: 85,
+    );
+
+    if (compressedBytes!.lengthInBytes > targetSize) {
+      compressedBytes = await FlutterImageCompress.compressWithList(
+        compressedBytes,
+        minWidth: 800,
+        minHeight: 600,
+        quality: 70,
+      );
+    }
+
+    File compressedFile = File(imageFile.path)
+      ..writeAsBytesSync(compressedBytes);
+
+    return compressedFile;
+  }
+
+  Future<XFile?> captureImage() async {
+    final ImagePicker picker = ImagePicker();
+    XFile? image = await picker.pickImage(source: ImageSource.camera);
+
+    if (image != null) return image;
+    return null;
+    }
+
 }
 
 /*

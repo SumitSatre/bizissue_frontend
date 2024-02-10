@@ -1,6 +1,9 @@
+import 'package:bizissue/business_home_page/models/user_profile_model.model.dart';
 import 'package:bizissue/business_home_page/screens/controller/business_controller.dart';
 import 'package:bizissue/business_home_page/widgets/rate_user_dialog.dart';
+import 'package:bizissue/business_home_page/widgets/rating_list_item_tile.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
+import 'package:bizissue/utils/utils.dart';
 import 'package:bizissue/widgets/buttons/custom_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -69,125 +72,129 @@ class _UserProfilePageState extends State<UserProfilePage> {
             )
           : SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.only(top: 15 , left: 15 , right: 15),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Colors.transparent,
-                            width: 2.0,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    // Profile image with styling
+                    Column(
+                      children: [
+                        CircleAvatar(
+                          backgroundImage:
+                              AssetImage('assets/images/person.png'),
+                          radius: 50,
+                        ),
+                        SizedBox(
+                          height: height * 0.01,
+                        ),
+                        Text(
+                          userProfile?.user?.name ?? "",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: Colors.blue, // Added color
                           ),
                         ),
-                        child: Column(
-                          children: [
-                            CircleAvatar(
-                              backgroundImage: AssetImage('assets/images/person.png'),
-                              radius: 50,
-                            ),
-                            SizedBox(
-                              height: height*0.01,
-                            ),
-                            Text((userProfile?.user?.totalRating ?? "").toString() + " ⭐" , style: TextStyle(
-                              fontWeight: FontWeight.bold , fontSize: 18
-                            ),)
-                          ],
+                        SizedBox(
+                          height: height * 0.01,
                         ),
-                      ),
-                      SizedBox(height: height*0.02),
-                      Row(
+                        Text(
+                          (userProfile?.user?.totalRating ?? "").toString() +
+                              " ⭐",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: Colors.blue, // Added color
+                          ),
+                        )
+                      ],
+                    ),
+
+                    const SizedBox(height: 20),
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Name:",
-                                style: TextStyle(
-                                  fontFamily: "poppins",
-                                  fontSize: 12 * textScale,
-                                  color:
-                                      Colors.black.withOpacity(0.699999988079071),
-                                ),
-                              ),
-                              SizedBox(height: height * 0.01),
-                              Text(
-                                "Contact Number:",
-                                style: TextStyle(
-                                  fontFamily: "poppins",
-                                  fontSize: 12 * textScale,
-                                  color:
-                                      Colors.black.withOpacity(0.699999988079071),
-                                ),
-                              ),
-                              SizedBox(height: height * 0.01),
-                            ],
-                          ),
-                          SizedBox(width: width * 0.22),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: width * 0.3,
-                                child: Text(
-                                  "t",
-                                  style: TextStyle(
-                                    fontFamily: "poppins",
-                                    fontSize: 12 * textScale,
-                                    color: Colors.black
-                                        .withOpacity(0.699999988079071),
-                                  ),
-                                ), // Text(
-                                //    userModel.artInfo!.artCategory == ""
-                                //        ? "N/A"
-                                //        : userModel
-                                //            .artInfo!.artCategory!,
-                                //    softWrap: false,
-                                //    overflow: TextOverflow.ellipsis,
-                                //    style: TextStyle(
-                                //      fontFamily: "poppins",
-                                //      fontSize: 12 * textScale,
-                                //      color: Colors.black.withOpacity(
-                                //          0.699999988079071),
-                                //    ),
-                                //  ),
-                              ),
-                              SizedBox(height: height * 0.01),
-                              Text(
-                                "fr",
-                                style: TextStyle(
-                                  fontFamily: "poppins",
-                                  fontSize: 12 * textScale,
-                                  color:
-                                      Colors.black.withOpacity(0.699999988079071),
-                                ),
-                              ),
-                              SizedBox(height: height * 0.01),
-                            ],
-                          )
+                          _buildKeyValuePair("Contact Number:",
+                              userProfile.user.contactNumber.number),
+                          _buildKeyValuePair(
+                              "User Type:", userProfile.user.userType),
+                          _buildKeyValuePair("Role:", userProfile.user.role),
+                          _buildKeyValuePair(
+                              "Last Seen:",
+                              userProfile?.user.lastSeen.toString() != null
+                                  ? convertUTCtoLocal(
+                                      userProfile!.user!.lastSeen.toString())
+                                  : ""),
+                          _buildKeyValuePair(
+                              "Total Issues Count:",
+                              userProfile.count.totalIssuesCount.toString() ??
+                                  ""),
+                          _buildKeyValuePair("Delayed Count:",
+                              userProfile.count.delayedCount.toString() ?? ""),
+                          _buildKeyValuePair("Blocked Count:",
+                              userProfile.count.blockedCount.toString() ?? ""),
+                          _buildKeyValuePair("Critical Count:",
+                              userProfile.count.criticalCount.toString() ?? ""),
+                          _buildKeyValuePair(
+                              "Expired Delivery Date Count:",
+                              userProfile.count.expiredDeliveryDateCount
+                                      .toString() ??
+                                  ""),
+                          _buildKeyValuePair(
+                              "Expired Next Follow-Up Date Count:",
+                              userProfile.count.expiredNextFollowUpDateCount
+                                      .toString() ??
+                                  ""),
                         ],
                       ),
-                      SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => RateUserDialog(
-                              userId:
-                                  widget.userId, // Pass the required parameters
-                              businessId: widget.businessId,
-                            ),
-                          );
+                    ),
+                    SizedBox(
+                      height: height*0.01,
+                    ),
+                    Container(
+                        padding: EdgeInsets.only(left: 10),
+                        alignment: Alignment.centerLeft,
+                        child: Text("Ratings " , style: TextStyle(fontSize: 17 , fontWeight: FontWeight.w600),)),
+                    SizedBox(
+                      height: height*0.01,
+                    ),
+                    if (userProfile != null)
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: userProfile?.user?.rating?.length ?? 0,
+                        itemBuilder: (context, index) {
+                          RatingModel ratingItem =
+                              userProfile!.user!.rating![index];
+                          return RatingListTile(rating: ratingItem);
                         },
-                        child: Text('Rate User'),
                       ),
-                    ],
-                  ),
+                  ],
                 ),
               ),
             ),
     );
   }
+}
+
+Widget _buildKeyValuePair(String key, String value) {
+  return Container(
+    margin: EdgeInsets.only(bottom: 10),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          flex: 6, // 70% of the width
+          child: Text(key, style: TextStyle(fontSize: 16, color: Colors.grey)),
+        ),
+        SizedBox(width: 10), // Spacer
+        Expanded(
+          flex: 4, // 30% of the width
+          child:
+              Text(value, style: TextStyle(fontSize: 16, color: Colors.black)),
+        ),
+      ],
+    ),
+  );
 }

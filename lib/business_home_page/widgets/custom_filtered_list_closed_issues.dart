@@ -1,26 +1,25 @@
 import 'package:bizissue/Issue/models/issue_model.dart';
 import 'package:bizissue/business_home_page/models/dropdown_lists.dart';
+import 'package:bizissue/business_home_page/screens/controller/business_users_controller.dart';
 import 'package:bizissue/business_home_page/widgets/custom_expannsion_tile.dart';
 import 'package:bizissue/utils/colors.dart';
 import 'package:bizissue/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
+import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 
-class CustomFilteredList extends StatefulWidget {
-  final List<GroupIssue>? myIssuesGroup;
-  final List<GroupIssue>? myTeamIssuesGroup;
+class CustomFilteredListClosedIssues extends StatefulWidget {
 
-  const CustomFilteredList({
-    Key? key,
-    required this.myIssuesGroup,
-    required this.myTeamIssuesGroup,
-  }) : super(key: key);
 
   @override
-  State<CustomFilteredList> createState() => _CustomFilteredListState();
+  State<CustomFilteredListClosedIssues> createState() => _CustomFilteredListState();
+
 }
 
-class _CustomFilteredListState extends State<CustomFilteredList> {
+class _CustomFilteredListState extends State<CustomFilteredListClosedIssues> {
+
+  bool _switchValue = false;
   bool isSwitched = true;
   String? selectedBCDFilter = "All"; // Set your default value here
 
@@ -31,19 +30,18 @@ class _CustomFilteredListState extends State<CustomFilteredList> {
     final todaysDate = DateTime.now().toString(); // You can replace this with your actual logic
     final tomorrowsDate = DateTime.now().add(Duration(days: 1)).toString();
 
+    final businessUsersController =
+    Provider.of<BusinessUsersProvider>(context, listen: true);
+
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
-              Text(
-                "Filters:",
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-              ),
               SizedBox(width: width * 0.02),
               SizedBox(
-                width: width * 0.45,
+                width: width * 0.443,
                 height: 40,
                 child: Row(
                   children: [
@@ -71,7 +69,7 @@ class _CustomFilteredListState extends State<CustomFilteredList> {
               SizedBox(width: 2),
               Container(
                 height: 36,
-                width: width * 0.24,
+                width: width * 0.22,
                 decoration: BoxDecoration(
                   border: Border.all(
                     style: BorderStyle.solid,
@@ -107,16 +105,76 @@ class _CustomFilteredListState extends State<CustomFilteredList> {
                   ),
                 ),
               ),
-              SizedBox(width: width * 0.01),
+              SizedBox(width: width * 0.02),
+              Container(
+                width: width * 0.23,
+                height: 36,
+                child: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                          businessUsersController.sortAccordingToNextFollowUpDate();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 7),
+                        decoration: BoxDecoration(
+                          color: _switchValue ? Colors.grey : Colors.blue,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(4),
+                            bottomLeft: Radius.circular(4),
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'NFD',
+                            style: TextStyle(
+                              color: _switchValue ? Colors.black : Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _switchValue = true;
+                          businessUsersController.sortAccordingToDeliveryDate();
+                        });
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 7),
+                        decoration: BoxDecoration(
+                          color: _switchValue ? Colors.blue : Colors.grey,
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(4),
+                            bottomRight: Radius.circular(4),
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'DD',
+                            style: TextStyle(
+                              color: _switchValue ? Colors.white : Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+
+
+
             ],
           ),
         ),
         SizedBox(height: height * 0.02),
         Expanded(
           child: ListView.builder(
-            itemCount: isSwitched ? widget.myIssuesGroup?.length ?? 0 : widget.myTeamIssuesGroup?.length ?? 0,
+            itemCount: isSwitched ? businessUsersController.myIssuesGroup?.length ?? 0 : businessUsersController.myTeamIssuesGroup?.length ?? 0,
             itemBuilder: (context, index) {
-              GroupIssue groupIssue = isSwitched ? widget.myIssuesGroup![index] : widget.myTeamIssuesGroup![index];
+              GroupIssue groupIssue = isSwitched ? businessUsersController.myIssuesGroup![index] : businessUsersController.myTeamIssuesGroup![index];
 
               if (groupIssue == null || groupIssue.issues == null || groupIssue.issues!.length < 1) {
                 return Center(child: Text("No Data"));
@@ -128,11 +186,11 @@ class _CustomFilteredListState extends State<CustomFilteredList> {
                 }
 
                 return CustomExpansionTile(
-                  title: groupIssue.nextFollowUpDate == todaysDate
+                  title: groupIssue.date == todaysDate
                       ? "Today"
-                      : groupIssue.nextFollowUpDate == tomorrowsDate
+                      : groupIssue.date == tomorrowsDate
                       ? "Tomorrow"
-                      : groupIssue.nextFollowUpDate ?? "No Date",
+                      : groupIssue.date ?? "No Date",
                   issues: filteredIssues,
                 );
               }

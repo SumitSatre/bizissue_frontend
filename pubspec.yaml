@@ -61,6 +61,10 @@ dependencies:
   permission_handler: ^10.2.0
   share: ^2.0.4
   flutter_rating_bar: ^4.0.1
+  flutter_toggle_tab:
+  image_picker: ^1.0.7
+  flutter_image_compress: ^2.1.0
+  uuid: ^4.2.2
 
 dev_dependencies:
   flutter_test:

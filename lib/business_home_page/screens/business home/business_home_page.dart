@@ -4,6 +4,8 @@ import 'package:bizissue/business_home_page/models/dropdown_lists.dart';
 import 'package:bizissue/business_home_page/screens/controller/business_controller.dart';
 import 'package:bizissue/business_home_page/widgets/appBar.dart';
 import 'package:bizissue/business_home_page/widgets/custom_expannsion_tile.dart';
+import 'package:bizissue/business_home_page/widgets/custom_filtered_list_closed_issues.dart';
+import 'package:bizissue/business_home_page/widgets/custom_filtered_list_home.dart';
 import 'package:bizissue/business_home_page/widgets/empty_screen.dart';
 import 'package:bizissue/business_home_page/widgets/issue_tile.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
@@ -31,7 +33,6 @@ class BusinessHomePage extends StatefulWidget {
 }
 
 class _BusinessHomePageState extends State<BusinessHomePage> {
-
   void callInit() {
     Provider.of<BusinessController>(context, listen: false).init(widget.id);
   }
@@ -88,153 +89,16 @@ class _BusinessHomePageState extends State<BusinessHomePage> {
                   )
                 : Scaffold(
                     body: RefreshIndicator(
-                      onRefresh: () async {
-                        controller.onRefresh(context);
-                        setState(() {});
-                      },
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                Text("Filters:",
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500)),
-                                SizedBox(
-                                  width: width * 0.02,
-                                ),
-
-                                SizedBox(
-                                  width: width * 0.45,
-                                  height: 40,
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                          child: ToggleSwitch(
-                                        initialLabelIndex:
-                                            controller.isSwitched ? 0 : 1,
-                                        inactiveBgColor: kbackgroundColor,
-                                        activeBgColor: [kprimaryColor],
-                                        fontSize: 13,
-                                        multiLineText: true,
-                                        minWidth: width * 0.22,
-                                        totalSwitches: 2,
-                                        labels: ['My Issues', 'My Team Issues'],
-                                        centerText: true,
-                                        onToggle: (index) {
-                                          if (index == 0) {
-                                            controller.isSwitched = true;
-                                          } else {
-                                            controller.isSwitched = false;
-                                          }
-                                          controller.notifyListeners();
-                                        },
-                                      )),
-                                    ],
-                                  ),
-                                ),
-
-                                SizedBox(width: 2),
-                                Container(
-                                  height: 36,
-                                  width: width * 0.24,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      style: BorderStyle.solid,
-                                      color: Colors.grey,
-                                    ),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: DropdownButtonHideUnderline(
-                                    child: DropdownButton<String>(
-                                      icon: const Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Icon(
-                                          Icons.keyboard_arrow_down_sharp,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      elevation: 4,
-                                      style: const TextStyle(
-                                          color: Colors.black, fontSize: 14),
-                                      value: controller.selectedBCDFilter,
-                                      onChanged: (p0) {
-                                        if (p0 != null) {
-                                          controller.selectedBCDFilter = p0;
-                                          controller.notifyListeners();
-                                        }
-                                      },
-                                      items:
-                                          BCDList.map<DropdownMenuItem<String>>(
-                                              (String s) {
-                                        return DropdownMenuItem<String>(
-                                          value: s,
-                                          child: Text("  $s"),
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ),
-                                ),
-
-                                SizedBox(
-                                  width: width * 0.01,
-                                ),
-
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: height * 0.02,
-                          ),
-                          Expanded(
-                            child: ListView.builder(
-                              itemCount: controller.isSwitched
-                                  ? controller.myIssuesGroup?.length ?? 0
-                                  : controller.myTeamIssuesGroup?.length ?? 0,
-                              itemBuilder: (context, index) {
-                                GroupIssue groupIssue  = controller.isSwitched
-                                    ? controller.myIssuesGroup![index]
-                                    : controller.myTeamIssuesGroup![index];
-
-                                if (groupIssue == null ||
-                                    groupIssue.issues == null ||
-                                    groupIssue.issues!.length < 1) {
-                                  return Center(child: Text("No Data"));
-                                } else {
-                                  List<IssueModel> filteredIssues =
-                                      filterIssues(groupIssue.issues,
-                                          controller.selectedBCDFilter);
-
-                                  if (filteredIssues.isEmpty) {
-                                    return Container();
-                                  }
-
-                                  return CustomExpansionTile(
-                                    title:
-                                    groupIssue.nextFollowUpDate == todaysDate
-                                            ? "Today"
-                                            : groupIssue.nextFollowUpDate ==
-                                                    tomorrowsDate
-                                                ? "Tomorrow"
-                                                : groupIssue.nextFollowUpDate ??
-                                                    "No Date",
-                                    issues: filteredIssues,
-                                  );
-                                }
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                        onRefresh: () async {
+                          controller.onRefresh(context);
+                          setState(() {});
+                        },
+                        child: CustomFilteredListHome()),
                   );
       }),
     );
   }
 }
-
 
 /*//    Container(
                                 //        height: 36,

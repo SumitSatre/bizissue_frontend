@@ -11,6 +11,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:http/http.dart' as http;
@@ -19,9 +20,14 @@ import 'package:path_provider/path_provider.dart';
 class IssuePage extends StatefulWidget {
   final String issueId;
   final String businessId;
+  final bool isClosedIssue; // New parameter added
 
-  const IssuePage({Key? key, required this.issueId, required this.businessId})
-      : super(key: key);
+  const IssuePage({
+    Key? key,
+    required this.issueId,
+    required this.businessId,
+    this.isClosedIssue = false, // Default value set to false
+  }) : super(key: key);
 
   @override
   State<IssuePage> createState() => _IssuePageState();
@@ -480,6 +486,7 @@ class _IssuePageState extends State<IssuePage> {
                             padding: EdgeInsets.symmetric(horizontal: 12.0),
                             child: TextField(
                               controller: messageContentController,
+
                               decoration: InputDecoration(
                                 hintText: 'Type a message...',
                                 border: OutlineInputBorder(
@@ -488,6 +495,16 @@ class _IssuePageState extends State<IssuePage> {
                                 contentPadding: EdgeInsets.symmetric(
                                   vertical: 12.0,
                                   horizontal: 16.0,
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: Icon(Icons.camera_alt), // Replace with your desired icon
+                                  onPressed: () async {
+                                    XFile? xfile = await captureImage();
+
+                                    if(xfile != null){
+                                      issueController.uploadFileToStorage("chats" , xfile);
+                                    }
+                                  },
                                 ),
                               ),
                             ),
@@ -555,6 +572,15 @@ class _IssuePageState extends State<IssuePage> {
       }),
     );
   }
+
+  Future<XFile?> captureImage() async {
+    final ImagePicker picker = ImagePicker();
+    XFile? image = await picker.pickImage(source: ImageSource.camera);
+
+    if (image != null) return image;
+    return null;
+    }
+
 }
 
 class ChatBubble extends StatelessWidget {

@@ -13,6 +13,7 @@ import 'package:go_router/go_router.dart';
 
 class BusinessRequestsProvider extends ChangeNotifier{
   List<RequestUserModel>? userRequestlist;
+  List<DeclinedRequestUser>? declinedRequestUsersList;
 
   UserRoleModel? userRoleModel;
 
@@ -44,6 +45,33 @@ class BusinessRequestsProvider extends ChangeNotifier{
       notifyListeners();
     // If _userlistModel is not null, return the cached list
   }
+
+  Future<void> getDeclinedRequestsList(BuildContext context , String id) async {
+    print("This is id : $id");
+    String accessToken = await SharedPreferenceService().getAccessToken();
+    ApiHttpResponse response =
+    await callUserGetMethod("business/declined/request/${id}", accessToken);
+    final data = jsonDecode(response.responceString!);
+    debugPrint(data.toString());
+    if (response.responseCode == 200) {
+      // print("This is data of users lists : ${data["data"]["users"]}");
+
+      declinedRequestUsersList = (data["data"]["declinedRequests"] as List)
+          .map((item) => DeclinedRequestUser.fromJson(item))
+          .toList();
+
+      // if their is no request in the business
+      if(declinedRequestUsersList == null){
+        declinedRequestUsersList = [];
+      }
+
+    } else {
+      declinedRequestUsersList = [];
+      showSnackBar(context, "Unable to fetch declined requests list!!", failureColor);
+    }
+    notifyListeners();
+  }
+
   void updateAssignTo(UserListModel? userListItem) {
     if(userListItem != null){
       if (userRoleModel != null ) {

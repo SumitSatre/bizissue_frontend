@@ -124,7 +124,7 @@ Map<String, dynamic> _$IssueModelToJson(IssueModel instance) =>
     };
 
 GroupIssue _$GroupIssueFromJson(Map<String, dynamic> json) => GroupIssue(
-      nextFollowUpDate: json['nextFollowUpDate'] as String?,
+  date: json['date'] as String?,
       issues: (json['issues'] as List<dynamic>?)
           ?.map((e) => IssueModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -132,6 +132,6 @@ GroupIssue _$GroupIssueFromJson(Map<String, dynamic> json) => GroupIssue(
 
 Map<String, dynamic> _$GroupIssueToJson(GroupIssue instance) =>
     <String, dynamic>{
-      'nextFollowUpDate': instance.nextFollowUpDate,
+      'date': instance.date,
       'issues': instance.issues,
     };

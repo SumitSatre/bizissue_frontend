@@ -259,10 +259,10 @@ class IssueModel {
 
 @JsonSerializable()
 class GroupIssue {
-  String? nextFollowUpDate;
+  String? date;
   List<IssueModel>? issues;
 
-  GroupIssue({ this.nextFollowUpDate,  this.issues});
+  GroupIssue({ this.date,  this.issues});
 
   factory GroupIssue.fromJson(Map<String, dynamic> json) =>
       _$GroupIssueFromJson(json);

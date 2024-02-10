@@ -33,7 +33,7 @@ class _CreateIssuePageState extends State<CreateIssuePage> {
 
   @override
   Widget build(BuildContext context) {
-    final homeController = Provider.of<HomeProvider>(context, listen: false);
+    final homeController = Provider.of<HomeProvider>(context, listen: true);
 
     // if(businessModel == null){
     //   // traverse him to business home page
@@ -49,7 +49,9 @@ class _CreateIssuePageState extends State<CreateIssuePage> {
 
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: () async {},
+        onRefresh: () async {
+          print("Hi");
+        },
         child: Padding(
           padding: const EdgeInsets.only(left: 15, right: 15),
           child: SingleChildScrollView(
