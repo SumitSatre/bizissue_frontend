@@ -63,6 +63,12 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setUserModelNull() {
+    _userModel = null;
+    selectedBusiness = "";
+    selectedBusinessUserType = "";
+  }
+
   void updateSelected(BuildContext context , String businessId){
     selectedBusiness = businessId;
 

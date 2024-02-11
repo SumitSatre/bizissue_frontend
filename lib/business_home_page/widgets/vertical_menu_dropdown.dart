@@ -11,6 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 
 class VerticalMenuDropDown extends StatefulWidget {
   @override
@@ -69,6 +70,11 @@ void showDropdown(BuildContext context, String businessId) async {
       if(result == "Create Group"){
         GoRouter.of(context).pushNamed(MyAppRouteConstants.createGroupRouteName);
       }
+      else if(result == "Refresh"){
+        Provider.of<BusinessController>(context, listen: false).setBusinessModelNull();
+        Provider.of<HomeProvider>(context, listen: false).setUserModelNull();
+        GoRouter.of(context).goNamed(MyAppRouteConstants.splashscreenRouteName);
+      }
       else if(result == "Requests"){
         Provider.of<BusinessRequestsProvider>(context, listen: false).clear();
         GoRouter.of(context).pushNamed(MyAppRouteConstants.businessRequestsRouteName,
@@ -90,17 +96,25 @@ void showDropdown(BuildContext context, String businessId) async {
       else if(result == "Upload Issues"){
         Provider.of<BusinessController>(context, listen: false).pickAndUploadCsvFile(context , businessId);
       }
+      else if(result == "Share"){
+        final businessModel = Provider.of<BusinessController>(context, listen: false).businessModel;
+
+        String businessCode = businessModel!.business!.businessCode;
+        Share.share("Use this code ${businessCode} to join our business and become a valued member!");
+      }
     }
   }
 }
 
 List<String> menuItemsList = [
+  "Refresh",
   "Requests",
   "Create Group",
   "Users",
   "Closed Issues",
   "Download Issue Template",
-  "Upload Issues"
+  "Upload Issues",
+  "Share"
 ];
 
 List<Map<String, String>> menuItemsWithRoutes = [

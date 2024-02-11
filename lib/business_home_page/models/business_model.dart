@@ -185,6 +185,7 @@ class BusinessInfo {
   String city;         // Change from String? to String
   String country;      // Change from String? to String
   String businessId;
+  String businessCode;
 
   BusinessInfo({
     required this.name,
@@ -192,6 +193,7 @@ class BusinessInfo {
     required this.city,
     required this.country,
     required this.businessId,
+    required this.businessCode,
   });
 
   factory BusinessInfo.fromJson(Map<String, dynamic> json) =>
@@ -205,6 +207,7 @@ class BusinessInfo {
     String? city,
     String? country,
     String? businessId,
+    String? businessCode,
   }) {
     return BusinessInfo(
       name: name ?? this.name,
@@ -212,6 +215,7 @@ class BusinessInfo {
       city: city ?? this.city,
       country: country ?? this.country,
       businessId: businessId ?? this.businessId,
+      businessCode: businessCode ?? this.businessCode,
     );
   }
 }

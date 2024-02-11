@@ -23,7 +23,7 @@ class NotificationSocketService {
     socket.connect();
 
     socket.onConnect((_) {
-      print('connected in home page');
+      print('connected in home page ${userId}');
       socket.emit("user-joined", userId);
     });
 

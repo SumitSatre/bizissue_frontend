@@ -105,10 +105,12 @@ Map<String, dynamic> _$IssueShortToJson(IssueShort instance) =>
 
 BusinessInfo _$BusinessInfoFromJson(Map<String, dynamic> json) => BusinessInfo(
       name: json['name'] as String,
-      industryType: json['industryType'] as String? ?? '', // Provide a default value for null
-      city: json['city'] as String? ?? '',                // Provide a default value for null
+      industryType: json['industryType'] as String? ??
+          '', // Provide a default value for null
+      city: json['city'] as String? ?? '', // Provide a default value for null
       country: json['country'] as String? ?? '',
       businessId: json['_id'] as String,
+      businessCode: json['businessCode'] as String,
     );
 
 Map<String, dynamic> _$BusinessInfoToJson(BusinessInfo instance) =>
@@ -118,6 +120,7 @@ Map<String, dynamic> _$BusinessInfoToJson(BusinessInfo instance) =>
       'city': instance.city,
       'country': instance.country,
       '_id': instance.businessId,
+      'businessCode': instance.businessCode,
     };
 
 TeamIssue _$TeamIssueFromJson(Map<String, dynamic> json) => TeamIssue(

@@ -1,5 +1,6 @@
 class MyAppRouteConstants {
-  static const String splashscreenRouteName = 'splashscreen';
+  static const String initialscreenRouteName = '/';
+  static const String splashscreenRouteName = '/splashscreen';
   static const String loginRouteName = '/login';
   static const String signupRouteName = 'signup';
   static const String contactUsRouteName = 'contact_us';

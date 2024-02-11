@@ -1,4 +1,5 @@
 import 'package:bizissue/business_home_page/screens/controller/business_controller.dart';
+import 'package:bizissue/business_home_page/screens/controller/create_business_controller.dart';
 import 'package:bizissue/business_home_page/widgets/no_business_app_bar.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/colors.dart';
@@ -30,11 +31,12 @@ class _NoBusinessHomePageState extends State<NoBusinessHomePage> {
     double width = MediaQuery.of(context).size.width;
     final controller = Provider.of<HomeProvider>(context, listen: false);
     final businessController = Provider.of<BusinessController>(context, listen: false);
+    final createBusinessController = Provider.of<CreateBusinessProvider>(context, listen: false);
     return Scaffold(
       appBar: NoBusinessAppBar(),
       body: GestureDetector(
         onTap: () {
-          // Unfocus any focused text field to dismiss the keyboard
+          // Unfocus any focused text field to dismiss thRe keyboard
           // FocusScope.of(context).unfocus();
         },
         child: Center(
@@ -124,7 +126,7 @@ length: 6,
                         SizedBox(height: 20), // Add space between PinInputTextField and SubmitButton
                         ElevatedButton(
                           onPressed: () {
-                            //createBusinessController.joinBusinessRequest(context, codeController.text);
+                            createBusinessController.joinBusinessRequest(context, _codeController.text);
                           },
                           child: Text('Submit'),
                         ),
