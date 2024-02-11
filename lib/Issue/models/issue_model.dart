@@ -1,3 +1,4 @@
+import 'package:bizissue/home/models/user_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'issue_model.g.dart';
@@ -110,10 +111,12 @@ class CriticalBy {
 class OutsiderShort {
   String? name;
   String? id;
+  ContactNumberOutsider? contactNumber;
 
   OutsiderShort({
     this.name,
     this.id,
+    this.contactNumber,
   });
 
   factory OutsiderShort.fromJson(Map<String, dynamic> json) =>
@@ -124,10 +127,12 @@ class OutsiderShort {
   OutsiderShort copyWith({
     String? name,
     String? id,
+    ContactNumberOutsider? contactNumber,
   }) {
     return OutsiderShort(
       name: name ?? this.name,
       id: id ?? this.id,
+      contactNumber: contactNumber ?? this.contactNumber,
     );
   }
 }
@@ -268,4 +273,38 @@ class GroupIssue {
       _$GroupIssueFromJson(json);
 
   Map<String, dynamic> toJson() => _$GroupIssueToJson(this);
+}
+
+class ContactNumberOutsider {
+  String? countryCode;
+  String? number;
+
+  ContactNumberOutsider({
+    this.countryCode,
+    this.number,
+  });
+
+  factory ContactNumberOutsider.fromJson(Map<String, dynamic> json) {
+    return ContactNumberOutsider(
+      countryCode: json['countryCode'] as String?,
+      number: json['number'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'countryCode': countryCode,
+      'number': number,
+    };
+  }
+
+  ContactNumberOutsider copyWith({
+    String? countryCode,
+    String? number,
+  }) {
+    return ContactNumberOutsider(
+      countryCode: countryCode ?? this.countryCode,
+      number: number ?? this.number,
+    );
+  }
 }

@@ -11,8 +11,9 @@ import 'package:provider/provider.dart';
 
 class InviteOutsiderDialog extends StatefulWidget {
   final String issueId;
+  final BuildContext prevContext;
 
-  InviteOutsiderDialog({required this.issueId});
+  InviteOutsiderDialog({required this.prevContext,required this.issueId});
 
   @override
   _InviteOutsiderDialogState createState() => _InviteOutsiderDialogState();
@@ -176,8 +177,8 @@ class _InviteOutsiderDialogState extends State<InviteOutsiderDialog> {
                 ElevatedButton(
                   onPressed: () {
                     GoRouter.of(context).pop();
-                    issueController.sentInviteToOutsiderRequest(context , countryCodeController.text , numberController.text);
-                    //
+                    issueController.sentInviteToOutsiderRequest(widget.prevContext , countryCodeController.text , numberController.text);
+                    GoRouter.of(context).pop();
                   },
                   child: Text("Submit"),
                 ),

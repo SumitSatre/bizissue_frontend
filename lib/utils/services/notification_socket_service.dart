@@ -75,7 +75,6 @@ class NotificationSocketService {
       }
     });
 
-
   }
 
   void closeSocket() {

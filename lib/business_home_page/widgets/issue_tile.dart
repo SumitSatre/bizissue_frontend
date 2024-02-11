@@ -1,4 +1,5 @@
 import 'package:bizissue/Issue/models/issue_model.dart';
+import 'package:bizissue/Issue/screens/controllers/issue_controller.dart';
 import 'package:bizissue/business_home_page/models/business_model.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/routes/app_route_constants.dart';
@@ -16,6 +17,7 @@ class CustomIssueTile extends StatelessWidget {
     final controller = Provider.of<HomeProvider>(context, listen: false);
     return InkWell(
       onTap: (){
+        Provider.of<IssueProvider>(context, listen: false).setIssueModelNull();
         GoRouter.of(context).pushNamed(MyAppRouteConstants.issuePageRouteName , params : {
           'issueId' : issue.issueId,
           "businessId" : controller.selectedBusiness

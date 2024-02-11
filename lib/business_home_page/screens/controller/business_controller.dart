@@ -166,7 +166,7 @@ class BusinessController extends ChangeNotifier {
     userProfile = null;
   }
 
-  void rateUserRequest(BuildContext context, String businessId , String userId , String message , double rating) async {
+  void rateUserRequest(BuildContext context, String businessId , String userId , String message , double rating , bool isAnonymous) async {
 
     try {
       // Validate business code
@@ -180,6 +180,11 @@ class BusinessController extends ChangeNotifier {
         return;
       }
 
+      if (message == null || message.isEmpty) {
+        showSnackBar(context, "Please give message!!", invalidColor);
+        return;
+      }
+
       String accessToken = await SharedPreferenceService().getAccessToken();
 
       ApiHttpResponse response = await callUserPatchMethod(
@@ -187,7 +192,7 @@ class BusinessController extends ChangeNotifier {
             "message" : message,
             "rating" : rating
           },
-          'business/rate/user/${businessId}/${userId}',
+          'business/rate/user/${businessId}/${userId}?isAnonymous=${isAnonymous}',
           accessToken);
 
       if (response.responseCode == 200) {

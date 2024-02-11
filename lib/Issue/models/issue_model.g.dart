@@ -6,6 +6,8 @@ part of 'issue_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+ContactNumber contactNumber = ContactNumber(countryCode: "+91", number: "1111111111");
+
 Blocked _$BlockedFromJson(Map<String, dynamic> json) => Blocked(
       isBlocked: json['isBlocked'] as bool,
       blockedBy: json['blockedBy'] == null
@@ -56,12 +58,17 @@ OutsiderShort _$OutsiderShortFromJson(Map<String, dynamic> json) =>
     OutsiderShort(
       name: json['name'] as String?,
       id: json['id'] as String?,
+      contactNumber: json['contactNumber'] != null
+    ? ContactNumberOutsider.fromJson(json['contactNumber'] as Map<String, dynamic>)
+    : ContactNumberOutsider(countryCode: "dummy", number: "dummy"),
+
     );
 
 Map<String, dynamic> _$OutsiderShortToJson(OutsiderShort instance) =>
     <String, dynamic>{
       'name': instance.name,
       'id': instance.id,
+      'contactNumber': instance.contactNumber
     };
 
 CreatedBy _$CreatedByFromJson(Map<String, dynamic> json) => CreatedBy(

@@ -58,7 +58,7 @@ class BusinessUsersProvider extends ChangeNotifier {
       // Validate business code
       print("Hiiiii");
       if (businessId == null || businessId.isEmpty) {
-      //  showSnackBar(context, "Invalid business code!!", invalidColor);
+        showSnackBar(context, "Invalid business code!!", invalidColor);
         return;
       }
 
@@ -66,40 +66,149 @@ class BusinessUsersProvider extends ChangeNotifier {
           role.isEmpty ||
           userIdToPromote == null ||
           userIdToPromote.isEmpty) {
-       // showSnackBar(context, "Invalid business role and userIdToPromote!!",
-       //     invalidColor);
+        showSnackBar(context, "Invalid business role and userIdToPromote!!",
+            invalidColor);
         return;
       }
 
       String accessToken = await SharedPreferenceService().getAccessToken();
 
-      ApiHttpResponse response = await callUserPatchMethod({
-        "role": role,
-        "userIdToPromote" : userIdToPromote
-      }, 'business/promotion/${businessId}', accessToken);
+      ApiHttpResponse response = await callUserPatchMethod(
+          {"role": role, "userIdToPromote": userIdToPromote},
+          'business/promotion/${businessId}',
+          accessToken);
 
       if (response.responseCode == 200) {
-      //  showSnackBar(context, "User promoted successfully!!", successColor);
+        showSnackBar(context, "User promoted successfully!!", successColor);
         print("Done");
-        updateRole(userIdToPromote , role);
+        updateRole(userIdToPromote, role);
         notifyListeners();
       } else {
         final data = jsonDecode(response.responceString ?? "");
 
-        // Handle other status codes if needed
-     //   showSnackBar(
-     //       context,
-     //       "Failed to send promotion request to business: ${data['message']}",
-       //     invalidColor);
+        showSnackBar(
+            context,
+            "Failed to send promotion request to business: ${data['message']}",
+            invalidColor);
+      }
+
+      debugPrint(response.responceString);
+    } catch (e) {
+      showSnackBar(context, "An unexpected error occurred", invalidColor);
+      print("Error: $e");
+    }
+    setFetching(false);
+  }
+
+  void RemoveUserFromBusinessRequest(
+      BuildContext context, String businessId, String userToRemoveId) async {
+    try {
+      // Validate business code
+      print("Hiiiii");
+      if (businessId == null || businessId.isEmpty) {
+        showSnackBar(context, "Invalid business code!!", invalidColor);
+        return;
+      }
+
+      String accessToken = await SharedPreferenceService().getAccessToken();
+
+      ApiHttpResponse response = await callUserPatchMethod({},
+          'business/remove/user/${businessId}?userToRemoveId=${userToRemoveId}',
+          accessToken);
+
+      if (response.responseCode == 200) {
+        showSnackBar(context, "User removed successfully!!", successColor);
+        notifyListeners();
+      } else {
+        final data = jsonDecode(response.responceString ?? "");
+
+        showSnackBar(
+            context,
+            "Failed to send promotion request to business: ${data['message']}",
+            invalidColor);
       }
 
       debugPrint(response.responceString);
     } catch (e) {
       // Handle unexpected errors
-    //  showSnackBar(context, "An unexpected error occurred", invalidColor);
+      //  showSnackBar(context, "An unexpected error occurred", invalidColor);
       print("Error: $e");
     }
-    setFetching(false);
+    notifyListeners();
+  }
+
+  void convertOutsiderToInsiderRequest(
+      BuildContext context, String businessId, String outsiderId) async {
+    try {
+      // Validate business code
+      print("Hiiiii");
+      if (businessId == null || businessId.isEmpty) {
+        showSnackBar(context, "Invalid business code!!", invalidColor);
+        return;
+      }
+
+      String accessToken = await SharedPreferenceService().getAccessToken();
+
+      ApiHttpResponse response = await callUserPatchMethod({},
+          'business/convert/outsider/${businessId}?outsiderId=${outsiderId}',
+          accessToken);
+
+      if (response.responseCode == 200) {
+        showSnackBar(context, "User converted to insider successfully!!", successColor);
+        notifyListeners();
+      } else {
+        final data = jsonDecode(response.responceString ?? "");
+
+        showSnackBar(
+            context,
+            "Failed to send request to business: ${data['message']}",
+            invalidColor);
+      }
+
+      debugPrint(response.responceString);
+    } catch (e) {
+      // Handle unexpected errors
+      //  showSnackBar(context, "An unexpected error occurred", invalidColor);
+      print("Error: $e");
+    }
+    notifyListeners();
+  }
+
+  void chnageUserManagerRequest(
+      BuildContext context, String businessId, String userId , String parentId) async {
+    try {
+      // Validate business code
+      print("Hiiiii");
+      if (businessId == null || businessId.isEmpty) {
+        showSnackBar(context, "Invalid business code!!", invalidColor);
+        return;
+      }
+
+      String accessToken = await SharedPreferenceService().getAccessToken();
+
+      ApiHttpResponse response = await callUserPatchMethod({},
+          'business/change/parent/${businessId}/${userId}?newParentId=${parentId}',
+          accessToken);
+
+      if (response.responseCode == 200) {
+        showSnackBar(context, "Parent changed successfully!!", successColor);
+        notifyListeners();
+      } else {
+        final data = jsonDecode(response.responceString ?? "");
+
+        showSnackBar(
+            context,
+            "Failed to manager change request to business: ${data['message']}",
+            invalidColor);
+      }
+
+      debugPrint(response.responceString);
+    } catch (e) {
+      // Handle unexpected errors
+        showSnackBar(context, "An unexpected error occurred", invalidColor);
+      print("Error: $e");
+    }
+    notifyListeners();
   }
 
   void setFetching(bool val) {
@@ -127,8 +236,8 @@ class BusinessUsersProvider extends ChangeNotifier {
   Future<void> getClosedIssueRequest(String id) async {
     print("This is id : $id");
     String accessToken = await SharedPreferenceService().getAccessToken();
-    ApiHttpResponse response =
-    await callUserGetMethod("business/get/closed/issues/${id}", accessToken);
+    ApiHttpResponse response = await callUserGetMethod(
+        "business/get/closed/issues/${id}", accessToken);
     final data = jsonDecode(response.responceString!);
     debugPrint(data.toString());
     if (response.responseCode == 200) {
@@ -140,8 +249,7 @@ class BusinessUsersProvider extends ChangeNotifier {
           .map((item) => IssueModel.fromJson(item))
           .toList();
       _myIssuesGroup = groupAndSortIssues(myIssues ?? []);
-      _myTeamIssuesGroup =
-          groupAndSortIssues(myTeamIssues ?? []);
+      _myTeamIssuesGroup = groupAndSortIssues(myTeamIssues ?? []);
       print("Done");
       notifyListeners();
     } else {
@@ -151,17 +259,13 @@ class BusinessUsersProvider extends ChangeNotifier {
     }
   }
 
-  void sortAccordingToDeliveryDate(){
+  void sortAccordingToDeliveryDate() {
     _myIssuesGroup = groupAndSortIssuesDeliveryDate(myIssues ?? []);
-    _myTeamIssuesGroup =
-        groupAndSortIssuesDeliveryDate(myTeamIssues ?? []);
+    _myTeamIssuesGroup = groupAndSortIssuesDeliveryDate(myTeamIssues ?? []);
   }
 
-  void sortAccordingToNextFollowUpDate(){
+  void sortAccordingToNextFollowUpDate() {
     _myIssuesGroup = groupAndSortIssues(myIssues ?? []);
-    _myTeamIssuesGroup =
-        groupAndSortIssues(myTeamIssues ?? []);
+    _myTeamIssuesGroup = groupAndSortIssues(myTeamIssues ?? []);
   }
-
-
 }

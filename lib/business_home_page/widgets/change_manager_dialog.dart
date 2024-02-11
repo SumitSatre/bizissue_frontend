@@ -1,0 +1,152 @@
+import 'package:bizissue/Issue/screens/controllers/issue_controller.dart';
+import 'package:bizissue/business_home_page/models/user_list_model.dart';
+import 'package:bizissue/business_home_page/screens/controller/business_controller.dart';
+import 'package:bizissue/business_home_page/screens/controller/business_requests_controller.dart';
+import 'package:bizissue/business_home_page/screens/controller/business_users_controller.dart';
+import 'package:bizissue/business_home_page/screens/controller/create_issue_controller.dart';
+import 'package:bizissue/home/screens/controllers/home_controller.dart';
+import 'package:bizissue/utils/colors.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
+class ChangeManagerDialog extends StatefulWidget {
+  final String userId;
+  final String businessId;
+  final BuildContext prevContext;
+
+  ChangeManagerDialog({required this.userId , required this.businessId , required this.prevContext});
+
+  @override
+  _ReAssignIssueDialogState createState() => _ReAssignIssueDialogState();
+}
+
+class _ReAssignIssueDialogState extends State<ChangeManagerDialog> {
+  UserListModel? selectedUserListItem;
+
+  @override
+  Widget build(BuildContext context) {
+    final businessUserscontroller =
+    Provider.of<BusinessUsersProvider>(context, listen: false);
+    final homeController = Provider.of<HomeProvider>(context, listen: false);
+
+    double height = MediaQuery.of(context).size.height;
+
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              "Select new manager:",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 16),
+            Row(
+              children: [
+                SizedBox(width: 5),
+                Text(
+                  "Assign To",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: "Poppins",
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: height * 0.01),
+            Container(
+              height: height * 0.06,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  style: BorderStyle.solid,
+                  color: Colors.grey,
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: FutureBuilder<List<UserListModel>>(
+                future: homeController.getUsersList(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError || snapshot.data == null) {
+                    return Center(child: Text('Error loading data'));
+                  } else {
+                    List<UserListModel> userList = snapshot.data!;
+
+                    return DropdownButtonHideUnderline(
+                      child: DropdownButton<UserListModel>(
+                        icon: const Align(
+                          alignment: Alignment.centerRight,
+                          child: Icon(
+                            Icons.keyboard_arrow_down_sharp,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        elevation: 4,
+                        style: const TextStyle(color: Colors.black, fontSize: 14),
+                        value: selectedUserListItem,
+                        onChanged: (UserListModel? newValue) {
+                          if (newValue != null) {
+                            setState(() {
+                              selectedUserListItem = newValue;
+                            });
+                          }
+                        },
+                        items: userList
+                            .map<DropdownMenuItem<UserListModel>>(
+                              (UserListModel user) {
+                            return DropdownMenuItem<UserListModel>(
+                              value: user,
+                              child: Text("  ${user.name}"),
+                            );
+                          },
+                        ).toList(),
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
+            SizedBox(height: height * 0.02),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    GoRouter.of(context).pop(); // Close the dialog
+                  },
+                  child: Text("Close"),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                    kprimaryColor, // Change the background color to blue
+                  ),
+                  onPressed: () {
+                    if (selectedUserListItem != null) {
+                      // Logic to re-assign issue to selected user
+                      businessUserscontroller.chnageUserManagerRequest(widget.prevContext, widget.businessId, widget.userId, selectedUserListItem!.userId!);
+                      GoRouter.of(context).pop(); // Close the dialog
+                    }
+                  },
+                  child: Text("Submit"),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

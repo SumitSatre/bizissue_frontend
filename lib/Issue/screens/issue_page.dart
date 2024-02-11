@@ -6,6 +6,7 @@ import 'package:bizissue/Issue/widgets/document_bubble.dart';
 import 'package:bizissue/Issue/widgets/vertical_menu_issue.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/colors.dart';
+import 'package:bizissue/utils/services/activity_socket_service.dart';
 import 'package:bizissue/utils/utils.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,13 +21,11 @@ import 'package:path_provider/path_provider.dart';
 class IssuePage extends StatefulWidget {
   final String issueId;
   final String businessId;
-  final bool isClosedIssue; // New parameter added
 
   const IssuePage({
     Key? key,
     required this.issueId,
-    required this.businessId,
-    this.isClosedIssue = false, // Default value set to false
+    required this.businessId
   }) : super(key: key);
 
   @override
@@ -34,70 +33,15 @@ class IssuePage extends StatefulWidget {
 }
 
 class _IssuePageState extends State<IssuePage> {
-  late IO.Socket socket;
-
+  late ActivitySocketService socketService;
   TextEditingController messageContentController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     callInit();
-
-    socket = IO.io(
-        'https://bizissue-backend.onrender.com/issue/chat', <String, dynamic>{
-      'transports': ['websocket'],
-      'autoConnect': false,
-    });
-
-    socket.connect();
-
-    socket.onConnect((_) {
-      print('connected');
-      socket.emit("join-issue-chat-room", widget.issueId);
-    });
-
-    socket.on('receive-message', (data) {
-      print("This data is received : ${data}");
-      final newMessage = MessageModel(
-          sender:
-              Sender(id: data['sender']['id'], name: data['sender']['name']),
-          content: data['content'],
-          createdAt: DateTime.fromMillisecondsSinceEpoch(data['createdAt']),
-          isAttachment: false);
-
-      final issueController =
-          Provider.of<IssueProvider>(context, listen: false);
-
-      if (issueController.messages == null) {
-        issueController.messages = [newMessage];
-      } else {
-        issueController.messages!.add(newMessage);
-      }
-      setState(() {});
-    });
-
-    socket.on('receive-message-doc', (data) {
-      print("This data is received : ${data}");
-      final newMessage = MessageModel(
-          sender:
-              Sender(id: data['sender']['id'], name: data['sender']['name']),
-          createdAt: DateTime.fromMillisecondsSinceEpoch(data['createdAt']),
-          isAttachment: true,
-          attachments: Attachments(
-              url: data['attachments']['url'],
-              type: data['attachments']['type'],
-              name: data['attachments']['name']));
-
-      final issueController =
-          Provider.of<IssueProvider>(context, listen: false);
-
-      if (issueController.messages == null) {
-        issueController.messages = [newMessage];
-      } else {
-        issueController.messages!.add(newMessage);
-      }
-      setState(() {});
-    });
+    socketService = ActivitySocketService();
+    socketService.initSocket(widget.issueId, context);
   }
 
   void callInit() {
@@ -109,6 +53,7 @@ class _IssuePageState extends State<IssuePage> {
 
   @override
   void dispose() {
+    socketService.disconnect(); // Disconnect from socket when disposing the widget
     super.dispose();
   }
 
@@ -135,7 +80,7 @@ class _IssuePageState extends State<IssuePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row (
+                          Row(
                             children: [
                               Container(
                                 width: 40,
@@ -175,8 +120,13 @@ class _IssuePageState extends State<IssuePage> {
                               ),
                             ],
                           ),
-
-                          homeController.selectedBusinessUserType == "Outsider" ? Container() : VerticalMenuIssueDropDown(issueId : widget.issueId)
+                          homeController.selectedBusinessUserType == "Outsider"
+                              ? Container()
+                              : VerticalMenuIssueDropDown(
+                            prevContext : context,
+                                  issueId: widget.issueId,
+                            issue:issueController.issueModel!
+                          )
                         ],
                       ),
                     ),
@@ -204,7 +154,7 @@ class _IssuePageState extends State<IssuePage> {
                                   if (issueController
                                           .issueModel!.blocked.isBlocked ==
                                       false) {
-                                    issueController.bockIssueRequest(
+                                    issueController.blockIssueRequest(
                                         context, widget.businessId);
                                   } else {
                                     issueController.unbockIssueRequest(
@@ -452,23 +402,15 @@ class _IssuePageState extends State<IssuePage> {
                                 String fileType =
                                     platformFile.extension ?? "unknown";
 
-                                socket.emit('issue-message-doc', {
-                                  'issueId': widget.issueId,
-                                  'businessId': widget.businessId,
-                                  'message': {
-                                    'sender': {
-                                      'id': homeController.userModel?.id ?? "",
-                                      'name':
-                                          homeController.userModel?.name ?? ""
-                                    },
-                                    'isAttachment': true,
-                                    "attachments": {
-                                      "url": docUrl,
-                                      "type": fileType,
-                                      "name": fileName
-                                    }
-                                  },
-                                });
+                                socketService.sendDocumentMessage(
+                                  context,
+                                    widget.issueId,
+                                    widget.businessId,
+                                    docUrl,
+                                    fileType,
+                                    fileName,
+                                    homeController.userModel?.id ?? "",
+                                    homeController.userModel?.name ?? "");
                               }
                             }
                           },
@@ -486,7 +428,6 @@ class _IssuePageState extends State<IssuePage> {
                             padding: EdgeInsets.symmetric(horizontal: 12.0),
                             child: TextField(
                               controller: messageContentController,
-
                               decoration: InputDecoration(
                                 hintText: 'Type a message...',
                                 border: OutlineInputBorder(
@@ -497,12 +438,14 @@ class _IssuePageState extends State<IssuePage> {
                                   horizontal: 16.0,
                                 ),
                                 suffixIcon: IconButton(
-                                  icon: Icon(Icons.camera_alt), // Replace with your desired icon
+                                  icon: Icon(Icons
+                                      .camera_alt), // Replace with your desired icon
                                   onPressed: () async {
                                     XFile? xfile = await captureImage();
 
-                                    if(xfile != null){
-                                      issueController.uploadFileToStorage("chats" , xfile);
+                                    if (xfile != null) {
+                                      issueController.uploadFileToStorage(
+                                          "chats", xfile);
                                     }
                                   },
                                 ),
@@ -513,37 +456,13 @@ class _IssuePageState extends State<IssuePage> {
                         SizedBox(width: 8.0),
                         GestureDetector(
                           onTap: () {
-                            socket.emit('issue-message', {
-                              'issueId': widget.issueId,
-                              'businessId': widget.businessId,
-                              'message': {
-                                'sender': {
-                                  'id': homeController.userModel?.id ?? "",
-                                  'name': homeController.userModel?.name ?? ""
-                                },
-                                'content': messageContentController.text,
-                              },
-                            });
-
-                            final newMessage = MessageModel(
-                                sender: Sender(
-                                  id: homeController.userModel?.id ?? "",
-                                  name: homeController.userModel?.name ?? "",
-                                ),
-                                content: messageContentController.text,
-                                createdAt: DateTime.now(),
-                                isAttachment: false);
-
-                            final issueController = Provider.of<IssueProvider>(
-                                context,
-                                listen: false);
-
-                            if (issueController.messages == null) {
-                              issueController.messages = [newMessage];
-                            } else {
-                              issueController.messages!.add(newMessage);
-                            }
-                            setState(() {});
+                            socketService.sendMessage(
+                              context,
+                                widget.issueId,
+                                widget.businessId,
+                                messageContentController.text,
+                                homeController.userModel?.id ?? "",
+                                homeController.userModel?.name ?? "");
 
                             messageContentController.text = "";
                           },
@@ -579,8 +498,7 @@ class _IssuePageState extends State<IssuePage> {
 
     if (image != null) return image;
     return null;
-    }
-
+  }
 }
 
 class ChatBubble extends StatelessWidget {

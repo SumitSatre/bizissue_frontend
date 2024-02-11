@@ -21,7 +21,7 @@ class RateUserDialog extends StatefulWidget {
 class _RateUserDialogState extends State<RateUserDialog> {
   late TextEditingController _messageController;
   double _rating = 0;
-
+bool _switchValue = false;
   @override
   void initState() {
     super.initState();
@@ -57,22 +57,47 @@ class _RateUserDialogState extends State<RateUserDialog> {
               ),
             ),
             SizedBox(height: 16),
-            RatingBar.builder(
-              initialRating: _rating,
-              minRating: 1,
-              direction: Axis.horizontal,
-              allowHalfRating: true,
-              itemCount: 5,
-              itemSize: 40,
-              itemBuilder: (context, _) => Icon(
-                Icons.star,
-                color: Colors.amber,
+            Center(
+              child: RatingBar.builder(
+                initialRating: _rating,
+                minRating: 1,
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                itemCount: 5,
+                itemSize: 40,
+                itemBuilder: (context, _) => Icon(
+                  Icons.star,
+                  color: Colors.amber,
+                ),
+                onRatingUpdate: (rating) {
+                  setState(() {
+                    _rating = rating;
+                  });
+                },
               ),
-              onRatingUpdate: (rating) {
-                setState(() {
-                  _rating = rating;
-                });
-              },
+            ),
+            Row(
+              children: [
+                Text(
+                  "Anonymous",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(width: 10),
+                Switch(
+                  value: _switchValue,
+                  onChanged: (value) {
+                    setState(() {
+                      _switchValue = value;
+                    });
+                  },
+                  activeColor: Colors.blue, // Color when switch is on
+                  inactiveThumbColor: Colors.grey, // Color of the switch when off
+                ),
+              ],
             ),
             SizedBox(height: 16),
             TextField(
@@ -84,6 +109,7 @@ class _RateUserDialogState extends State<RateUserDialog> {
               maxLines: 3,
             ),
             SizedBox(height: 16),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -101,7 +127,9 @@ class _RateUserDialogState extends State<RateUserDialog> {
                         widget.businessId,
                         widget.userId,
                         _messageController.text,
-                        _rating);
+                        _rating,
+                    _switchValue
+                    );
                     _messageController.text = "";
 
                     _submitRating(); // Perform rating submission

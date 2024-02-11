@@ -90,7 +90,7 @@ class UserProfile {
 
 class RatingModel {
   final GivenBy givenBy;
-  final int rating;
+  final double rating;
   final String message;
   final DateTime date;
   final String id;
@@ -106,7 +106,9 @@ class RatingModel {
   factory RatingModel.fromJson(Map<String, dynamic> json) {
     return RatingModel(
       givenBy: GivenBy.fromJson(json['givenBy']),
-      rating: json['rating'],
+      rating: json['rating'] is int
+          ? (json['rating'] as int).toDouble()
+          : json['rating'],
       message: json['message'],
       date: DateTime.parse(json['date']),
       id: json['_id'],
@@ -116,11 +118,11 @@ class RatingModel {
 
 class GivenBy {
   final String name;
-  final String id;
+  final String? id;
 
   GivenBy({
     required this.name,
-    required this.id,
+     this.id,
   });
 
   factory GivenBy.fromJson(Map<String, dynamic> json) {

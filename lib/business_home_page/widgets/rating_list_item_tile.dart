@@ -8,21 +8,55 @@ class RatingListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String formattedDate = "${rating.date.day}/${rating.date.month}/${rating.date.year}";
+    String formattedDate =
+        "${rating.date.day}/${rating.date.month}/${rating.date.year}";
 
-    return ListTile(
-      title: Text("Rating: ${rating.rating}"),
-      subtitle: Column(
+    return Container(
+      margin: EdgeInsets.only(top: 10),
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey[200], // Background color
+      ),
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Message: ${rating.message}"),
-          Text("Given By: ${rating.givenBy.name}"), // Assuming 'name' is a property of GivenBy
+          Expanded(
+            flex: 2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Rating: ${rating.rating}",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  "Message: ${rating.message}",
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  "Given By: ${rating.givenBy.name}",
+                  style: TextStyle(fontSize: 14),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Container(
+              alignment: Alignment.centerRight,
+              child: Text(
+                "Date: $formattedDate",
+                style: TextStyle(fontSize: 14),
+              ),
+            ),
+          ),
         ],
       ),
-      trailing: Text("Date: $formattedDate"),
-      onTap: () {
-        // Add onTap functionality here if needed
-      },
     );
   }
 }

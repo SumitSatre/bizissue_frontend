@@ -63,8 +63,8 @@ class _BusinessUsersListScreenState extends State<BusinessUsersListScreen> {
           Size.fromHeight(MediaQuery.of(context).size.height * 0.19),
           child: Padding(
             padding: EdgeInsets.symmetric(
-              vertical: MediaQuery.of(context).size.height * 0.02,
-              horizontal: MediaQuery.of(context).size.width * 0.04,
+              vertical: MediaQuery.of(context).size.height * 0.01,
+              horizontal: MediaQuery.of(context).size.width * 0.02,
             ),
             child: Row(
               children: [
@@ -92,6 +92,7 @@ class _BusinessUsersListScreenState extends State<BusinessUsersListScreen> {
 
                   return UserRecordTile(
                     userRecord: user,
+                      prevContext: context
                   );
                 }),
       );

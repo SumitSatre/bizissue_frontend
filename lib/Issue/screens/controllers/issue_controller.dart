@@ -6,6 +6,7 @@ import 'package:bizissue/Issue/models/message_model.dart';
 import 'package:bizissue/api%20repository/api_http_response.dart';
 import 'package:bizissue/api%20repository/product_repository.dart';
 import 'package:bizissue/business_home_page/screens/controller/business_controller.dart';
+import 'package:bizissue/home/models/user_model.dart';
 import 'package:bizissue/home/screens/controllers/home_controller.dart';
 import 'package:bizissue/utils/colors.dart';
 import 'package:bizissue/utils/services/shared_preferences_service.dart';
@@ -88,7 +89,7 @@ class IssueProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void bockIssueRequest(BuildContext context, String businessId) async {
+  void blockIssueRequest(BuildContext context, String businessId) async {
     try {
       // Validate business code
       if (businessId == null || businessId.isEmpty) {
@@ -369,6 +370,11 @@ class IssueProvider extends ChangeNotifier {
     }
   }
 
+
+  setIssueModelNull(){
+    _issueModel = null;
+  }
+
   void sentInviteToOutsiderRequest(
       BuildContext context, String countryCode, String number) async {
     try {
@@ -382,17 +388,17 @@ class IssueProvider extends ChangeNotifier {
               .name;
 
       if (countryCode == "" || number.length != 10) {
-        // showSnackBar(context, "Contact number is not valid!!", invalidColor);
+        showSnackBar(context, "Contact number is not valid!!", invalidColor);
         return;
       }
 
       if (businessId == null || businessId.isEmpty) {
-        //  showSnackBar(context, "Invalid business code!!", invalidColor);
+         showSnackBar(context, "Invalid business code!!", invalidColor);
         return;
       }
 
       if (issueModel == null || issueModel!.issueId == null) {
-        //  showSnackBar(context, "Something got wrong!!", invalidColor);
+         showSnackBar(context, "Something got wrong!!", invalidColor);
         return;
       }
 
@@ -413,15 +419,14 @@ class IssueProvider extends ChangeNotifier {
 
       print("This is response $response");
       if (response.responseCode == 200) {
-        //  showSnackBar(context, "Invite sent successfully!!", successColor);
+        showSnackBar(context, "Invite sent successfully!!", successColor);
         notifyListeners();
       } else {
         final data = jsonDecode(response.responceString ?? "");
-        // Handle other status codes if needed
-        //  showSnackBar(
-        //      context,
-        //      "Failed to send invite request to user: ${data['message']}",
-        //      invalidColor);
+          showSnackBar(
+              context,
+              "Failed to send invite request to user: ${data['message']}",
+              invalidColor);
       }
 
       debugPrint(response.responceString);
@@ -473,7 +478,99 @@ class IssueProvider extends ChangeNotifier {
       debugPrint(response.responceString);
     } catch (e) {
       // Handle unexpected errors
-      // showSnackBar(context, "An unexpected error occurred", invalidColor);
+      showSnackBar(context, "An unexpected error occurred", invalidColor);
+      print("Error: $e");
+    }
+    setFetching(false);
+  }
+
+  void removeOutsiderRequest(BuildContext context, String businessId ,ContactNumberOutsider contactNumber) async {
+
+    try {
+      // Validate business code
+      if (businessId == null || businessId.isEmpty) {
+        showSnackBar(context, "Invalid business code!!", invalidColor);
+        return;
+      }
+
+      if (issueModel == null || issueModel!.issueId == null) {
+        showSnackBar(context, "Something got wrong!!", invalidColor);
+        return;
+      }
+
+      String accessToken = await SharedPreferenceService().getAccessToken();
+
+      ApiHttpResponse response = await callUserPatchMethod({
+        "issueId" : issueModel!.issueId,
+        "contactNumber" : contactNumber.toJson()
+      },
+          'issue/remove/outsider/user/${businessId}?issueId=${issueModel!.issueId}',
+          accessToken);
+
+      if (response.responseCode == 200) {
+        final businessController =
+        Provider.of<BusinessController>(context, listen: false);
+
+        businessController.setBusinessModelNull();
+
+        GoRouter.of(context).pop();
+        showSnackBar(context, "Issue blocked successfully!!", successColor);
+        notifyListeners();
+      } else {
+        final data = jsonDecode(response.responceString ?? "");
+        showSnackBar(
+            context,
+            "Failed to send close request to business: ${data['message']}",
+            invalidColor);
+      }
+
+      debugPrint(response.responceString);
+    } catch (e) {
+      // Handle unexpected errors
+      showSnackBar(context, "An unexpected error occurred", invalidColor);
+      print("Error: $e");
+    }
+    setFetching(false);
+  }
+
+  void reassignIssueRequest(
+      BuildContext context, String businessId, String issueId , String assignedToId) async {
+    try {
+      // Validate business code
+      if (businessId == null || businessId.isEmpty) {
+        showSnackBar(context, "Invalid business code!!", invalidColor);
+        return;
+      }
+
+      if (issueModel == null || issueModel!.issueId == null) {
+        showSnackBar(context, "Something got wrong!!", invalidColor);
+        return;
+      }
+
+      String accessToken = await SharedPreferenceService().getAccessToken();
+
+      ApiHttpResponse response = await callUserPatchMethod({},
+          'issue/reassign/${businessId}?issueId=${issueId}&assignedToId=${assignedToId}',
+          accessToken);
+
+      if (response.responseCode == 200) {
+
+        showSnackBar(
+            context, "Isssue reassigned successfully!!", successColor);
+        notifyListeners();
+      } else {
+        final data = jsonDecode(response.responceString ?? "");
+        // Handle other status codes if needed
+        showSnackBar(
+            context,
+            "Failed to reassign up date: ${data['message']}",
+            invalidColor);
+      }
+
+      debugPrint(response.responceString);
+    } catch (e) {
+      // Handle unexpected errors
+      showSnackBar(context, "An unexpected error occurred", invalidColor);
       print("Error: $e");
     }
     setFetching(false);
